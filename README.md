@@ -1,4 +1,4 @@
-# ESP32-C3 Haier AC Studio (v4.1) — Local hOn UART Controller, PEA Energy Meter & Technician Diagnostics
+# Haier hOn ESP32-C3 Studio (`haier-hon-esp32c3-studio` v4.1) — Local UART Controller, PEA Energy Meter & Technician Diagnostics
 
 > **TH:** ระบบควบคุมแอร์ Haier Inverter (`HSU-15VQRA03T` / โปรโตคอล `hOn E++2.18`) แบบพึ่งพาตนเอง 100% บนชิป **ESP32-C3** เชื่อมต่อผ่าน UART โดยตรง ไม่พึ่งคลาวด์ ไม่ต้องลงแอป ผสานเซนเซอร์ห้องจริง **Xiaomi LYWSD03MMC (BLE)**, ระบบคำนวณค่าไฟ **กฟภ. (PEA ประเภทที่ 1 บ้านอยู่อาศัย)**, กฎอัตโนมัติ **`IF → THEN`** ทำงานเอง 24 ชม., และหน้า **All-Sensors Real-Time 2Hz** สำหรับช่างแอร์วินิจฉัยน้ำยา R32 รั่วได้ทันที
 >
@@ -108,3 +108,11 @@ python firmware/ota_flash.py 192.168.1.25
 ```bash
 python -m unittest pc_studio/tests/test_haier_studio.py -v
 ```
+
+---
+
+## 📚 Protocol Reference & Acknowledgements
+
+- **Haier hOn (`E++2.18`) UART Protocol:** Frame structure, control byte layout, and Self-Clean register references adapted from open-source **ESPHome Haier (`hOn` / `hon_climate.cpp`)** community documentation ([esphome/esphome](https://github.com/esphome/esphome), [paveldn/haier-esphome](https://github.com/paveldn/haier-esphome)).
+- **Xiaomi LYWSD03MMC BLE Formats:** Passive advertisement decoding supports open community formats (`BTHome v2`, `pvvx`, `ATC1441`).
+- Released under the [MIT License](./LICENSE).

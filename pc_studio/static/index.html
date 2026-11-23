@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Haier HSU-15VQRA03T Studio (p25)</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background:#0b1120; color:#e2e8f0; margin:0; padding:14px; }
+  .topbar { max-width:1460px; margin:0 auto 12px auto; background:#151f32; border:1px solid #26354d; border-radius:14px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .brand { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .brand-title { font-size:15px; font-weight:800; color:#38bdf8; letter-spacing:0.2px; }
+  .badge { display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:700; background:#1e293b; border:1px solid #334155; color:#cbd5e1; }
+  .badge.ok { background:rgba(16,185,129,0.14); border-color:#10b981; color:#34d399; }
+  .badge.warn { background:rgba(245,158,11,0.14); border-color:#f59e0b; color:#fbbf24; }
+  .badge.danger { background:rgba(239,68,68,0.16); border-color:#ef4444; color:#f87171; }
+  .dot { width:8px; height:8px; border-radius:50%; background:#64748b; display:inline-block; }
+  .dot.ok { background:#10b981; box-shadow:0 0 8px #10b981; }
+  .dot.err { background:#ef4444; box-shadow:0 0 8px #ef4444; }
+  .screen-switch { display:flex; gap:6px; background:#0b1220; padding:4px; border-radius:10px; border:1px solid #26354d; }
+  .screen-btn { background:transparent; color:#94a3b8; border:none; border-radius:8px; padding:6px 12px; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all .15s; }
+  .screen-btn:hover { color:#e2e8f0; background:#1e293b; }
+  .screen-btn.active { background:#0284c7; color:#fff; box-shadow:0 2px 8px rgba(2,132,199,0.35); }
+  .screen-btn.cl-running { background:#b91c1c; color:#fff; animation:pulseCl 1.8s infinite; }
+  @keyframes pulseCl { 0%,100% { box-shadow:0 0 0 0 rgba(239,68,68,0.55); } 50% { box-shadow:0 0 0 6px rgba(239,68,68,0); } }
+
+  .grid { display:grid; grid-template-columns: 340px minmax(0, 1fr); gap:14px; max-width:1460px; margin:auto; }
+  @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+  .col-right { display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .card { background:#151f32; border:1px solid #26354d; border-radius:14px; padding:14px; min-width:0; }
+  .card-hd { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  h2,h3 { margin:0; font-size:15px; color:#38bdf8; }
+  .sub { font-size:12px; color:#94a3b8; }
+
+  /* Remote Control Widget */
+  .remote { background:#eef2f6; color:#0f172a; border-radius:26px; padding:15px; box-shadow:0 12px 30px rgba(0,0,0,0.45); position:relative; }
+  .remote.is-off .lcd { background:#8b978f; }
+  .remote.is-cl { box-shadow:0 0 0 2px #ef4444, 0 12px 30px rgba(239,68,68,0.28); }
+  .lcd { background:#9aa89e; border:3px solid #475569; border-radius:10px; padding:8px 10px; margin-bottom:12px; font-family:ui-monospace, monospace; color:#0f172a; transition:background .2s; }
+  .lcd-icons { display:flex; justify-content:space-between; font-size:10px; font-weight:800; border-bottom:1px solid rgba(15,23,42,0.2); padding-bottom:3px; margin-bottom:4px; }
+  .lcd-icons span { opacity:0.22; } .lcd-icons span.lit { opacity:1; background:#0f172a; color:#9aa89e; padding:0 4px; border-radius:3px; }
+  .lcd-main { display:flex; justify-content:space-between; align-items:center; min-height:54px; }
+  .lcd-temp-wrap { display:flex; flex-direction:column; align-items:flex-end; line-height:1; }
+  .lcd-rtag { font-size:9.5px; font-weight:900; background:#0f172a; color:#9aa89e; padding:1px 5px; border-radius:3px; margin-bottom:3px; letter-spacing:0.5px; display:none; }
+  .lcd-rtag.show { display:inline-block; }
+  .lcd-temp { font-size:38px; font-weight:800; line-height:1; }
+  .lcd-unit { font-size:18px; font-weight:800; }
+  .lcd-bot { display:flex; justify-content:space-between; font-size:10px; font-weight:800; border-top:1px solid rgba(15,23,42,0.2); padding-top:3px; margin-top:4px; }
+  .lcd-bot span { opacity:0.22; } .lcd-bot span.lit { opacity:1; }
+  .r-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:8px; align-items:center; }
+  .r-btn { background:#ffffff; color:#0f172a; border:1px solid #94a3b8; border-radius:10px; padding:8px 4px; font-size:10.5px; font-weight:700; cursor:pointer; box-shadow:0 2px 0 #94a3b8; text-align:center; user-select:none; transition:all .12s; }
+  .r-btn:active { transform:translateY(1px); box-shadow:none; }
+  .r-btn.on { background:#0284c7; color:#fff; border-color:#0369a1; }
+  .r-btn.warn { background:#dc2626; color:#fff; border-color:#b91c1c; }
+  .r-btn.cl-locked { opacity:0.42; cursor:not-allowed; background:#e2e8f0; }
+  .r-pwr { background:#6ee7b7; color:#064e3b; border:2px solid #10b981; border-radius:50%; width:48px; height:48px; margin:auto; font-weight:800; font-size:18px; cursor:pointer; box-shadow:0 3px 0 #059669; }
+  .r-pwr.off { background:#cbd5e1; color:#334155; border-color:#64748b; box-shadow:0 3px 0 #64748b; }
+  .r-pwr.cl-locked { opacity:0.5; cursor:not-allowed; }
+  .dpad { display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:38px 44px 38px; gap:6px; margin:10px 0; align-items:center; }
+  .r-dot { width:24px; height:24px; border-radius:50%; margin:auto; padding:0; display:block; }
+  .r-small-lbl { font-size:10px; text-align:center; font-weight:800; color:#334155; margin-top:3px; }
+  .cl-guard-note { display:none; background:#fef2f2; color:#991b1b; border:1px solid #fca5a5; border-radius:8px; padding:6px 8px; font-size:11px; font-weight:700; margin-bottom:10px; text-align:center; }
+  .remote.is-cl .cl-guard-note { display:block; }
+
+  /* Buttons & Inputs */
+  .row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; align-items:center; }
+  button.ui { background:#273549; color:#f8fafc; border:1px solid #3f526d; border-radius:8px; padding:6px 11px; cursor:pointer; font-size:12px; font-weight:600; transition:all .12s; }
+  button.ui:hover { background:#364964; }
+  button.ui.active { background:#0284c7; border-color:#38bdf8; }
+  button.ui.primary { background:#059669; border-color:#10b981; }
+  button.ui.primary:hover { background:#047857; }
+  button.ui.danger { background:#b91c1c; border-color:#ef4444; }
+  button.ui.danger:hover { background:#991b1b; }
+  button.ui.warn { background:#b45309; border-color:#f59e0b; }
+  button.ui.accent { background:#0369a1; border-color:#38bdf8; }
+  button.ui:disabled { opacity:0.45; cursor:not-allowed; }
+  select, input { background:#0b1220; color:#f8fafc; border:1px solid #3f526d; border-radius:8px; padding:6px 8px; font-size:12px; }
+
+  /* Sensor Grid */
+  .kv { display:grid; grid-template-columns:repeat(auto-fit, minmax(168px, 1fr)); gap:8px; font-size:12px; }
+  .kv-item { background:#0b1220; padding:8px 10px; border-radius:8px; border:1px solid #1e293b; border-left:3px solid #334155; display:flex; flex-direction:column; gap:4px; }
+  .kv-k { font-size:10.5px; color:#94a3b8; font-weight:600; letter-spacing:0.2px; }
+  .kv-v { font-size:14px; font-weight:700; color:#e2e8f0; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11.5px; font-weight:700; line-height:1.3; }
+  .fan-bars { display:inline-flex; align-items:flex-end; gap:2px; height:12px; }
+  .fan-bars i { display:block; width:3px; border-radius:1px; background:#334155; }
+  .fan-bars i.on { background:currentColor; }
+
+  /* CL Completion Banner (Standard Screen) */
+  .cl-done-banner { display:none; background:linear-gradient(135deg, rgba(16,185,129,0.16), rgba(2,132,199,0.14)); border:1px solid #10b981; border-radius:14px; padding:14px; }
+  .cl-done-banner.show { display:block; }
+  .cl-done-banner.cancelled { background:linear-gradient(135deg, rgba(245,158,11,0.16), rgba(30,41,59,0.7)); border-color:#f59e0b; }
+
+  /* Dedicated Self-Clean (CL) Screen */
+  .cl-hero { background:linear-gradient(135deg, #172554, #1e1b4b); border:1px solid #38bdf8; border-radius:14px; padding:16px; }
+  .cl-hero.idle { background:linear-gradient(135deg, #0f172a, #172554); border-color:#334155; }
+  .progress-track { height:10px; background:#0b1220; border-radius:999px; overflow:hidden; border:1px solid #334155; margin:10px 0; }
+  .progress-fill { height:100%; background:linear-gradient(90deg, #38bdf8, #2dd4bf, #34d399); transition:width .4s ease; }
+  .stepper { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin:12px 0; }
+  @media (max-width: 720px) { .stepper { grid-template-columns:1fr; } }
+  .step { background:#0b1220; border:1px solid #26354d; border-radius:10px; padding:8px; text-align:center; font-size:11.5px; color:#64748b; }
+  .step.done { border-color:#10b981; color:#34d399; background:rgba(16,185,129,0.1); }
+  .step.now { border-color:#38bdf8; color:#e0f2fe; background:rgba(56,189,248,0.16); box-shadow:0 0 0 1px #38bdf8; font-weight:700; }
+  .step-ic { font-size:17px; display:block; margin-bottom:3px; }
+
+  .post-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:8px; margin-top:8px; }
+  .post-opt { background:#0b1220; border:1px solid #334155; border-radius:10px; padding:10px 12px; cursor:pointer; text-align:left; color:#cbd5e1; transition:all .15s; }
+  .post-opt:hover { border-color:#38bdf8; background:#132036; }
+  .post-opt.selected { border-color:#10b981; background:rgba(16,185,129,0.14); color:#f8fafc; box-shadow:0 0 0 1px #10b981; }
+  .post-opt-title { font-size:12.5px; font-weight:700; margin-bottom:3px; display:flex; align-items:center; justify-content:space-between; }
+  .post-opt-desc { font-size:11px; color:#94a3b8; line-height:1.35; }
+
+  /* Tabs */
+  .tabs { display:flex; gap:6px; flex-wrap:wrap; border-bottom:1px solid #26354d; padding-bottom:8px; margin-bottom:10px; }
+  .tab-btn { background:transparent; color:#94a3b8; border:1px solid transparent; border-radius:8px; padding:6px 11px; font-size:12px; font-weight:700; cursor:pointer; }
+  .tab-btn:hover { color:#e2e8f0; background:#1e293b; }
+  .tab-btn.active { background:#0284c7; color:#fff; border-color:#38bdf8; }
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+
+  /* Logs & Tables */
+  pre { background:#020617; padding:10px; border-radius:8px; overflow:auto; max-height:360px; font-size:11.5px; color:#a7f3d0; white-space:pre-wrap; word-break:break-all; margin:0; }
+  .log-item { border-bottom:1px solid #26354d; padding:6px 0; font-family:ui-monospace, monospace; font-size:11.5px; white-space:pre-wrap; word-break:break-all; overflow-wrap:anywhere; line-height:1.4; }
+  .tx { color:#fbbf24; } .rx { color:#34d399; } .err { color:#f87171; } .cl-ev { color:#38bdf8; font-weight:700; }
+  .diff-badge { background:#7c2d12; border:1px solid #f97316; padding:6px 8px; border-radius:6px; margin-bottom:6px; font-family:monospace; font-size:12px; word-break:break-all; }
+  table.tbl { width:100%; border-collapse:collapse; font-size:12px; }
+  table.tbl th { color:#94a3b8; text-align:left; border-bottom:1px solid #334155; padding:6px 8px; font-weight:700; }
+  table.tbl td { border-bottom:1px solid #1e293b; padding:6px 8px; vertical-align:top; }
+
+  /* Toast */
+  #toast { position:fixed; bottom:18px; right:18px; background:#0f172a; color:#f8fafc; border:1px solid #38bdf8; border-radius:10px; padding:10px 14px; font-size:12.5px; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,0.5); opacity:0; pointer-events:none; transform:translateY(10px); transition:all .2s; z-index:99; max-width:380px; }
+  #toast.show { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-title">Haier HSU-15VQRA03T Studio</span>
+    <span class="badge" id="connBadge"><i class="dot" id="connDot"></i> <span id="devInfo">Scanning COM...</span></span>
+    <span class="badge" id="healthBadge" title="UART Frame Health">RX: --</span>
+  </div>
+  <div class="screen-switch">
+    <button class="screen-btn active" id="navStandard" onclick="switchScreen('standard', true)">🎛️ หน้ามาตรฐาน (Standard)</button>
+    <button class="screen-btn" id="navCL" onclick="switchScreen('cl', true)">❄️ โหมดล้างคอยล์ (CL) <span id="navClTag"></span></button>
+  </div>
+</div>
+
+<div class="grid">
+  <!-- LEFT COLUMN: Serial Controls + Physical Remote Emulator + Smart Shortcuts -->
+  <div>
+    <div class="card" style="margin-bottom:10px;">
+      <div class="row">
+        <button class="ui primary" onclick="autoDetect()">Auto-Detect</button>
+        <button class="ui" onclick="pollAll()">Poll</button>
+        <button class="ui warn" onclick="reconnectCom()" title="Reconnect COM port without deleting logs">Reconnect</button>
+      </div>
+      <div class="row" style="margin-bottom:0;">
+        <select id="portSel" style="flex:1"></select>
+        <button class="ui" onclick="connectPort()">Connect</button>
+      </div>
+    </div>
+
+    <div class="remote" id="remoteBox">
+      <div class="cl-guard-note" id="clGuardNote">❄️ กำลังล้างคอยล์ (CL) — ปุ่มโหมดถูกล็อกชั่วคราว<br>เสร็จแล้วจะคืนค่าและรีเซ็ตปุ่มอัตโนมัติ</div>
+
+      <div class="lcd">
+        <div class="lcd-icons">
+          <span id="iAuto">AUTO</span>
+          <span id="iCool">❄COOL</span>
+          <span id="iDry">💧DRY</span>
+          <span id="iFan">❋FAN</span>
+          <span id="iLock">🔒</span>
+          <span id="iPwr">OFF</span>
+        </div>
+        <div class="lcd-main">
+          <div style="font-size:10.5px;font-weight:800;">
+            <div id="lcdSwing">V:-- | H:--</div>
+            <div id="lcdFan">FAN: --</div>
+            <div id="lcdTimer" style="color:#7c2d12;"></div>
+            <div id="lcdExtra" style="color:#1e3a8a;"></div>
+          </div>
+          <div class="lcd-temp-wrap">
+            <span id="tempTag" class="lcd-rtag">ROOM</span>
+            <div class="lcd-temp"><span id="tempVal">--</span><span id="tempUnit" class="lcd-unit">°C</span></div>
+          </div>
+        </div>
+        <div class="lcd-bot">
+          <span id="iQuiet">QUIET</span>
+          <span id="iTurbo">TURBO</span>
+          <span id="iSleep">SLEEP</span>
+          <span id="iHealth">UV/LEAF</span>
+          <span id="iClean">CL</span>
+          <span id="iEco">ECO</span>
+        </div>
+      </div>
+
+      <div class="r-row" style="grid-template-columns:1fr 1fr;">
+        <button class="r-btn cl-lockable" id="btnTurboQuiet" onclick="guarded(()=>cycleTurboQuiet())">TURBO / QUIET</button>
+        <button class="r-pwr cl-lockable" id="btnPower" onclick="guarded(()=>togglePower())">⏻</button>
+      </div>
+
+      <div class="r-row">
+        <button class="r-btn cl-lockable" id="btnCool" onclick="guarded(()=>setVal('ac_mode','COOL'))">COOL</button>
+        <button class="r-btn" id="btnClean" onclick="toggleClean()">SELF CLEAN<br>(CL)</button>
+        <button class="r-btn cl-lockable" id="btnEco" onclick="guarded(()=>cycleEco())">ECO<br>(L1-L3)</button>
+      </div>
+
+      <div class="dpad">
+        <div></div>
+        <button class="r-btn cl-lockable" onclick="guarded(()=>chgTemp(1))">TEMP ▲</button>
+        <div></div>
+        <button class="r-btn cl-lockable" onclick="guarded(()=>cycleHSwing())">◄►<br>SWING</button>
+        <button class="r-btn cl-lockable" id="btnFanStep" onclick="guarded(()=>cycleFan3())">FAN<br>❋</button>
+        <button class="r-btn cl-lockable" onclick="guarded(()=>cycleVSwing())">▲▼<br>SWING</button>
+        <div></div>
+        <button class="r-btn cl-lockable" onclick="guarded(()=>chgTemp(-1))">TEMP ▼</button>
+        <div></div>
+      </div>
+
+      <div class="r-row">
+        <button class="r-btn cl-lockable" id="btnDry" onclick="guarded(()=>setVal('ac_mode','DRY'))">DRY</button>
+        <button class="r-btn cl-lockable" id="btnSleep" onclick="guarded(()=>toggleBool('sleep_mode'))">SLEEP</button>
+        <button class="r-btn cl-lockable" id="btnExtra" onclick="guarded(()=>cycleExtra())">EXTRA<br>FUNCTION</button>
+      </div>
+
+      <div class="r-row">
+        <button class="r-btn cl-lockable" id="btnTimeOn" onmousedown="guarded(()=>startHoldTimer('ON'))" onmouseup="stopHoldTimer()" onmouseleave="stopHoldTimer()">TIME<br>ON</button>
+        <button class="r-btn cl-lockable" id="btnTimeOff" onmousedown="guarded(()=>startHoldTimer('OFF'))" onmouseup="stopHoldTimer()" onmouseleave="stopHoldTimer()">TIME<br>OFF</button>
+        <button class="r-btn cl-lockable" id="btnConfirm" onclick="guarded(()=>confirmOrCancel())">CONFIRM<br>CANCEL</button>
+      </div>
+
+      <div class="r-row" style="margin-top:10px;margin-bottom:0;">
+        <div><button class="r-btn r-dot" id="btnLock" onclick="toggleBool('lock_remote')"></button><div class="r-small-lbl">LOCK</div></div>
+        <div><button class="r-btn r-dot" id="btnLight" onclick="toggleBool('display_status')"></button><div class="r-small-lbl">LIGHT</div></div>
+        <div><button class="r-btn r-dot cl-lockable" onclick="guarded(()=>resetAC())"></button><div class="r-small-lbl">RESET</div></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:10px;">
+      <div class="card-hd"><h3>ปุ่มเสริม &amp; ระบบอัจฉริยะ hOn</h3></div>
+      <div class="row" style="margin-bottom:0;">
+        <button class="ui cl-lockable" onclick="guarded(()=>setVal('ac_mode','FAN'))">Fan Only</button>
+        <button class="ui cl-lockable" onclick="guarded(()=>setVal('fan_mode','AUTO'))">Fan Auto</button>
+        <button class="ui cl-lockable" onclick="guarded(()=>setVal('ac_mode','AUTO'))">Auto</button>
+        <button class="ui accent" id="btnHealth" onclick="toggleBool('health_mode')">UV / Health</button>
+        <button class="ui accent" id="btnMute" onclick="toggleBool('beeper_muted')">Mute Beeper</button>
+        <button class="ui primary cl-lockable" onclick="guarded(()=>dryAndOff())">Dry &amp; Off (10น.➔ปิด)</button>
+        <button class="ui" onclick="checkAlarms()">Alarms (0x73)</button>
+        <button class="ui active" id="btnSync" onclick="toggleAutoSync()">Auto-Sync: ON</button>
+        <button class="ui" id="btnSmart" onclick="toggleSmartRule()">Auto-ECO ≤27°C: OFF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Dual-Screen Workspace (Standard Screen vs Dedicated CL Screen) -->
+  <div class="col-right">
+
+    <!-- ==================== VIEW 1: STANDARD SCREEN ==================== -->
+    <div id="viewStandard" style="display:flex;flex-direction:column;gap:14px;">
+
+      <!-- Auto-shown when CL finishes or is cancelled and bounces back to Standard Screen -->
+      <div class="cl-done-banner" id="clDoneBanner">
+        <div class="card-hd" style="margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span id="clDoneTitle" style="font-size:15px;font-weight:800;color:#34d399;">✅ Self-Clean (CL) เสร็จสมบูรณ์ — กลับสู่หน้ามาตรฐานและรีเซ็ตปุ่มแล้ว</span>
+            <span class="badge ok" id="clDoneDur">--</span>
+          </div>
+          <button class="ui" onclick="ackClDone()">ปิดแจ้งเตือน</button>
+        </div>
+        <div id="clDoneDetail" style="font-size:12.5px;color:#e2e8f0;line-height:1.5;margin-bottom:10px;"></div>
+        <div class="row" style="margin-bottom:0;">
+          <button class="ui accent" onclick="quickCool25()">❄ เปิด COOL 25°C (AUTO)</button>
+          <button class="ui primary" onclick="dryAndOff()">💨 เป่าคอยล์เพิ่ม 10น. ➔ ปิด</button>
+          <button class="ui" onclick="switchScreen('cl', true)">📊 ดูประวัติ CL ทั้งหมด</button>
+        </div>
+      </div>
+
+      <!-- Live Sensors Card -->
+      <div class="card">
+        <div class="card-hd">
+          <h2>Live AC Status &amp; Diagnostic Sensors (HSU-15VQRA03T / TF)</h2>
+          <span class="sub" id="postClMiniInfo"></span>
+        </div>
+        <div class="kv" id="sensorGrid">Waiting for Auto-Detect / Poll...</div>
+      </div>
+
+      <!-- Tabbed Workspace Card -->
+      <div class="card">
+        <div class="tabs">
+          <button class="tab-btn active" id="tabBtnLogs" onclick="switchTab('logs')">📜 Live Frame Log</button>
+          <button class="tab-btn" id="tabBtnClHist" onclick="switchTab('clhist')">❄️ ประวัติ CL &amp; ค่าหลังจบ CL</button>
+          <button class="tab-btn" id="tabBtnDiff" onclick="switchTab('diff')">🔬 Remote Diff Scanner</button>
+          <button class="tab-btn" id="tabBtnDht" onclick="switchTab('dht')">🌡️ Xiaomi BLE / Sensor Log</button>
+          <button class="tab-btn" id="tabBtnTable" onclick="switchTab('table')">📋 Protocol Table</button>
+        </div>
+
+        <!-- TAB: Live Logs -->
+        <div class="tab-pane active" id="paneLogs">
+          <div class="row" style="justify-content:space-between;">
+            <div class="row" style="margin-bottom:0;">
+              <button class="ui active" id="fltAll" onclick="setLogFilter('all')">All</button>
+              <button class="ui" id="fltCmd" onclick="setLogFilter('commands')">Commands / Events</button>
+              <button class="ui" id="fltCl" onclick="setLogFilter('cl')">CL Only</button>
+              <button class="ui" id="fltErr" onclick="setLogFilter('errors')">Recovered / Errors</button>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+              <button class="ui" onclick="loadLogs()">Refresh</button>
+              <button class="ui danger" onclick="clearLogs()">Clear Logs</button>
+            </div>
+          </div>
+          <div id="logBox" style="max-height:360px;overflow:auto;"></div>
+        </div>
+
+        <!-- TAB: CL History & Default Post-CL Policy -->
+        <div class="tab-pane" id="paneClHist">
+          <div style="margin-bottom:12px;">
+            <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px;">⚙️ ตั้งค่าเริ่มต้น: ทำ CL เสร็จแล้วให้ทำยังไงต่ออัตโนมัติ?</div>
+            <div class="post-grid" id="stdPostActionGrid"></div>
+          </div>
+          <div class="card-hd" style="margin-top:12px;">
+            <h3>ประวัติการล้างคอยล์ (Self-Clean History)</h3>
+            <button class="ui" onclick="loadClHistory()">Refresh</button>
+          </div>
+          <div id="stdClHistoryBox" style="max-height:280px;overflow:auto;"></div>
+        </div>
+
+        <!-- TAB: Remote Diff Scanner -->
+        <div class="tab-pane" id="paneDiff">
+          <div class="row">
+            <button class="ui primary" onclick="setBaseline()">1. Set Baseline</button>
+            <button class="ui" id="btnScan" onclick="toggleScan()">2. Start Live Diff Scan</button>
+            <input id="diffLabel" placeholder="เช่น ECO_L1, ECO_L2, Extra_UV" style="width:200px" />
+            <button class="ui" onclick="saveDiff()">3. Save Diff</button>
+            <button class="ui" onclick="showSavedDiffs()">Saved Map</button>
+          </div>
+          <div id="diffBox" style="font-size:12px;color:#94a3b8;margin-bottom:8px;">กด "1. Set Baseline" ➔ กด "2. Start Live Diff Scan" ➔ กดปุ่มบนรีโมทจริง 1 ครั้ง</div>
+          <div id="savedDiffBox"></div>
+        </div>
+
+        <!-- TAB: ESP32 DHT Log -->
+        <div class="tab-pane" id="paneDht">
+          <div class="row" style="justify-content:space-between;">
+            <div class="row" style="margin-bottom:0;">
+              <input id="dhtIpInput" value="192.168.1.25" style="width:130px" />
+              <button class="ui" onclick="setDhtIp()">Set IP</button>
+              <button class="ui" onclick="loadDhtLogs()">Refresh</button>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+              <a href="/api/ext_dht/logs.csv" target="_blank"><button class="ui">Download CSV</button></a>
+              <button class="ui danger" onclick="clearDhtLogs()">Clear</button>
+            </div>
+          </div>
+          <div id="dhtLogBox" style="max-height:310px;overflow:auto;font-size:12px;"></div>
+        </div>
+
+        <!-- TAB: Protocol Table -->
+        <div class="tab-pane" id="paneTable">
+          <pre id="protocolTablePre">Loading...</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 2: DEDICATED SELF-CLEAN (CL) SCREEN ==================== -->
+    <div id="viewCL" style="display:none;flex-direction:column;gap:14px;">
+
+      <!-- Hero Card: Active CL Progress OR Pre-Flight Launcher -->
+      <div class="cl-hero" id="clHeroBox">
+        <div class="card-hd" style="margin-bottom:6px;">
+          <div>
+            <h2 id="clHeroTitle" style="font-size:17px;color:#38bdf8;">❄️ ระบบล้างคอยล์อัตโนมัติ (Self-Clean / CL)</h2>
+            <div id="clHeroDesc" class="sub" style="margin-top:3px;">ตรวจสอบสถานะและตั้งค่าการทำงานอัตโนมัติหลังล้างคอยล์เสร็จ</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="badge" id="clElapsedBadge">--</span>
+            <span class="badge" id="clEtaBadge">--</span>
+          </div>
+        </div>
+
+        <!-- Active CL Section -->
+        <div id="clActiveBody" style="display:none;">
+          <div class="progress-track"><div class="progress-fill" id="clProgressFill" style="width:5%"></div></div>
+
+          <div class="stepper">
+            <div class="step" id="st1"><span class="step-ic">⚡</span>1. เริ่มต้น<br><span style="font-size:10px;">Starting</span></div>
+            <div class="step" id="st2"><span class="step-ic">❄️</span>2. เคลือบน้ำแข็ง<br><span style="font-size:10px;">0°C (~12น.)</span></div>
+            <div class="step" id="st3"><span class="step-ic">💧</span>3. ละลายล้างคราบ<br><span style="font-size:10px;">Wash (~5น.)</span></div>
+            <div class="step" id="st4"><span class="step-ic">💨</span>4. เป่าคอยล์แห้ง<br><span style="font-size:10px;">Dry (~3น.)</span></div>
+            <div class="step" id="st5"><span class="step-ic">✅</span>5. คืนค่า &amp; รีเซ็ต<br><span style="font-size:10px;">กลับหน้ามาตรฐาน</span></div>
+          </div>
+
+          <div class="kv" id="clLiveMetricsGrid" style="margin-bottom:12px;"></div>
+
+          <div style="background:#0b1220;border:1px solid #26354d;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;">
+            <div><strong>📸 สถานะก่อนเริ่ม CL (Pre-CL Snapshot):</strong> <span id="clPreSnapTxt" style="color:#38bdf8;font-weight:700;">--</span></div>
+            <div style="color:#94a3b8;font-size:11.5px;margin-top:3px;">แหล่งสั่งงาน: <span id="clTriggerSrc">--</span> • เริ่มเมื่อ: <span id="clStartedAt">--</span> • เสร็จแล้วจะเด้งกลับหน้ามาตรฐานและรีเซ็ตปุ่มทั้งหมดอัตโนมัติ</div>
+          </div>
+
+          <div class="row" style="margin-bottom:0;">
+            <button class="ui danger" onclick="cancelCL('restore')">🛑 ยกเลิก CL &amp; คืนค่าก่อนทำ</button>
+            <button class="ui warn" onclick="cancelCL('dry_5m')">💨 ยกเลิก + เป่าแห้ง 5น. ➔ ปิด</button>
+            <button class="ui" onclick="cancelCL('power_off')">⏻ ยกเลิก &amp; ปิดเครื่องทันที</button>
+          </div>
+        </div>
+
+        <!-- Idle CL Launcher Section -->
+        <div id="clIdleBody" style="display:block;margin-top:10px;">
+          <div style="background:#0b1220;border:1px solid #26354d;border-radius:10px;padding:12px;margin-bottom:12px;font-size:12.5px;line-height:1.5;">
+            <div><strong>สถานะแอร์ปัจจุบัน:</strong> <span id="clCurrentAcSummary" style="color:#34d399;font-weight:700;">--</span></div>
+            <div style="color:#94a3b8;font-size:11.5px;margin-top:4px;">เมื่อกดเริ่ม CL ระบบจะบันทึกสถานะปัจจุบันเก็บไว้ (รองรับทั้งเริ่มจากตอนปิดเครื่อง OFF หรือตอนเปิดเครื่อง ON) พอครบ ~20 นาทีจะเด้งกลับหน้ามาตรฐาน รีเซ็ตปุ่มทั้งหมด และทำงานตามคำสั่งด้านล่างให้อัตโนมัติ</div>
+          </div>
+          <div class="row" style="margin-bottom:0;">
+            <button class="ui primary" style="padding:9px 16px;font-size:13px;" onclick="startCL()">❄️ เริ่มล้างคอยล์อัตโนมัติ (Start Self-Clean CL)</button>
+            <button class="ui" onclick="switchScreen('standard', true)">← กลับหน้ามาตรฐาน</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post-CL Action Selector Card (Live editable before OR during CL!) -->
+      <div class="card">
+        <div class="card-hd">
+          <h2>🎯 ทำ CL เสร็จแล้วทำยังไงต่อ? (Post-CL Auto-Action)</h2>
+          <span class="sub">เปลี่ยนได้ทันทีแม้ระหว่างเครื่องกำลังล้างคอยล์</span>
+        </div>
+        <div class="post-grid" id="clPostActionGrid"></div>
+      </div>
+
+      <!-- CL History Card -->
+      <div class="card">
+        <div class="card-hd">
+          <h2>📊 ประวัติการล้างคอยล์ (Self-Clean History)</h2>
+          <button class="ui" onclick="loadClHistory()">Refresh</button>
+        </div>
+        <div id="clHistoryBox" style="max-height:280px;overflow:auto;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let curState = {}, curBigData = {}, curCl = null, curStats = null;
+let scanTimer = null, lastUserDiffs = [], lastBigDiffs = [], lastRawUser = '';
+let pendingExtra = null, pendingTimer = null, holdInt = null, activeTimerInfo = null;
+let autoSyncState = true, smartRuleState = false, lastAlarms = {active_count: 0, active_alarms: []};
+let lastExtDht = null, activeScreen = 'standard', manualScreenOverride = false, activeTab = 'logs', logFilter = 'all';
+let prevClActive = null, lastSeenCompletionSeq = 0;
+
+const FAN3 = ['LOW','MID','HIGH'];
+const VSWING_ORDER = ['AUTO','MAX_UP','UP','CENTER','DOWN','HEALTH_UP'];
+const HSWING_ORDER = ['CENTER','LEFT','RIGHT','AUTO'];
+const EXTRA_LIST = [
+  {name:'FAN ONLY', fn:()=>setVal('ac_mode','FAN')},
+  {name:'UV / HEALTH', fn:()=>toggleBool('health_mode')},
+  {name:'AUTO MODE', fn:()=>setVal('ac_mode','AUTO')},
+];
+let extraIdx = -1;
+
+const POST_ACTION_META = [
+  {id:'restore_prev', icon:'🔄', title:'คืนค่าก่อนทำ CL (แนะนำ)', desc:'ถ้าก่อนหน้าไม่ได้เปิดเครื่อง (OFF) จะปิดเครื่องกลับให้เหมือนเดิม • ถ้าเปิด COOL/FAN อยู่จะคืนค่าเดิมให้ครบ'},
+  {id:'power_off',    icon:'⏻',  title:'ปิดเครื่องอัตโนมัติ (OFF)', desc:'เมื่อ CL เสร็จให้สั่งปิดแอร์ทันทีทุกครั้ง ไม่ว่าก่อนทำจะเปิดหรือปิดอยู่'},
+  {id:'dry_off_10m',  icon:'💨', title:'เป่าคอยล์ต่อ 10น. ➔ ปิด', desc:'หลังจบ CL เปลี่ยนเป็น FAN HIGH เป่าไล่ความชื้นเพิ่ม 10 นาที แล้วตั้งเวลาปิดอัตโนมัติ'},
+  {id:'stay_on',      icon:'⏸️', title:'คงสถานะเดิมของแอร์ไว้', desc:'ไม่สั่งปิดหรือเปลี่ยนโหมดแอร์ รีเซ็ตเฉพาะปุ่มและเด้งกลับหน้ามาตรฐาน'},
+];
+
+let toastTimer = null;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.innerText = msg;
+  el.className = 'show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ el.className = ''; }, 3200);
+}
+
+function switchScreen(name, byUser=false){
+  activeScreen = name;
+  if(byUser) manualScreenOverride = true;
+  document.getElementById('viewStandard').style.display = name === 'standard' ? 'flex' : 'none';
+  document.getElementById('viewCL').style.display = name === 'cl' ? 'flex' : 'none';
+  updateTopNavButtons();
+  if(name === 'cl') loadClHistory();
+}
+
+function updateTopNavButtons(){
+  const clActive = Boolean(curCl && curCl.active) || Boolean(curState && curState.self_cleaning);
+  const bStd = document.getElementById('navStandard');
+  const bCl = document.getElementById('navCL');
+  bStd.className = 'screen-btn' + (activeScreen === 'standard' ? ' active' : '');
+  bCl.className = 'screen-btn' + (clActive ? ' cl-running' : (activeScreen === 'cl' ? ' active' : ''));
+  document.getElementById('navClTag').innerText = clActive ? '• ACTIVE' : '';
+}
+
+function switchTab(tab){
+  activeTab = tab;
+  const map = {logs:'Logs', clhist:'ClHist', diff:'Diff', dht:'Dht', table:'Table'};
+  for(const [k, suf] of Object.entries(map)){
+    document.getElementById('tabBtn'+suf).className = 'tab-btn' + (k === tab ? ' active' : '');
+    document.getElementById('pane'+suf).className = 'tab-pane' + (k === tab ? ' active' : '');
+  }
+  if(tab === 'logs') loadLogs();
+  else if(tab === 'clhist') loadClHistory();
+  else if(tab === 'dht') loadDhtLogs();
+  else if(tab === 'table') loadProtocolTable();
+}
+
+function setLogFilter(flt){
+  logFilter = flt;
+  document.getElementById('fltAll').className = 'ui' + (flt==='all'?' active':'');
+  document.getElementById('fltCmd').className = 'ui' + (flt==='commands'?' active':'');
+  document.getElementById('fltCl').className = 'ui' + (flt==='cl'?' active':'');
+  document.getElementById('fltErr').className = 'ui' + (flt==='errors'?' active':'');
+  loadLogs();
+}
+
+function resetAllRemoteUiState(){
+  pendingExtra = null;
+  pendingTimer = null;
+  extraIdx = -1;
+  stopHoldTimer();
+  manualScreenOverride = false;
+  document.getElementById('remoteBox').classList.remove('is-cl');
+  document.querySelectorAll('.cl-lockable').forEach(el => el.classList.remove('cl-locked'));
+}
+
+function isClLocked(){
+  return Boolean(curState && curState.self_cleaning) || Boolean(curCl && curCl.active);
+}
+
+function guarded(fn){
+  if(isClLocked()){
+    showToast('❄️ กำลังทำ Self-Clean (CL) — กด CANCEL CL หากต้องการยกเลิกก่อน');
+    return;
+  }
+  fn();
+}
+
+async function loadPorts(){
+  const r = await fetch('/api/ports').then(x=>x.json());
+  document.getElementById('portSel').innerHTML = r.ports.map(p=>`<option value="${p.device}" ${p.device===r.current?'selected':''}>${p.device} (${p.desc||''})</option>`).join('');
+}
+
+async function autoDetect(){
+  document.getElementById('devInfo').innerText = 'Scanning COM...';
+  const r = await fetch('/api/auto_detect',{method:'POST'}).then(x=>x.json());
+  await loadPorts();
+  if(r.ok){
+    document.getElementById('devInfo').innerText = `${r.selected} | ${r.device.device_name} | ${r.device.protocol_version}`;
+    pollAll();
+  } else {
+    document.getElementById('devInfo').innerText = 'No AC found';
+    showToast('ไม่พบแอร์บน COM port — ตรวจสอบสาย USB-TTL');
+  }
+}
+
+async function connectPort(){
+  const port = document.getElementById('portSel').value;
+  await fetch('/api/connect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({port})});
+  pollAll();
+}
+
+async function reconnectCom(){
+  document.getElementById('devInfo').innerText = 'Reconnecting...';
+  const r = await fetch('/api/reconnect',{method:'POST'}).then(x=>x.json());
+  if(r.ok){
+    applyServerPayload(r);
+    showToast(`เชื่อมต่อ ${r.port} ใหม่เรียบร้อย (Log เดิมยังคงอยู่)`);
+  } else {
+    showToast('เชื่อมต่อ COM ไม่สำเร็จ');
+  }
+  loadLogs();
+}
+
+async function pollAll(){
+  const r = await fetch('/api/poll',{method:'POST'}).then(x=>x.json());
+  applyServerPayload(r);
+  loadLogs();
+}
+
+function setLit(id, cond){ document.getElementById(id).className = cond ? 'lit' : ''; }
+function tempColor(t){
+  if(t == null) return '#64748b';
+  if(t <= 5) return '#60a5fa';
+  if(t <= 24) return '#38bdf8';
+  if(t <= 28) return '#34d399';
+  if(t <= 33) return '#fbbf24';
+  return '#f87171';
+}
+function dischargeColor(t){
+  if(t == null) return '#64748b';
+  if(t < 50) return '#38bdf8';
+  if(t <= 90) return '#34d399';
+  if(t <= 102) return '#fbbf24';
+  return '#f87171';
+}
+function kvCard(label, html, accent='#334155', bg='#0b1220'){
+  return `<div class="kv-item" style="border-left-color:${accent};background:${bg}"><span class="kv-k">${label}</span><div class="kv-v">${html}</div></div>`;
+}
+function pill(txt, color, bg){
+  return `<span class="pill" style="color:${color};background:${bg}">${txt}</span>`;
+}
+function fanBarsHtml(fanMode, color){
+  const lvl = fanMode==='LOW' ? 1 : (fanMode==='MID' ? 2 : (fanMode==='HIGH'||fanMode==='AUTO' ? 3 : 0));
+  const hs = [4, 8, 12];
+  return `<span class="fan-bars" style="color:${color}">${hs.map((h,i)=>`<i class="${i<lvl?'on':''}" style="height:${h}px"></i>`).join('')}</span>`;
+}
+
+function applyServerPayload(r){
+  if(!r) return;
+  if(r.port && r.device && r.device.device_name){
+    document.getElementById('devInfo').innerText = `${r.port} | ${r.device.device_name} | ${r.device.protocol_version} | SW:${r.device.software_version}`;
+  }
+  const connected = r.connected !== undefined ? r.connected : Boolean(r.ok);
+  document.getElementById('connDot').className = 'dot ' + (connected ? 'ok' : 'err');
+  document.getElementById('connBadge').className = 'badge ' + (connected ? 'ok' : 'danger');
+
+  if(r.stats){
+    curStats = r.stats;
+    const rec = r.stats.rx_recovered_single_ff || 0;
+    const err = (r.stats.rx_raw_failed || 0) + (r.stats.serial_errors || 0);
+    const hb = document.getElementById('healthBadge');
+    hb.innerText = `RX:${r.stats.rx_ok||0} | RecFF:${rec} | Err:${err}`;
+    hb.className = 'badge ' + (err > 0 ? 'warn' : 'ok');
+  }
+  if(r.alarms) lastAlarms = r.alarms;
+  if(r.ext_dht) lastExtDht = r.ext_dht;
+  if(r.timer !== undefined) activeTimerInfo = r.timer || null;
+  if(r.auto_sync !== undefined){
+    autoSyncState = r.auto_sync;
+    const b = document.getElementById('btnSync');
+    b.innerText = 'Auto-Sync: ' + (autoSyncState ? 'ON' : 'OFF');
+    b.className = 'ui' + (autoSyncState ? ' active' : '');
+  }
+  if(r.smart_rule !== undefined){
+    smartRuleState = r.smart_rule;
+    const b = document.getElementById('btnSmart');
+    b.innerText = 'Auto-ECO ≤27°C: ' + (smartRuleState ? 'ON' : 'OFF');
+    b.className = 'ui' + (smartRuleState ? ' active' : '');
+  }
+  if(r.big_data && Object.keys(r.big_data).length) curBigData = r.big_data;
+  if(r.cl) handleClLifecycle(r.cl);
+  if(r.state && Object.keys(r.state).length) renderState(r.state, curBigData);
+  if(curCl) renderClViews(curCl);
+}
+
+function handleClLifecycle(cl){
+  const wasActive = prevClActive;
+  const isActive = Boolean(cl.active);
+  curCl = cl;
+
+  if(lastSeenCompletionSeq === 0 && cl.completion_seq > 0){
+    // First load after page open: initialize seq without fake transition toast unless unacked
+    lastSeenCompletionSeq = cl.unacked_completion ? cl.completion_seq - 1 : cl.completion_seq;
+  }
+
+  // Transition: IDLE/initial -> CL ACTIVE (auto-open CL screen!)
+  if(isActive && (wasActive === false || wasActive === null) && !manualScreenOverride){
+    manualScreenOverride = false;
+    switchScreen('cl', false);
+    if(wasActive === false){
+      showToast('❄️ เข้าสู่โหมดล้างคอยล์ (Self-Clean CL) — ล็อกปุ่มชั่วคราว');
+    }
+  }
+
+  // Transition: CL ACTIVE -> COMPLETED / CANCELLED (auto bounce-back to Standard Screen + full button reset!)
+  if(!isActive && ((wasActive === true) || (cl.completion_seq > lastSeenCompletionSeq && cl.unacked_completion))){
+    lastSeenCompletionSeq = cl.completion_seq;
+    resetAllRemoteUiState();
+    switchScreen('standard', false);
+    if(cl.last_completed){
+      const msg = cl.last_completed.status === 'cancelled'
+        ? `🛑 ยกเลิก CL แล้ว: ${cl.last_completed.post_action_summary}`
+        : `✅ CL เสร็จแล้ว (${cl.last_completed.duration_text}) ➔ ${cl.last_completed.post_action_summary}`;
+      showToast(msg);
+    }
+    loadClHistory();
+  }
+
+  prevClActive = isActive;
+  updateTopNavButtons();
+}
+
+function renderPostActionCards(containerId, selectedId){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML = POST_ACTION_META.map(o => `
+    <button type="button" class="post-opt ${o.id === selectedId ? 'selected' : ''}" onclick="setPostClAction('${o.id}')">
+      <div class="post-opt-title">
+        <span>${o.icon} ${o.title}</span>
+        <span>${o.id === selectedId ? '✓ เลือกอยู่' : ''}</span>
+      </div>
+      <div class="post-opt-desc">${o.desc}</div>
+    </button>
+  `).join('');
+}
+
+function renderClViews(cl){
+  const selectedPa = (cl.active && cl.session) ? cl.session.post_action : (cl.default_post_action || 'restore_prev');
+  renderPostActionCards('clPostActionGrid', selectedPa);
+  renderPostActionCards('stdPostActionGrid', selectedPa);
+
+  const paObj = POST_ACTION_META.find(x => x.id === selectedPa);
+  document.getElementById('postClMiniInfo').innerText = paObj ? `หลังจบ CL: ${paObj.icon} ${paObj.title}` : '';
+
+  // CL Done Banner on Standard Screen
+  const banner = document.getElementById('clDoneBanner');
+  if(!cl.active && cl.unacked_completion && cl.last_completed){
+    const lc = cl.last_completed;
+    const isCancel = lc.status === 'cancelled';
+    banner.className = 'cl-done-banner show' + (isCancel ? ' cancelled' : '');
+    document.getElementById('clDoneTitle').innerText = isCancel
+      ? '🛑 ยกเลิก Self-Clean (CL) — กลับหน้ามาตรฐานและรีเซ็ตปุ่มเรียบร้อย'
+      : '✅ Self-Clean (CL) เสร็จสมบูรณ์ — กลับหน้ามาตรฐานและรีเซ็ตปุ่มอัตโนมัติแล้ว';
+    document.getElementById('clDoneTitle').style.color = isCancel ? '#fbbf24' : '#34d399';
+    document.getElementById('clDoneDur').innerText = `ใช้เวลา ${lc.duration_text || '--'}`;
+    const m = lc.metrics || {};
+    document.getElementById('clDoneDetail').innerHTML =
+      `<div><strong>ก่อนทำ CL:</strong> ${lc.pre_cl_summary || '--'} &nbsp;➔&nbsp; <strong>ผลลัพธ์หลังจบ:</strong> <span style="color:#38bdf8;font-weight:700;">${lc.post_action_summary || '--'}</span></div>` +
+      `<div style="color:#94a3b8;font-size:11.5px;margin-top:3px;">สถิติรอบนี้: คอยล์ต่ำสุด <b>${m.min_coil_c ?? '--'}°C</b> • ท่ออัดสูงสุด <b>${m.peak_pipe_c ?? '--'}°C</b> • กำลังไฟสูงสุด <b>${m.peak_power_w ?? '--'} W</b> (${lc.started_at || ''} ➔ ${lc.finished_at || ''})</div>`;
+  } else {
+    banner.className = 'cl-done-banner';
+  }
+
+  // Dedicated CL Screen Hero
+  const hero = document.getElementById('clHeroBox');
+  const activeBody = document.getElementById('clActiveBody');
+  const idleBody = document.getElementById('clIdleBody');
+
+  if(cl.active && cl.session){
+    const s = cl.session;
+    hero.className = 'cl-hero';
+    activeBody.style.display = 'block';
+    idleBody.style.display = 'none';
+    document.getElementById('clHeroTitle').innerText = `❄️ กำลังล้างคอยล์: ${s.phase_label}`;
+    document.getElementById('clHeroDesc').innerText = s.phase_desc || '';
+    document.getElementById('clElapsedBadge').innerText = `ผ่านไป ${s.elapsed_text}`;
+    document.getElementById('clElapsedBadge').className = 'badge ok';
+    document.getElementById('clEtaBadge').innerText = `เหลือ ~${s.eta_text}`;
+    document.getElementById('clEtaBadge').className = 'badge warn';
+    document.getElementById('clProgressFill').style.width = `${Math.max(4, s.progress_pct || 0)}%`;
+
+    const curStep = s.phase_step || 1;
+    for(let i=1; i<=5; i++){
+      const stEl = document.getElementById('st'+i);
+      stEl.className = 'step' + (i < curStep ? ' done' : (i === curStep ? ' now' : ''));
+    }
+
+    document.getElementById('clPreSnapTxt').innerText = s.pre_cl_summary || '--';
+    document.getElementById('clTriggerSrc').innerText = s.trigger_source === 'remote_detected' ? 'รีโมทจริง (IR Remote)' : 'Web Studio';
+    document.getElementById('clStartedAt').innerText = s.started_at || '--';
+
+    const bd = curBigData || {};
+    const sens = (curState && curState.sensors) || {};
+    const coil = bd.indoor_coil_temp_c;
+    const coilBadge = coil != null && coil <= 2 ? pill('🧊 FROST', '#93c5fd', 'rgba(59,130,246,0.22)') : '';
+    const compOn = bd.compressor_status === 1;
+    const fanOn = bd.indoor_fan_status === 1;
+    document.getElementById('clLiveMetricsGrid').innerHTML = [
+      kvCard('คอยล์เย็น (Indoor Coil)', `<span style="color:${tempColor(coil)}">${coil != null ? coil+' °C' : '--'}</span> ${coilBadge}`, tempColor(coil)),
+      kvCard('เซนเซอร์หน้าคอยล์ (Room)', `<span style="color:${tempColor(sens.room_temp_c)}">${sens.room_temp_c != null ? sens.room_temp_c+' °C' : '--'}</span>`, tempColor(sens.room_temp_c)),
+      kvCard('ท่ออัดคอมฯ (Discharge)', `<span style="color:${dischargeColor(bd.outdoor_out_air_c)}">${bd.outdoor_out_air_c != null ? bd.outdoor_out_air_c+' °C' : '--'}</span>`, dischargeColor(bd.outdoor_out_air_c)),
+      kvCard('คอมเพรสเซอร์ (Comp)', `${pill(compOn?'ON':'OFF', compOn?'#38bdf8':'#94a3b8', compOn?'rgba(56,189,248,0.18)':'rgba(100,116,139,0.16)')} <span>${bd.compressor_freq_hz ?? 0} Hz</span>`, compOn?'#38bdf8':'#475569'),
+      kvCard('กำลังไฟ (Power / Amp)', `<span style="color:#fbbf24">${bd.power_w ?? 0} W</span> <span style="color:#94a3b8;font-size:12px">/ ${bd.compressor_current_a ?? 0} A</span>`, '#f59e0b'),
+      kvCard('พัดลมคอยล์เย็น (Indoor Fan)', pill(fanOn?'หมุนอยู่ (ON)':'หยุดหมุน (OFF)', fanOn?'#2dd4bf':'#fbbf24', fanOn?'rgba(45,212,191,0.16)':'rgba(245,158,11,0.16)'), fanOn?'#2dd4bf':'#f59e0b'),
+    ].join('');
+  } else {
+    hero.className = 'cl-hero idle';
+    activeBody.style.display = 'none';
+    idleBody.style.display = 'block';
+    document.getElementById('clHeroTitle').innerText = '❄️ ระบบล้างคอยล์อัตโนมัติ (Self-Clean / CL)';
+    document.getElementById('clHeroDesc').innerText = 'พร้อมใช้งาน • รอบการล้างปกติ ~20 นาที (เคลือบน้ำแข็ง 12น. ➔ ละลายล้าง 5น. ➔ เป่าแห้ง 3น.)';
+    document.getElementById('clElapsedBadge').innerText = 'IDLE';
+    document.getElementById('clElapsedBadge').className = 'badge';
+    document.getElementById('clEtaBadge').innerText = '~20 น.';
+    document.getElementById('clEtaBadge').className = 'badge';
+
+    const pwr = curState && curState.ac_power;
+    const summary = !curState || curState.ac_power === undefined
+      ? 'รอเชื่อมต่อแอร์...'
+      : (pwr
+          ? `เปิดเครื่อง (${curState.ac_mode}${curState.ac_mode!=='FAN'?' '+curState.target_temp+'°C':''} | Fan ${curState.fan_mode})`
+          : `ปิดเครื่อง (OFF) [โหมดเดิม: ${curState.ac_mode||'--'} ${curState.target_temp||'--'}°C]`);
+    document.getElementById('clCurrentAcSummary').innerText = summary;
+  }
+}
+
+function renderState(st, bd){
+  curState = st;
+  bd = bd || curBigData || {};
+  const s = st.sensors || {};
+  const isOn = Boolean(st.ac_power);
+  const isCl = Boolean(st.self_cleaning);
+
+  const rBox = document.getElementById('remoteBox');
+  rBox.classList.toggle('is-off', !isOn && !isCl);
+  rBox.classList.toggle('is-cl', isCl);
+  document.querySelectorAll('.cl-lockable').forEach(el => el.classList.toggle('cl-locked', isCl));
+
+  const tTag = document.getElementById('tempTag');
+  const tUnit = document.getElementById('tempUnit');
+  if(isCl){
+    const ph = (curCl && curCl.session && curCl.session.phase) ? curCl.session.phase : 'CLEAN';
+    tTag.innerText = ph; tTag.className = 'lcd-rtag show';
+    document.getElementById('tempVal').innerText = 'CL';
+    tUnit.innerText = '';
+  } else if(!isOn){
+    tTag.innerText = s.room_temp_c != null ? `ROOM ${s.room_temp_c}°C` : 'STANDBY';
+    tTag.className = 'lcd-rtag show';
+    document.getElementById('tempVal').innerText = 'OFF';
+    tUnit.innerText = '';
+  } else if(st.ac_mode === 'FAN'){
+    tTag.innerText = 'ROOM'; tTag.className = 'lcd-rtag show';
+    document.getElementById('tempVal').innerText = s.room_temp_c != null ? s.room_temp_c : '--';
+    tUnit.innerText = '°C';
+  } else {
+    tTag.className = 'lcd-rtag';
+    document.getElementById('tempVal').innerText = st.target_temp ?? '--';
+    tUnit.innerText = '°C';
+  }
+
+  document.getElementById('lcdFan').innerText = isOn ? ('FAN: ' + (st.fan_mode || '--')) : 'STANDBY';
+  document.getElementById('lcdSwing').innerText = isOn ? `V:${st.vertical_swing||'--'} | H:${st.horizontal_swing||'--'}` : `LAST: ${st.ac_mode||'--'} ${st.target_temp||'--'}°C`;
+
+  setLit('iAuto', isOn && st.ac_mode==='AUTO');
+  setLit('iCool', isOn && st.ac_mode==='COOL');
+  setLit('iDry',  isOn && st.ac_mode==='DRY');
+  setLit('iFan',  isOn && st.ac_mode==='FAN');
+  setLit('iLock', st.lock_remote);
+  setLit('iPwr',  isOn);
+  document.getElementById('iPwr').innerText = isOn ? 'ON' : 'OFF';
+  setLit('iQuiet',  isOn && st.quiet_mode);
+  setLit('iTurbo',  isOn && st.fast_mode);
+  setLit('iSleep',  isOn && st.sleep_mode);
+  setLit('iHealth', st.health_mode);
+  setLit('iClean',  isCl);
+  setLit('iEco',    isOn && (st.energy_saving || st.ac_mode==='ENERGY_SAVING'));
+
+  if(isCl && curCl && curCl.session){
+    document.getElementById('lcdExtra').innerText = `CL ${curCl.session.elapsed_text}`;
+  } else if(pendingExtra){
+    document.getElementById('lcdExtra').innerText = `[?] ${pendingExtra.name} (CONFIRM)`;
+  } else if(isOn && (st.eco_level || 0) > 0){
+    document.getElementById('lcdExtra').innerText = `ECO L${st.eco_level}`;
+  } else {
+    document.getElementById('lcdExtra').innerText = '';
+  }
+
+  if(pendingTimer) document.getElementById('lcdTimer').innerText = `SET ${pendingTimer.action}: ${pendingTimer.hours}h (CONFIRM?)`;
+  else if(activeTimerInfo) document.getElementById('lcdTimer').innerText = `${activeTimerInfo.label || ('TIMER '+activeTimerInfo.action)} @ ${activeTimerInfo.trigger_at}`;
+  else document.getElementById('lcdTimer').innerText = '';
+
+  // Button states (cleanly reset/unlit when AC is OFF!)
+  document.getElementById('btnPower').className = 'r-pwr cl-lockable' + (isOn ? '' : ' off') + (isCl ? ' cl-locked' : '');
+  document.getElementById('btnCool').className = 'r-btn cl-lockable' + (isOn && !isCl && st.ac_mode==='COOL' ? ' on' : '') + (isCl ? ' cl-locked' : '');
+  document.getElementById('btnDry').className = 'r-btn cl-lockable' + (isOn && !isCl && st.ac_mode==='DRY' ? ' on' : '') + (isCl ? ' cl-locked' : '');
+  document.getElementById('btnClean').className = 'r-btn' + (isCl ? ' warn' : '');
+  document.getElementById('btnClean').innerHTML = isCl ? 'CANCEL<br>CL' : 'SELF CLEAN<br>(CL)';
+  document.getElementById('btnEco').className = 'r-btn cl-lockable' + (isOn && !isCl && (st.eco_level||0)>0 ? ' on' : '') + (isCl ? ' cl-locked' : '');
+  document.getElementById('btnEco').innerHTML = (isOn && (st.eco_level||0)>0) ? `ECO<br>L${st.eco_level}` : 'ECO<br>(L1-L3)';
+  document.getElementById('btnSleep').className = 'r-btn cl-lockable' + (isOn && !isCl && st.sleep_mode ? ' on' : '') + (isCl ? ' cl-locked' : '');
+  document.getElementById('btnExtra').className = 'r-btn cl-lockable' + ((pendingExtra || (isOn && st.health_mode)) ? ' on' : '') + (isCl ? ' cl-locked' : '');
+  document.getElementById('btnTurboQuiet').className = 'r-btn cl-lockable' + (isOn && !isCl && (st.fast_mode||st.quiet_mode) ? ' on' : '') + (isCl ? ' cl-locked' : '');
+  document.getElementById('btnLock').className = 'r-btn r-dot' + (st.lock_remote ? ' on' : '');
+  document.getElementById('btnLight').className = 'r-btn r-dot' + (st.display_status ? ' on' : '');
+
+  document.getElementById('btnHealth').className = 'ui ' + (st.health_mode ? 'active' : 'accent');
+  document.getElementById('btnMute').className = 'ui ' + (st.beeper_muted ? 'warn' : 'accent');
+  document.getElementById('btnMute').innerText = st.beeper_muted ? 'Beeper: MUTED' : 'Mute Beeper';
+
+  const modeMap = {
+    COOL: ['#38bdf8', 'rgba(56,189,248,0.14)'],
+    FAN:  ['#2dd4bf', 'rgba(45,212,191,0.16)'],
+    DRY:  ['#fbbf24', 'rgba(251,191,36,0.14)'],
+    AUTO: ['#a78bfa', 'rgba(167,139,250,0.14)'],
+  };
+  const [mCol, mBg] = modeMap[st.ac_mode] || ['#94a3b8', 'rgba(148,163,184,0.12)'];
+  const fanMap = {
+    HIGH: ['#fb923c', 'rgba(251,146,60,0.15)'],
+    MID:  ['#2dd4bf', 'rgba(45,212,191,0.15)'],
+    LOW:  ['#38bdf8', 'rgba(56,189,248,0.15)'],
+    AUTO: ['#a78bfa', 'rgba(167,139,250,0.15)'],
+  };
+  const [fCol, fBg] = fanMap[st.fan_mode] || ['#94a3b8', 'rgba(148,163,184,0.12)'];
+  const pwrHtml = isOn ? pill('ON', '#34d399', 'rgba(16,185,129,0.18)') : pill('OFF', '#94a3b8', 'rgba(100,116,139,0.18)');
+  const rtC = tempColor(s.room_temp_c), otC = tempColor(s.outdoor_temp_c), icC = tempColor(bd.indoor_coil_temp_c), opC = dischargeColor(bd.outdoor_out_air_c);
+  const hz = bd.compressor_freq_hz, pw = bd.power_w, amp = bd.compressor_current_a;
+  const hzCol = (hz && hz > 0) ? '#38bdf8' : '#64748b';
+  const pwCol = (pw && pw > 0) ? '#fbbf24' : '#64748b';
+  const compOn = bd.compressor_status === 1, fanOn = bd.indoor_fan_status === 1;
+  const ecoLvl = st.eco_level || 0;
+  const almActive = lastAlarms.active_count > 0;
+
+  const cards = [
+    kvCard('Power', pwrHtml, isOn ? '#10b981' : '#475569'),
+    kvCard('Mode', pill(st.ac_mode || '--', mCol, mBg) + (!isOn ? ' <span style="font-size:11px;color:#64748b">(Standby)</span>' : ''), mCol),
+    kvCard('Fan Speed', pill(st.fan_mode || '--', fCol, fBg) + fanBarsHtml(st.fan_mode, fCol), fCol),
+    kvCard('Room Temp', `<span style="color:${rtC}">${s.room_temp_c != null ? s.room_temp_c+' °C' : '--'}</span>`, rtC),
+    kvCard('Outdoor Temp', `<span style="color:${otC}">${s.outdoor_temp_c != null ? s.outdoor_temp_c+' °C' : '--'}</span>`, otC),
+    kvCard('Indoor Coil', `<span style="color:${icC}">${bd.indoor_coil_temp_c != null ? bd.indoor_coil_temp_c+' °C' : '--'}</span>`, icC),
+    kvCard('Comp Discharge Pipe', `<span style="color:${opC}">${bd.outdoor_out_air_c != null ? bd.outdoor_out_air_c+' °C' : '--'}</span>`, opC),
+    kvCard('Comp Freq', `<span style="color:${hzCol}">${hz != null ? hz+' Hz' : '--'}</span>`, hzCol),
+    kvCard('Power / Amp', `<span style="color:${pwCol}">${pw ?? '--'} W</span> <span style="color:#94a3b8;font-size:12px">/ ${amp ?? '--'} A</span>`, pwCol),
+    kvCard('Comp / Fan',
+      (bd.compressor_status == null ? '--' : pill('Comp '+(compOn?'ON':'OFF'), compOn?'#38bdf8':'#64748b', compOn?'rgba(56,189,248,0.16)':'rgba(100,116,139,0.14)')) +
+      (bd.indoor_fan_status == null ? '' : pill('Fan '+(fanOn?'ON':'OFF'), fanOn?'#2dd4bf':'#64748b', fanOn?'rgba(45,212,191,0.16)':'rgba(100,116,139,0.14)')),
+      (compOn||fanOn) ? '#2dd4bf' : '#475569'),
+    kvCard('Self Clean (CL)', isCl ? pill((curCl && curCl.session ? curCl.session.phase : 'ACTIVE'), '#f87171', 'rgba(239,68,68,0.2)') : pill('OFF', '#64748b', 'rgba(100,116,139,0.14)'), isCl ? '#ef4444' : '#334155'),
+    kvCard('ECO Level', ecoLvl > 0 ? pill('L'+ecoLvl, '#34d399', 'rgba(16,185,129,0.18)') : pill('OFF', '#64748b', 'rgba(100,116,139,0.14)'), ecoLvl > 0 ? '#10b981' : '#334155'),
+    kvCard('Health / UV', st.health_mode ? pill('ON', '#c084fc', 'rgba(168,85,247,0.18)') : pill('OFF', '#64748b', 'rgba(100,116,139,0.14)'), st.health_mode ? '#a855f7' : '#334155'),
+    kvCard('Beeper / LED',
+      pill(st.beeper_muted?'MUTED':'SOUND', st.beeper_muted?'#fbbf24':'#94a3b8', st.beeper_muted?'rgba(251,191,36,0.16)':'rgba(100,116,139,0.14)') +
+      pill('LED '+(st.display_status?'ON':'OFF'), st.display_status?'#38bdf8':'#64748b', st.display_status?'rgba(56,189,248,0.16)':'rgba(100,116,139,0.14)'),
+      '#334155'),
+    kvCard('Source / Alarms',
+      pill(s.operation_source ?? '--', '#cbd5e1', 'rgba(148,163,184,0.14)') +
+      (almActive ? pill(`${lastAlarms.active_count} ALM!`, '#fca5a5', 'rgba(239,68,68,0.25)') : pill('0 OK', '#34d399', 'rgba(16,185,129,0.16)')),
+      almActive ? '#ef4444' : '#10b981'),
+  ];
+
+  if (lastExtDht && lastExtDht.ok && lastExtDht.data) {
+    const ed = lastExtDht.data;
+    const fmtExt = (sn, lbl) => {
+      if (!sn || !sn.ok) return kvCard(lbl, `<span style="color:#64748b">${sn ? sn.err : '--'}</span>`, '#475569');
+      const dT = (s.room_temp_c != null && sn.temp_c != null) ? (sn.temp_c - s.room_temp_c).toFixed(1) : null;
+      const dTxt = dT != null ? ` <span style="color:#94a3b8;font-size:11px">(Δ${dT > 0 ? '+'+dT : dT}°C)</span>` : '';
+      return kvCard(lbl, `<span style="color:${tempColor(sn.temp_c)}">${sn.temp_c}°C</span> <span style="color:#38bdf8;font-size:12px">/ ${sn.humidity_pct}%</span>${dTxt}`, tempColor(sn.temp_c));
+    };
+    const isXiaomi = ed.s1 && String(ed.s1.mode || '').startsWith('XIAOMI_BLE');
+    if (isXiaomi) {
+      const bTxt = (ed.s1.batt_pct != null && ed.s1.batt_pct >= 0) ? ` • ${ed.s1.batt_pct}%` : '';
+      cards.push(fmtExt(ed.s1, `Xiaomi BLE (${lastExtDht.ip}${bTxt})`));
+    } else {
+      cards.push(fmtExt(ed.s1, `ESP Sensor S1 (${lastExtDht.ip})`));
+      if (ed.s2 && ed.s2.err !== 'removed') cards.push(fmtExt(ed.s2, `ESP Sensor S2 (GPIO 3)`));
+    }
+  } else {
+    cards.push(kvCard(`ESP Xiaomi BLE (${lastExtDht ? lastExtDht.ip : '192.168.1.25'})`, '<span style="color:#64748b">Offline</span>', '#334155'));
+  }
+  document.getElementById('sensorGrid').innerHTML = cards.join('');
+}
+
+// ==================== CL ACTIONS ====================
+async function toggleClean(){
+  if(isClLocked()){
+    await cancelCL('restore');
+  } else {
+    await startCL();
+  }
+}
+
+async function startCL(){
+  const postAction = (curCl && curCl.default_post_action) || 'restore_prev';
+  showToast('❄️ กำลังเริ่ม Self-Clean (CL) และบันทึกสถานะเดิม...');
+  const r = await fetch('/api/cl/start',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({post_action: postAction}),
+  }).then(x=>x.json());
+  applyServerPayload(r);
+  if(r.ok){
+    manualScreenOverride = false;
+    switchScreen('cl', false);
+    showToast('❄️ เริ่มล้างคอยล์ (CL) เรียบร้อย — เสร็จแล้วจะคืนค่าและกลับหน้ามาตรฐานอัตโนมัติ');
+  } else {
+    showToast('⚠️ ' + (r.error || 'เริ่ม CL ไม่สำเร็จ'));
+  }
+  loadLogs();
+}
+
+async function cancelCL(mode='restore'){
+  showToast('🛑 กำลังยกเลิก CL และคืนสถานะ...');
+  const r = await fetch('/api/cl/cancel',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({mode}),
+  }).then(x=>x.json());
+  applyServerPayload(r);
+  resetAllRemoteUiState();
+  switchScreen('standard', false);
+  loadLogs();
+  loadClHistory();
+}
+
+async function setPostClAction(postAction){
+  const r = await fetch('/api/cl/config',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({post_action: postAction, apply_to_default: true}),
+  }).then(x=>x.json());
+  if(r.cl){
+    curCl = r.cl;
+    renderClViews(curCl);
+    const meta = POST_ACTION_META.find(x => x.id === postAction);
+    showToast(`บันทึกคำสั่งหลังจบ CL: ${meta ? meta.title : postAction}`);
+  }
+}
+
+async function ackClDone(){
+  const r = await fetch('/api/cl/ack',{method:'POST'}).then(x=>x.json());
+  if(r.cl){ curCl = r.cl; renderClViews(curCl); }
+}
+
+async function loadClHistory(){
+  try {
+    const r = await fetch('/api/cl/history?limit=25').then(x=>x.json());
+    const items = r.items || [];
+    const html = !items.length
+      ? '<div class="sub">ยังไม่มีประวัติการล้างคอยล์</div>'
+      : `<table class="tbl"><thead><tr><th>เวลาเริ่ม ➔ จบ</th><th>ระยะเวลา</th><th>สถานะ</th><th>ก่อนทำ CL</th><th>หลังจบ CL</th><th>คอยล์ต่ำสุด / ท่ออัด / วัตต์</th></tr></thead><tbody>` +
+        items.map(it => {
+          const m = it.metrics || {};
+          const stPill = it.status === 'completed'
+            ? pill('เสร็จสมบูรณ์', '#34d399', 'rgba(16,185,129,0.16)')
+            : pill('ยกเลิก', '#fbbf24', 'rgba(245,158,11,0.16)');
+          return `<tr>
+            <td style="font-family:monospace;font-size:11px;">${it.started_at||''}<br>➔ ${it.finished_at||''}</td>
+            <td><b>${it.duration_text||'--'}</b></td>
+            <td>${stPill}</td>
+            <td>${it.pre_cl_summary||'--'}</td>
+            <td style="color:#38bdf8;">${it.post_action_summary||'--'}</td>
+            <td style="font-family:monospace;font-size:11px;">Coil:${m.min_coil_c??'--'}°C<br>Pipe:${m.peak_pipe_c??'--'}°C • ${m.peak_power_w??'--'}W</td>
+          </tr>`;
+        }).join('') + `</tbody></table>`;
+    document.getElementById('clHistoryBox').innerHTML = html;
+    document.getElementById('stdClHistoryBox').innerHTML = html;
+  } catch(e){}
+}
+
+// ==================== STANDARD REMOTE CONTROLS ====================
+async function togglePower(){
+  const next = !curState.ac_power;
+  const r = await fetch('/api/power',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({on:next})}).then(x=>x.json());
+  applyServerPayload(r);
+  loadLogs();
+}
+async function setMany(updates){
+  const r = await fetch('/api/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({updates})}).then(x=>x.json());
+  applyServerPayload(r);
+  loadLogs();
+}
+function setVal(k, v){ setMany({[k]:v}); }
+function toggleBool(k){ setVal(k, !curState[k]); }
+function chgTemp(d){ setVal('target_temp', Math.max(16, Math.min(30, (curState.target_temp || 24) + d))); }
+function cycleFan3(){ const i = FAN3.indexOf(curState.fan_mode); setVal('fan_mode', FAN3[(i+1)%FAN3.length]); }
+function cycleVSwing(){ const i = VSWING_ORDER.indexOf(curState.vertical_swing); setVal('vertical_swing', VSWING_ORDER[(i+1)%VSWING_ORDER.length]); }
+function cycleHSwing(){ const i = HSWING_ORDER.indexOf(curState.horizontal_swing); setVal('horizontal_swing', HSWING_ORDER[(i+1)%HSWING_ORDER.length]); }
+function cycleTurboQuiet(){
+  if(!curState.fast_mode && !curState.quiet_mode) setMany({fast_mode:true, quiet_mode:false});
+  else if(curState.fast_mode) setMany({fast_mode:false, quiet_mode:true});
+  else setMany({fast_mode:false, quiet_mode:false});
+}
+function cycleEco(){ setMany({eco_level: ((curState.eco_level || 0) + 1) % 4}); }
+function cycleExtra(){
+  extraIdx = (extraIdx + 1) % EXTRA_LIST.length;
+  pendingExtra = EXTRA_LIST[extraIdx];
+  renderState(curState, curBigData);
+}
+function stepTimer(action){
+  if(!pendingTimer || pendingTimer.action !== action) pendingTimer = {action, hours: 0.5};
+  else pendingTimer.hours = pendingTimer.hours >= 24 ? 0.5 : pendingTimer.hours + 0.5;
+  renderState(curState, curBigData);
+}
+function startHoldTimer(action){ stepTimer(action); holdInt = setInterval(()=>stepTimer(action), 220); }
+function stopHoldTimer(){ if(holdInt){ clearInterval(holdInt); holdInt = null; } }
+async function confirmOrCancel(){
+  if(pendingExtra){ const fn = pendingExtra.fn; pendingExtra = null; extraIdx = -1; await fn(); return; }
+  if(pendingTimer){
+    const r = await fetch('/api/timer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pendingTimer)}).then(x=>x.json());
+    pendingTimer = null; activeTimerInfo = r.timer; renderState(curState, curBigData); loadLogs(); return;
+  }
+  if(activeTimerInfo){
+    await fetch('/api/timer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'CANCEL'})});
+    activeTimerInfo = null; renderState(curState, curBigData); loadLogs();
+  }
+}
+function resetAC(){
+  pendingExtra = null; pendingTimer = null;
+  setMany({ac_power:true, ac_mode:'COOL', target_temp:25, fan_mode:'AUTO', fast_mode:false, quiet_mode:false, sleep_mode:false, eco_level:0, self_cleaning:false});
+}
+async function quickCool25(){
+  await ackClDone();
+  await setMany({ac_power:true, ac_mode:'COOL', target_temp:25, fan_mode:'AUTO', fast_mode:false, quiet_mode:false, eco_level:0, self_cleaning:false});
+}
+
+// ==================== DIFF SCANNER / SMART RULES / LOGS ====================
+async function setBaseline(){
+  const r = await fetch('/api/diff/baseline',{method:'POST'}).then(x=>x.json());
+  document.getElementById('diffBox').innerText = `Baseline set: ${r.baseline_user_hex}`;
+  lastUserDiffs = []; lastBigDiffs = [];
+}
+function toggleScan(){
+  if(scanTimer){ clearInterval(scanTimer); scanTimer = null; document.getElementById('btnScan').innerText = '2. Start Live Diff Scan'; document.getElementById('btnScan').className='ui'; return; }
+  document.getElementById('btnScan').innerText = 'Stop Diff Scan'; document.getElementById('btnScan').className='ui active';
+  scanTimer = setInterval(async ()=>{
+    const r = await fetch('/api/diff/step',{method:'POST'}).then(x=>x.json());
+    if(!r.ok) return;
+    lastRawUser = r.raw_user_hex || '';
+    applyServerPayload(r);
+    if(r.user_diffs.length || r.big_diffs.length){
+      lastUserDiffs = r.user_diffs; lastBigDiffs = r.big_diffs;
+      document.getElementById('diffBox').innerHTML =
+        r.user_diffs.map(d=>`<div class="diff-badge">[6D01] byte[${d.byte_idx}] ${d.old} -> ${d.new} (xor=${d.xor} | ${d.bits})</div>`).join('') +
+        r.big_diffs.map(d=>`<div class="diff-badge">[7D01] byte[${d.byte_idx}] ${d.old} -> ${d.new} (xor=${d.xor})</div>`).join('');
+    }
+  }, 600);
+}
+async function saveDiff(){
+  const label = document.getElementById('diffLabel').value.trim() || 'unnamed_btn';
+  const r = await fetch('/api/diff/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({label, user_diffs:lastUserDiffs, big_diffs:lastBigDiffs, raw_user_hex:lastRawUser})}).then(x=>x.json());
+  document.getElementById('diffLabel').value = '';
+  document.getElementById('diffBox').innerText = `Saved "${label}" (total ${r.count}) & reset baseline!`;
+}
+async function showSavedDiffs(){
+  const r = await fetch('/api/diff/list').then(x=>x.json());
+  document.getElementById('savedDiffBox').innerHTML = `<pre>${JSON.stringify(r.items, null, 2)}</pre>`;
+}
+
+async function loadLogs(){
+  try {
+    const r = await fetch(`/api/logs?limit=35&filter=${logFilter}`).then(x=>x.json());
+    document.getElementById('logBox').innerHTML = (r.logs||[]).map(l=>{
+      const cls = l.dir==='TX' ? 'tx' : (l.dir.includes('ERR')||l.dir==='RX_RAW' ? 'err' : (l.dir.startsWith('CL_') ? 'cl-ev' : 'rx'));
+      return `<div class="log-item"><span class="${cls}">[${l.ts}] ${l.dir}</span> ${l.note||''}${l.hex?'<br>HEX: '+l.hex:''}<br>JSON: ${JSON.stringify(l.decoded)}</div>`;
+    }).join('') || '<div class="sub">No log entries matching filter.</div>';
+  } catch(e){}
+}
+async function clearLogs(){
+  if(!confirm('ล้างไฟล์ haier_frames.jsonl ทั้งหมดใช่ไหม?')) return;
+  await fetch('/api/logs',{method:'DELETE'});
+  loadLogs();
+}
+async function loadProtocolTable(){
+  const t = await fetch('/api/table').then(x=>x.json());
+  document.getElementById('protocolTablePre').innerText = JSON.stringify(t, null, 2);
+}
+
+async function toggleAutoSync(){
+  autoSyncState = !autoSyncState;
+  await fetch('/api/auto_sync?enabled='+autoSyncState, {method:'POST'});
+  const b = document.getElementById('btnSync');
+  b.innerText = 'Auto-Sync: ' + (autoSyncState ? 'ON' : 'OFF');
+  b.className = 'ui' + (autoSyncState ? ' active' : '');
+}
+async function toggleSmartRule(){
+  smartRuleState = !smartRuleState;
+  await fetch('/api/smart_rule?enabled='+smartRuleState, {method:'POST'});
+  const b = document.getElementById('btnSmart');
+  b.innerText = 'Auto-ECO ≤27°C: ' + (smartRuleState ? 'ON' : 'OFF');
+  b.className = 'ui' + (smartRuleState ? ' active' : '');
+}
+async function dryAndOff(){
+  const r = await fetch('/api/dry_off?minutes=10', {method:'POST'}).then(x=>x.json());
+  applyServerPayload(r);
+  showToast('💨 เปิดเป่าคอยล์ FAN HIGH 10 นาที ➔ ปิดเครื่องอัตโนมัติ');
+  loadLogs();
+}
+async function checkAlarms(){
+  const r = await fetch('/api/alarms', {method:'POST'}).then(x=>x.json());
+  lastAlarms = r.alarms || {active_count:0, active_alarms:[]};
+  const txt = lastAlarms.active_count > 0
+    ? '⚠️ ACTIVE ALARMS: ' + lastAlarms.active_alarms.map(x=>x.message).join(', ')
+    : '✅ ไม่มีสัญญาณเตือนผิดปกติ (0 Active Alarms)';
+  showToast(txt);
+  renderState(curState, curBigData);
+  loadLogs();
+}
+
+async function syncState(){
+  try {
+    const r = await fetch('/api/state').then(x=>x.json());
+    applyServerPayload(r);
+  } catch(e){}
+}
+
+async function setDhtIp(){
+  const ip = document.getElementById('dhtIpInput').value.trim();
+  await fetch('/api/ext_dht/ip?ip='+encodeURIComponent(ip), {method:'POST'});
+  showToast('Updated ESP DHT IP: ' + ip);
+}
+async function loadDhtLogs(){
+  try {
+    const d = await fetch('/api/ext_dht/logs?limit=40').then(x=>x.json());
+    const rows = d.rows || [];
+    if(!rows.length){ document.getElementById('dhtLogBox').innerHTML = '<div class="sub">No DHT logs yet...</div>'; return; }
+    let html = '<table class="tbl"><thead><tr><th>Time</th><th>S1 (GPIO 4)</th><th>S2 (GPIO 3)</th><th>Haier Room</th><th>Δ(S1−Haier)</th><th>Δ(S1−S2)</th></tr></thead><tbody>';
+    for(const r of rows){
+      const s1 = r.s1_temp_c != null ? `${r.s1_temp_c}°C / ${r.s1_hum_pct}%` : (r.s1_err || '--');
+      const s2 = r.s2_temp_c != null ? `${r.s2_temp_c}°C / ${r.s2_hum_pct}%` : (r.s2_err || '--');
+      const hr = r.haier_room_c != null ? `${r.haier_room_c}°C` : '--';
+      const d1 = r.delta_s1_haier != null ? `${r.delta_s1_haier > 0 ? '+' : ''}${r.delta_s1_haier}°C` : '--';
+      const d2 = r.delta_s1_s2 != null ? `${r.delta_s1_s2 > 0 ? '+' : ''}${r.delta_s1_s2}°C` : '--';
+      html += `<tr><td>${r.ts}</td><td>${s1}</td><td>${s2}</td><td>${hr}</td><td>${d1}</td><td>${d2}</td></tr>`;
+    }
+    html += '</tbody></table>';
+    document.getElementById('dhtLogBox').innerHTML = html;
+  } catch(e){}
+}
+async function clearDhtLogs(){ await fetch('/api/ext_dht/logs',{method:'DELETE'}); loadDhtLogs(); }
+
+setInterval(()=>{
+  syncState();
+  if(activeScreen === 'standard' && activeTab === 'logs') loadLogs();
+  if(activeScreen === 'standard' && activeTab === 'dht') loadDhtLogs();
+}, 1200);
+
+(async function init(){
+  await loadPorts();
+  await syncState();
+  if(!curState || !Object.keys(curState).length){
+    await autoDetect();
+  }
+  loadLogs();
+  loadClHistory();
+})();
+</script>
+</body>
+</html>
