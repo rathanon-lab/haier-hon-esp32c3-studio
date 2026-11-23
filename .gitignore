@@ -1,0 +1,11 @@
+# Build artifacts & local logs
+firmware/p25_haier_c3/build/
+*.bin
+*.elf
+*.map
+__pycache__/
+*.pyc
+.env
+logs/
+.DS_Store
+Thumbs.db

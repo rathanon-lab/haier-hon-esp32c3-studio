@@ -1,0 +1,2762 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#060b16">
+<title>Haier AC Studio v4.1 — Interactive GitHub Pages Demo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%230b1224'/><text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' font-size='36'>❄️</text></svg>">
+<style>
+:root{
+  --bg:#060b16;--card:#0e172a;--card2:#131f38;--line:#1e293b;--line2:#334155;
+  --txt:#f1f5f9;--mut:#94a3b8;--dim:#64748b;
+  --cyan:#22d3ee;--blue:#38bdf8;--em:#10b981;--amb:#f59e0b;--red:#ef4444;--vio:#a78bfa;--org:#fb923c;
+  --rad:16px;--rad-s:11px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;font-size:14px;line-height:1.45;}
+body{min-height:100dvh;display:flex;flex-direction:column;}
+.num{font-variant-numeric:tabular-nums;}
+
+/* App Shell */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(6,11,22,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;letter-spacing:-.2px;}
+.brand .vtag{font-size:10px;padding:2px 6px;border-radius:99px;background:rgba(34,211,238,.14);color:var(--cyan);border:1px solid rgba(34,211,238,.3);}
+.hdr-pills{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11.5px;}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-weight:600;font-size:11.5px;border:1px solid var(--line2);background:#0b1324;color:var(--txt);white-space:nowrap;}
+.p-ok{background:rgba(16,185,129,.14);border-color:rgba(16,185,129,.4);color:#34d399;}
+.p-cyan{background:rgba(34,211,238,.14);border-color:rgba(34,211,238,.4);color:var(--cyan);}
+.p-warn{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.45);color:#fbbf24;}
+.p-err{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.45);color:#f87171;}
+.p-vio{background:rgba(167,139,250,.15);border-color:rgba(167,139,250,.4);color:#c4b5fd;}
+.p-off{background:rgba(100,116,139,.14);border-color:var(--line);color:var(--mut);}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--dim);}
+.dot.on{background:var(--em);box-shadow:0 0 8px var(--em);}
+.dot.warn{background:var(--amb);box-shadow:0 0 8px var(--amb);}
+.dot.err{background:var(--red);}
+
+/* Desktop Top Tabs */
+.desk-nav{display:flex;gap:6px;padding:8px 14px;background:#091020;border-bottom:1px solid var(--line);overflow-x:auto;}
+.ntab{border:1px solid transparent;background:transparent;color:var(--mut);padding:7px 14px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:.15s;}
+.ntab:hover{background:var(--card);color:var(--txt);}
+.ntab.active{background:linear-gradient(135deg,rgba(34,211,238,.2),rgba(56,189,248,.12));border-color:rgba(34,211,238,.45);color:#fff;}
+.ntab.pulse{animation:pulseCl 1.4s infinite;border-color:var(--amb);color:#fde68a;}
+@keyframes pulseCl{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.4)}50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}}
+
+/* Banners */
+.ro-bar{display:none;background:linear-gradient(90deg,rgba(245,158,11,.18),rgba(239,68,68,.15));border-bottom:1px solid rgba(245,158,11,.4);padding:8px 14px;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;}
+.ro-bar.show{display:flex;}
+.cl-done-bar{display:none;background:linear-gradient(90deg,rgba(16,185,129,.2),rgba(34,211,238,.15));border:1px solid rgba(16,185,129,.45);border-radius:12px;padding:10px 14px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:10px;}
+.cl-done-bar.show{display:flex;}
+
+/* Main Container */
+.main{flex:1;width:100%;max-width:1280px;margin:0 auto;padding:14px;}
+.screen{display:none;}
+.screen.active{display:block;}
+.grid2{display:grid;grid-template-columns:390px 1fr;gap:14px;align-items:start;}
+.stack{display:flex;flex-direction:column;gap:12px;}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.between{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.22);}
+.ctitle{font-size:13px;font-weight:800;color:var(--cyan);letter-spacing:.2px;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.sub{color:var(--mut);font-size:12px;}
+
+/* Buttons */
+button{font-family:inherit;}
+.btn{background:var(--card2);border:1px solid var(--line2);color:var(--txt);padding:8px 12px;border-radius:10px;font-weight:700;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;transition:.12s;user-select:none;}
+.btn:hover:not(:disabled){border-color:var(--cyan);background:#182644;}
+.btn:active:not(:disabled){transform:scale(.97);}
+.btn:disabled{opacity:.42;cursor:not-allowed;}
+.btn-pri{background:linear-gradient(135deg,#0284c7,#0891b2);border-color:#22d3ee;color:#fff;}
+.btn-ok{background:linear-gradient(135deg,#059669,#10b981);border-color:#34d399;color:#fff;}
+.btn-warn{background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.55);color:#fde68a;}
+.btn-err{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.55);color:#fca5a5;}
+.btn-sm{padding:5px 9px;font-size:11.5px;border-radius:8px;}
+.seg{display:flex;background:#070d1a;border:1px solid var(--line);border-radius:11px;padding:3px;gap:3px;}
+.seg button{flex:1;border:none;background:transparent;color:var(--mut);padding:7px 8px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;transition:.15s;white-space:nowrap;}
+.seg button.active{background:#162544;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);}
+.seg button.act-cyan{background:linear-gradient(135deg,#0284c7,#06b6d4);color:#fff;}
+.seg button.act-em{background:linear-gradient(135deg,#059669,#10b981);color:#fff;}
+.seg button.act-amb{background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;}
+.seg button.act-vio{background:linear-gradient(135deg,#6d28d9,#8b5cf6);color:#fff;}
+
+/* Thermostat Hero Card */
+.thermo-hero{display:flex;align-items:center;justify-content:space-between;gap:12px;background:radial-gradient(circle at 20% 20%,rgba(34,211,238,.12),transparent 65%),#081020;border:1px solid var(--line2);border-radius:16px;padding:16px 14px;margin:10px 0;}
+.pwr-ring{width:68px;height:68px;border-radius:50%;border:2px solid var(--line2);background:#0f172a;color:var(--mut);font-size:26px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;}
+.pwr-ring span{font-size:9.5px;font-weight:800;margin-top:1px;}
+.pwr-ring.on{background:radial-gradient(circle,#10b981,#047857);border-color:#6ee7b7;color:#fff;box-shadow:0 0 22px rgba(16,185,129,.45);}
+.temp-ctrl{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end;}
+.t-step{width:46px;height:46px;border-radius:14px;border:1px solid var(--line2);background:#111d36;color:#fff;font-size:24px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s;}
+.t-step:active:not(:disabled){transform:scale(.93);background:#1e3a5f;}
+.t-step:disabled{opacity:.35;}
+.t-read{text-align:center;min-width:86px;}
+.t-val{font-size:44px;font-weight:900;line-height:1;letter-spacing:-1.5px;color:#fff;}
+.t-val small{font-size:18px;font-weight:700;color:var(--cyan);}
+.t-sub{font-size:11px;color:var(--mut);margin-top:2px;}
+
+.ctl-label{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px;}
+.chip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.chip-grid.c4{grid-template-columns:repeat(4,1fr);}
+.chip{background:#0b1324;border:1px solid var(--line);color:var(--mut);padding:8px 6px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:.12s;}
+.chip.on{background:rgba(34,211,238,.16);border-color:var(--cyan);color:#fff;}
+.chip.on-em{background:rgba(16,185,129,.18);border-color:var(--em);color:#a7f3d0;}
+.chip.on-amb{background:rgba(245,158,11,.18);border-color:var(--amb);color:#fde68a;}
+.chip.on-red{background:rgba(239,68,68,.2);border-color:var(--red);color:#fecaca;}
+
+/* Classic Remote Skin (4 Filled D-Pad Slots) */
+.rem-shell{background:linear-gradient(180deg,#f8fafc,#e2e8f0);color:#0f172a;border-radius:24px;padding:14px;border:3px solid #cbd5e1;box-shadow:inset 0 2px 4px #fff,0 10px 25px rgba(0,0,0,.4);}
+.rem-lcd{background:#9eb2a1;border:2px solid #475569;border-radius:10px;padding:8px 10px;color:#111827;font-family:ui-monospace,monospace;margin-bottom:10px;box-shadow:inset 0 2px 6px rgba(0,0,0,.22);}
+.lcd-top{display:flex;justify-content:space-between;font-size:10px;font-weight:800;opacity:.75;}
+.lcd-top .on{background:#111827;color:#a7f3d0;padding:0 4px;border-radius:3px;opacity:1;}
+.lcd-mid{display:flex;justify-content:space-between;align-items:center;margin:5px 0;}
+.lcd-temp{font-size:32px;font-weight:900;line-height:1;}
+.lcd-bot{display:flex;justify-content:space-between;font-size:9.5px;font-weight:800;border-top:1px solid rgba(0,0,0,.15);padding-top:4px;}
+.lcd-bot span{opacity:.28;}.lcd-bot span.on{opacity:1;}
+.rem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.rb{background:#fff;border:1px solid #cbd5e1;color:#0f172a;border-radius:10px;padding:8px 4px;font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 2px 0 #cbd5e1;transition:.1s;}
+.rb:active:not(:disabled){transform:translateY(1px);box-shadow:none;}
+.rb.on{background:#0284c7;color:#fff;border-color:#0369a1;}
+.rb.pwr{background:#10b981;color:#fff;border-color:#059669;border-radius:99px;font-size:16px;}
+.rb.pwr.off{background:#64748b;border-color:#475569;}
+.rb.cl-on{background:#ef4444;color:#fff;border-color:#b91c1c;}
+.rb.sub-slot{background:#f1f5f9;color:#334155;font-size:10px;}
+.rb.sub-slot.on{background:#0ea5e9;color:#fff;}
+.rem-dots{display:flex;justify-content:space-around;margin-top:10px;}
+.rdot{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#334155;font-size:10px;font-weight:800;cursor:pointer;}
+.rdot i{width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid #94a3b8;display:block;}
+.rdot.on i{background:#0ea5e9;border-color:#0284c7;}
+
+/* 3 Categorized Sensor Cards */
+.env-hero{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(34,211,238,.08));border:1px solid rgba(16,185,129,.3);border-radius:12px;padding:12px;margin-bottom:10px;}
+.env-big{font-size:28px;font-weight:900;color:#34d399;line-height:1.05;}
+.sub3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.st{background:#081020;border:1px solid var(--line);border-radius:11px;padding:9px 10px;}
+.st .k{font-size:11px;color:var(--mut);margin-bottom:2px;}
+.st .v{font-size:16px;font-weight:800;}
+.bar-bg{height:8px;border-radius:99px;background:#081020;border:1px solid var(--line);overflow:hidden;margin:6px 0;}
+.bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--em),var(--cyan),var(--amb));transition:width .35s;}
+.pipe-ok{color:#34d399;}.pipe-hi{color:#fbbf24;}.pipe-hot{color:#f87171;}
+
+/* Advanced & Rules */
+.adv-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#091224;border:1px solid var(--line2);border-radius:14px;padding:10px 14px;margin-bottom:12px;}
+.rule-card{background:#091122;border:1px solid var(--line);border-radius:12px;padding:11px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:.15s;}
+.rule-card.en{border-color:rgba(34,211,238,.38);background:#0c1830;}
+.ios-sw{position:relative;width:44px;height:24px;flex-shrink:0;}
+.ios-sw input{opacity:0;width:0;height:0;}
+.ios-sl{position:absolute;inset:0;background:#334155;border-radius:99px;cursor:pointer;transition:.2s;}
+.ios-sl:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+.ios-sw input:checked + .ios-sl{background:var(--em);}
+.ios-sw input:checked + .ios-sl:before{transform:translateX(20px);}
+
+/* Analytics & Multi-Overlay Chart */
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0;}
+.kpi{background:#081020;border:1px solid var(--line);border-radius:12px;padding:11px 12px;}
+.kpi .kl{font-size:11px;color:var(--mut);}
+.kpi .kv{font-size:20px;font-weight:900;margin-top:2px;}
+.kpi .ks{font-size:11px;color:var(--dim);margin-top:2px;}
+.series-bar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px;}
+.schip{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:99px;font-size:11.5px;font-weight:700;border:1px solid var(--line);background:#081020;color:var(--dim);cursor:pointer;user-select:none;transition:.12s;}
+.schip i{width:8px;height:8px;border-radius:50%;display:inline-block;opacity:.35;}
+.schip.on{color:#fff;border-color:var(--line2);background:#13203b;}
+.schip.on i{opacity:1;box-shadow:0 0 6px currentColor;}
+.chart-box{position:relative;background:#070d1b;border:1px solid var(--line);border-radius:14px;padding:10px 8px 6px;overflow:hidden;}
+.chart-box svg{width:100%;height:260px;display:block;touch-action:none;}
+.ctip{position:absolute;top:10px;left:12px;background:rgba(15,23,42,.95);border:1px solid var(--line2);border-radius:10px;padding:7px 10px;font-size:11.5px;pointer-events:none;display:none;z-index:10;box-shadow:0 8px 20px rgba(0,0,0,.5);max-width:250px;}
+.heat24{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:6px;}
+.hcell{aspect-ratio:1/1.2;border-radius:5px;background:#0b1324;border:1px solid var(--line);display:flex;align-items:flex-end;justify-content:center;font-size:9px;color:var(--dim);padding-bottom:2px;}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;}
+th{color:var(--mut);font-weight:700;font-size:11px;}
+
+/* Self-Clean Stepper */
+.cl-hero{background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(239,68,68,.12));border:1px solid rgba(245,158,11,.45);border-radius:16px;padding:16px;margin-bottom:12px;}
+.cl-hero.idle{background:linear-gradient(135deg,rgba(34,211,238,.1),rgba(15,23,42,.8));border-color:var(--line2);}
+.steps5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0;}
+.step{background:#081020;border:1px solid var(--line);border-radius:10px;padding:8px 5px;text-align:center;font-size:11px;color:var(--dim);}
+.step.done{border-color:var(--em);color:#6ee7b7;background:rgba(16,185,129,.12);}
+.step.now{border-color:var(--amb);color:#fde68a;background:rgba(245,158,11,.16);font-weight:800;}
+.post-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.post-opt{background:#081020;border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;text-align:left;color:var(--txt);}
+.post-opt.sel{border-color:var(--cyan);background:rgba(34,211,238,.12);}
+
+/* Logs & Forms */
+.logbox{background:#050912;border:1px solid var(--line);border-radius:12px;padding:10px;height:250px;overflow-y:auto;font-family:ui-monospace,Consolas,monospace;font-size:11.5px;line-height:1.55;}
+.log-ln{border-bottom:1px solid rgba(30,41,59,.5);padding:2px 0;}
+.c-CMD{color:#38bdf8;font-weight:700;}.c-AC{color:#34d399;font-weight:700;}.c-CL{color:#fbbf24;font-weight:700;}
+.c-RULE{color:#c084fc;font-weight:700;}.c-BLE{color:#2dd4bf;font-weight:700;}.c-SYS{color:#94a3b8;font-weight:700;}.c-ERR{color:#f87171;font-weight:700;}
+.fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.fg label{display:block;font-size:11.5px;color:var(--mut);margin-bottom:4px;font-weight:600;}
+.fg input,.fg select{width:100%;background:#070d1b;border:1px solid var(--line2);color:#fff;padding:8px 10px;border-radius:9px;font-size:13px;outline:none;}
+.fg input:focus,.fg select:focus{border-color:var(--cyan);}
+
+/* Custom Modals (Zero Browser Dialogs!) */
+.mbd{position:fixed;inset:0;z-index:100;background:rgba(2,6,23,.78);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;}
+.mbd.show{display:flex;}
+.modal{width:100%;max-width:440px;background:var(--card);border:1px solid var(--line2);border-radius:18px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.65);max-height:90dvh;overflow-y:auto;}
+.modal h3{margin:0 0 8px;font-size:16px;color:#fff;}
+.mfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#0f172a;border:1px solid var(--cyan);color:#fff;padding:9px 16px;border-radius:99px;font-size:12.5px;font-weight:700;opacity:0;pointer-events:none;transition:.2s;z-index:120;box-shadow:0 10px 25px rgba(0,0,0,.5);white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* PEA Calculator & All-Sensors Technician Mode (v4.1) */
+.pea-box{background:#081020;border:1px solid var(--line2);border-radius:14px;padding:12px;margin:10px 0;}
+.chk-lbl{display:inline-flex!important;align-items:center;gap:5px;margin:0!important;cursor:pointer;font-size:12px;color:var(--txt);white-space:nowrap;}
+.chk-lbl input{width:auto!important;margin:0;}
+.pea-break{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.28);border-radius:10px;padding:8px 12px;margin-top:10px;font-size:12px;}
+.rt-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(14,23,42,.95),rgba(19,31,56,.95));border:1px solid var(--line2);border-radius:16px;padding:12px 14px;margin-bottom:12px;}
+.rt-bar.live{border-color:rgba(239,68,68,.65);box-shadow:0 0 20px rgba(239,68,68,.18);}
+.rt-dot{width:10px;height:10px;border-radius:50%;background:var(--dim);display:inline-block;}
+.rt-dot.live{background:var(--red);box-shadow:0 0 10px var(--red);animation:pulseCl 1s infinite;}
+.diag-card{border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--line2);background:#091224;}
+.diag-ok{background:linear-gradient(135deg,rgba(16,185,129,.16),rgba(6,11,22,.9));border-color:rgba(16,185,129,.55);}
+.diag-warn{background:linear-gradient(135deg,rgba(245,158,11,.17),rgba(6,11,22,.9));border-color:rgba(245,158,11,.55);}
+.diag-err{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(6,11,22,.92));border-color:rgba(239,68,68,.65);}
+.diag-title{font-size:15px;font-weight:900;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.diag-list{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:#e2e8f0;line-height:1.6;}
+.sens-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.scard{background:#081020;border:1px solid var(--line);border-radius:13px;padding:11px 13px;display:flex;flex-direction:column;justify-content:space-between;gap:4px;}
+.scard.hi-ok{border-color:rgba(16,185,129,.45);}
+.scard.hi-warn{border-color:rgba(245,158,11,.55);background:rgba(245,158,11,.06);}
+.scard.hi-err{border-color:rgba(239,68,68,.6);background:rgba(239,68,68,.08);}
+.scard .sk{font-size:12px;font-weight:700;color:#cbd5e1;display:flex;justify-content:space-between;gap:6px;align-items:center;}
+.scard .sv{font-size:24px;font-weight:900;line-height:1.15;letter-spacing:-.4px;color:#fff;}
+.scard .ss{font-size:11px;color:var(--mut);line-height:1.35;}
+.src-tag{font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:6px;background:#13203b;color:var(--cyan);border:1px solid var(--line2);white-space:nowrap;}
+
+/* Mobile Bottom Nav + Native Responsive Breakpoints (Mobile / iPad / Desktop) */
+.mob-nav{display:none;}
+@media(max-width:1099px){
+  .sens-grid{grid-template-columns:repeat(2,1fr);}
+  .desk-nav{gap:4px;padding:7px 10px;}
+  .ntab{padding:6px 9px;font-size:12px;gap:4px;}
+}
+@media(max-width:960px){
+  .grid2{grid-template-columns:1fr;}
+  .kpi4{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:767px){
+  body{height:100dvh;overflow:hidden;}
+  .desk-nav{display:none;}
+  .topbar{padding:7px 10px;flex-wrap:nowrap;gap:6px;}
+  .brand{font-size:13.5px;white-space:nowrap;gap:5px;}
+  .brand span.long,.brand .vtag{display:none;}
+  .hdr-pills{flex-wrap:nowrap;gap:4px;}
+  .hdr-pills .pill{padding:3px 7px;font-size:11px;}
+  .hdr-hide-m{display:none;}
+  .main{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 10px 18px;}
+  .mob-nav{display:grid;grid-template-columns:repeat(6,1fr);background:rgba(9,16,32,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:5px 2px calc(5px + env(safe-area-inset-bottom));flex-shrink:0;z-index:50;}
+  .mbtn{background:none;border:none;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9.5px;font-weight:700;padding:4px 1px;cursor:pointer;position:relative;white-space:nowrap;}
+  .mbtn i{font-style:normal;font-size:16px;line-height:1.1;}
+  .mbtn.active{color:var(--cyan);}
+  .mbtn.pulse{color:var(--amb);}
+  .sens-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .scard{padding:9px 10px;}
+  .scard .sv{font-size:20px;}
+  .sub3{grid-template-columns:repeat(3,1fr);gap:6px;}
+  .st .v{font-size:14px;}
+  .fgrid{grid-template-columns:1fr;}
+  .steps5{grid-template-columns:repeat(5,1fr);gap:4px;}
+  .step{font-size:9.5px;padding:6px 2px;}
+  .heat24{grid-template-columns:repeat(12,1fr);}
+  .toast{bottom:74px;}
+}
+
+/* GitHub Pages Interactive Sandbox Toolbar (hidden automatically with ?clean=1) */
+.gh-demo-bar{background:linear-gradient(90deg,rgba(14,165,233,.16),rgba(139,92,246,.16));border-bottom:1px solid rgba(56,189,248,.4);padding:7px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;z-index:60;}
+body.clean-mode .gh-demo-bar{display:none!important;}
+.gh-demo-title{display:flex;align-items:center;gap:7px;font-weight:800;color:#e0f2fe;}
+.gh-demo-btns{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.gh-btn{background:#0b1324;border:1px solid #334155;color:#e2e8f0;padding:4px 9px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;transition:.15s;}
+.gh-btn:hover{border-color:#22d3ee;color:#fff;}
+.gh-btn.act{background:#0284c7;border-color:#38bdf8;color:#fff;}
+.gh-btn.warn{border-color:rgba(239,68,68,.55);color:#fca5a5;}
+.gh-btn.warn.act{background:#dc2626;color:#fff;}
+@media(max-width:767px){
+  .gh-demo-bar{padding:5px 8px;font-size:10.5px;}
+  .gh-demo-title span.gh-long{display:none;}
+  .gh-btn{padding:3px 6px;font-size:10px;}
+}
+
+</style>
+</head>
+<body>
+
+<div class="gh-demo-bar" id="ghDemoBar">
+  <div class="gh-demo-title">
+    <span>🧪 Live Sandbox Demo</span>
+    <span class="gh-long sub" style="color:#bae6fd;">(Virtual ESP32-C3 • ทำงานบนเบราว์เซอร์ 100% ไม่ต้องต่อบอร์ดจริง)</span>
+  </div>
+  <div class="gh-demo-btns">
+    <button class="gh-btn act" id="scBtnOk" onclick="ghSetScenario('healthy')">✅ แอร์ปกติ (R32 ดี)</button>
+    <button class="gh-btn warn" id="scBtnLeak" onclick="ghSetScenario('leak')">🚨 จำลองน้ำยา R32 รั่ว</button>
+    <button class="gh-btn" onclick="ghTriggerTakeover()">🔒 จำลอง Takeover</button>
+    <button class="gh-btn" onclick="ghDemoCl()">❄️ จำลองล้างคอยล์ CL</button>
+    <button class="gh-btn" onclick="ghOpenTech()">🔬 เปิดโหมดช่าง 2Hz</button>
+  </div>
+</div>
+
+
+<header class="topbar">
+  <div class="brand">
+    <span>❄️ Haier AC <span class="long">Studio</span></span>
+    <span class="vtag">v4.1</span>
+  </div>
+  <div class="hdr-pills">
+    <span class="pill" id="hNet"><i class="dot" id="hNetDot"></i><span id="hIp">--</span></span>
+    <span class="pill p-cyan num" id="hQuickEnv">--°C • --W</span>
+    <span class="pill p-off hdr-hide-m" id="hUart">UART --</span>
+    <span class="pill p-off" id="hPoll">IDLE</span>
+    <span class="pill p-ok hdr-hide-m" id="hSess">Owner</span>
+  </div>
+</header>
+
+<nav class="desk-nav" id="deskNav">
+  <button class="ntab active" data-sc="ctrl" onclick="goScreen('ctrl')">🎛️ ควบคุมแอร์</button>
+  <button class="ntab" data-sc="adv" onclick="goScreen('adv')">🤖 แอดวานซ์ & กฎอัตโนมัติ</button>
+  <button class="ntab" data-sc="hist" onclick="goScreen('hist')">📊 กราฟ & ค่าไฟ</button>
+  <button class="ntab" data-sc="cl" id="dNavCl" onclick="goScreen('cl')">❄️ ล้างคอยล์ (CL) <span id="dClTag"></span></button>
+  <button class="ntab" data-sc="sys" onclick="goScreen('sys')">⚙️ ระบบ, BLE & Log</button>
+  <button class="ntab" data-sc="sens" id="dNavSens" onclick="goScreen('sens')">🔬 เซนเซอร์ทั้งหมด</button>
+</nav>
+
+<div class="ro-bar" id="roBar">
+  <div>🔒 <b>โหมดดูอย่างเดียว (Read-Only)</b> — กำลังถูกควบคุมโดย <b id="roOwner">เครื่องอื่น</b></div>
+  <button class="btn btn-warn btn-sm" onclick="doTakeover()">⚡ ยึดสิทธิ์ควบคุม</button>
+</div>
+
+<main class="main" id="mainScroll">
+  <div class="cl-done-bar" id="clDoneBar">
+    <div>✅ <b id="clDoneTxt">ล้างคอยล์เสร็จสมบูรณ์</b></div>
+    <button class="btn btn-ok btn-sm" onclick="ackClDone()">รับทราบ</button>
+  </div>
+
+  <!-- ==================== SCREEN 1: CONTROL & 3 SENSOR CARDS ==================== -->
+  <section class="screen active" id="sc-ctrl">
+    <div class="grid2">
+      <!-- Left: Dual Control Card -->
+      <div class="card">
+        <div class="between" style="margin-bottom:8px;">
+          <div class="seg" style="width:100%;">
+            <button id="vBtnThermo" class="act-cyan" onclick="setCtrlView('thermo')">📱 เทอร์โมสตัท</button>
+            <button id="vBtnRem" onclick="setCtrlView('rem')">🎛️ รีโมตคลาสสิก</button>
+          </div>
+        </div>
+
+        <!-- Timer Active Strip -->
+        <div id="timerStrip" style="display:none;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.35);border-radius:10px;padding:7px 10px;margin-bottom:8px;" class="between">
+          <span style="font-size:12px;">⏱️ <b id="timerTxt">--</b></span>
+          <button class="btn btn-err btn-sm" onclick="cancelTimer()">ยกเลิก</button>
+        </div>
+
+        <!-- MODERN THERMOSTAT VIEW -->
+        <div id="viewThermo">
+          <div class="thermo-hero">
+            <button class="pwr-ring" id="tPwrBtn" onclick="togglePower()">⏻<span id="tPwrLbl">OFF</span></button>
+            <div class="temp-ctrl">
+              <button class="t-step" id="tDown" onclick="stepTemp(-1)">−</button>
+              <div class="t-read">
+                <div class="t-val num" id="tVal">--<small>°C</small></div>
+                <div class="t-sub" id="tSub">ห้องจริง --°C</div>
+              </div>
+              <button class="t-step" id="tUp" onclick="stepTemp(1)">+</button>
+            </div>
+          </div>
+
+          <div class="ctl-label">โหมดการทำงาน (Mode)</div>
+          <div class="seg" id="segMode">
+            <button data-m="1" onclick="sendAc({mode:1})">❄️ COOL</button>
+            <button data-m="2" onclick="sendAc({mode:2})">💧 DRY</button>
+            <button data-m="6" onclick="sendAc({mode:6})">🌀 FAN</button>
+            <button data-m="0" onclick="sendAc({mode:0})">✨ AUTO</button>
+          </div>
+
+          <div class="ctl-label">กำลังทำความเย็น (Performance)</div>
+          <div class="seg" id="segPerf">
+            <button data-pf="normal" onclick="sendAc({perf:'normal'})">ปกติ</button>
+            <button data-pf="turbo" onclick="sendAc({perf:'turbo'})">⚡ E-Turbo</button>
+            <button data-pf="quiet" onclick="sendAc({perf:'quiet'})">🌙 Quiet</button>
+          </div>
+
+          <div class="ctl-label">ประหยัดพลังงาน (ECO Level)</div>
+          <div class="seg" id="segEco">
+            <button data-e="0" onclick="sendAc({eco:0})">OFF</button>
+            <button data-e="1" onclick="sendAc({eco:1})">🍃 L1</button>
+            <button data-e="2" onclick="sendAc({eco:2})">🍃 L2</button>
+            <button data-e="3" onclick="sendAc({eco:3})">🍃 L3</button>
+          </div>
+
+          <div class="ctl-label">แรงลม & บานสวิง (Fan & Swing)</div>
+          <div class="seg" id="segFan" style="margin-bottom:7px;">
+            <button data-f="3" onclick="sendAc({fan:3})">LOW</button>
+            <button data-f="2" onclick="sendAc({fan:2})">MID</button>
+            <button data-f="1" onclick="sendAc({fan:1})">HIGH</button>
+            <button data-f="5" onclick="sendAc({fan:5})">AUTO</button>
+          </div>
+          <div class="row" style="margin-bottom:8px;">
+            <button class="btn" style="flex:1" onclick="cycleVSwing()">↕ ขึ้นลง: <span id="tVsw">--</span></button>
+            <button class="btn" style="flex:1" onclick="cycleHSwing()">↔ ซ้ายขวา: <span id="tHsw">--</span></button>
+          </div>
+
+          <div class="ctl-label">คำสั่งด่วน & ฟังก์ชันเสริม</div>
+          <div class="chip-grid">
+            <button class="chip" id="qCl" onclick="toggleClean()">❄️ ล้างคอยล์ CL</button>
+            <button class="chip" id="qDryOff" onclick="dryAndOff()">🌬️ Dry&Off 10น.</button>
+            <button class="chip" id="qTimer" onclick="openTimerModal(false)">⏱️ ตั้งเวลา</button>
+            <button class="chip" id="qSleep" onclick="toggleFlag('sleep')">💤 Sleep</button>
+            <button class="chip" id="qUv" onclick="toggleFlag('health')">🌿 UV/Health</button>
+            <button class="chip" id="qLed" onclick="toggleFlag('display')">💡 จอ LED</button>
+            <button class="chip" id="qMute" onclick="toggleFlag('mute_beep')">🔇 ปิดติ๊ด</button>
+            <button class="chip" id="qLock" onclick="toggleFlag('lock')">🔒 Lock</button>
+            <button class="chip" onclick="confirmResetAc()">↺ Reset แอร์</button>
+          </div>
+        </div>
+
+        <!-- CLASSIC REMOTE VIEW (4 FILLED D-PAD SLOTS) -->
+        <div id="viewRem" style="display:none;">
+          <div class="rem-shell">
+            <div class="rem-lcd" onclick="toggleRoomPreview()" title="แตะเพื่อสลับดูอุณหภูมิห้องจริง">
+              <div class="lcd-top">
+                <span id="lAuto">AUTO</span><span id="lCool">COOL</span><span id="lDry">DRY</span><span id="lFan">FAN</span><span id="lPwr">OFF</span>
+              </div>
+              <div class="lcd-mid">
+                <div style="font-size:10.5px;line-height:1.35;">
+                  <div>V:<b id="lVsw">--</b> H:<b id="lHsw">--</b></div>
+                  <div>FAN:<b id="lFanTxt">--</b></div>
+                  <div id="lSubHint" style="font-size:9.5px;opacity:.8;">TARGET</div>
+                </div>
+                <div class="lcd-temp num" id="lTemp">--°C</div>
+              </div>
+              <div class="lcd-bot">
+                <span id="lQuiet">QUIET</span><span id="lTurbo">TURBO</span><span id="lSleep">SLEEP</span><span id="lUv">UV</span><span id="lCl">CL</span><span id="lEco">ECO</span>
+              </div>
+            </div>
+
+            <div class="row" style="margin-bottom:6px;">
+              <button class="rb" id="rTQ" style="flex:2" onclick="cycleTurboQuiet()">TURBO / QUIET</button>
+              <button class="rb pwr" id="rPwr" style="flex:1" onclick="togglePower()">⏻</button>
+            </div>
+            <div class="rem-grid">
+              <button class="rb" id="rCool" onclick="sendAc({mode:1})">COOL</button>
+              <button class="rb" id="rCl" onclick="toggleClean()">SELF CLEAN</button>
+              <button class="rb" id="rEco" onclick="cycleEco()">ECO L1-L3</button>
+
+              <!-- 3x3 D-Pad (ALL 4 CORNERS FILLED!) -->
+              <button class="rb sub-slot" id="rFanAuto" onclick="sendAc({fan:5})">FAN AUTO</button>
+              <button class="rb" onclick="stepTemp(1)">TEMP ▲</button>
+              <button class="rb sub-slot" id="rFanOnly" onclick="sendAc({mode:6})">FAN ONLY</button>
+
+              <button class="rb" onclick="cycleHSwing()">◀▶ SWING</button>
+              <button class="rb" onclick="cycleFan()">FAN ✳</button>
+              <button class="rb" onclick="cycleVSwing()">▲▼ SWING</button>
+
+              <button class="rb sub-slot" id="rUv" onclick="toggleFlag('health')">UV/HEALTH</button>
+              <button class="rb" onclick="stepTemp(-1)">TEMP ▼</button>
+              <button class="rb sub-slot" id="rMute" onclick="toggleFlag('mute_beep')">MUTE BEEP</button>
+
+              <button class="rb" id="rDry" onclick="sendAc({mode:2})">DRY</button>
+              <button class="rb" id="rSleep" onclick="toggleFlag('sleep')">SLEEP</button>
+              <button class="rb" id="rAuto" onclick="sendAc({mode:0})">AUTO</button>
+
+              <button class="rb" onclick="openTimerModal(true)">TIME ON</button>
+              <button class="rb" onclick="openTimerModal(false)">TIME OFF</button>
+              <button class="rb" onclick="cancelTimer()">CANCEL T</button>
+            </div>
+            <div class="rem-dots">
+              <button class="rdot" id="rLock" onclick="toggleFlag('lock')"><i></i>LOCK</button>
+              <button class="rdot" id="rLed" onclick="toggleFlag('display')"><i></i>LIGHT</button>
+              <button class="rdot" onclick="confirmResetAc()"><i></i>RESET</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: 3 Categorized Sensor Cards -->
+      <div class="stack">
+        <!-- Card 1: Environment -->
+        <div class="card">
+          <div class="ctitle">
+            <span>🌡️ สภาพแวดล้อม (Environment)</span>
+            <span class="pill p-off" id="cBleMode">BLE --</span>
+          </div>
+          <div class="env-hero">
+            <div>
+              <div class="sub">ห้องจริง Xiaomi LYWSD03MMC</div>
+              <div class="env-big num" id="sXTemp">--.--°C</div>
+              <div class="sub num" id="sXMeta">กำลังรอสัญญาณ BLE...</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="pill p-cyan num" style="font-size:16px;padding:6px 12px;" id="sXHum">--%</div>
+              <div class="sub num" style="margin-top:4px;" id="sXBatt">Batt --%</div>
+            </div>
+          </div>
+          <div class="sub3">
+            <div class="st"><div class="k">หน้าแอร์ (vs Xiaomi)</div><div class="v num" id="sAcRoom">--</div></div>
+            <div class="st"><div class="k">อุณหภูมิข้างนอก</div><div class="v num" style="color:#fbbf24" id="sOutTemp">--</div></div>
+            <div class="st"><div class="k">คอยล์เย็น (Coil)</div><div class="v num" style="color:#38bdf8" id="sCoil">--</div></div>
+          </div>
+        </div>
+
+        <!-- Card 2: Inverter & Power -->
+        <div class="card">
+          <div class="ctitle">
+            <span>⚡ อินเวอร์เตอร์ & พลังงาน (Inverter & Power)</span>
+            <span class="pill p-ok num" id="sRateHr">0.00 ฿/ชม.</span>
+          </div>
+          <div class="between" style="margin-bottom:6px;">
+            <div>
+              <span style="font-size:26px;font-weight:900;" class="num" id="sWatt">0 W</span>
+              <span class="sub num" style="margin-left:6px;" id="sAmp">0.0 A</span>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:18px;font-weight:800;color:var(--cyan)" class="num" id="sHz">0 Hz</span>
+            </div>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="sHzBar" style="width:0%"></div></div>
+          <div class="row" style="margin:8px 0 10px;" id="sCompPills">
+            <span class="pill p-off" id="pComp">Comp OFF</span>
+            <span class="pill p-off" id="pInFan">In-Fan OFF</span>
+            <span class="pill p-off" id="pOutFan">Out-Fan OFF</span>
+            <span class="pill p-warn" id="pWait3m" style="display:none;">⏳ หน่วงคอมฯ ป้องกันกระชาก (~3 น.)</span>
+          </div>
+          <div class="sub3">
+            <div class="st"><div class="k">ท่ออัดคอมฯ (Pipe)</div><div class="v num" id="sPipe">--</div></div>
+            <div class="st"><div class="k">โหมด / พัดลม</div><div class="v" id="sModeFan">--</div></div>
+            <div class="st"><div class="k">ECO / ล้างคอยล์</div><div class="v" id="sEcoCl">--</div></div>
+          </div>
+        </div>
+
+        <!-- Card 3: System & Smart -->
+        <div class="card">
+          <div class="ctitle">
+            <span>🛡️ ระบบ & อัจฉริยะ (System & Smart)</span>
+            <button class="btn btn-sm" onclick="checkAlarms()">เช็ก Alarm 0x73</button>
+          </div>
+          <div class="sub3">
+            <div class="st"><div class="k">Alarms / แหล่งคำสั่ง</div><div class="v" id="sAlarmSrc">--</div></div>
+            <div class="st" style="cursor:pointer" onclick="goScreen('adv')"><div class="k">กฎอัตโนมัติ (แตะดู)</div><div class="v" style="color:var(--vio)" id="sRulesCnt">--</div></div>
+            <div class="st"><div class="k">หลังจบ CL</div><div class="v" style="font-size:12.5px" id="sClPol">--</div></div>
+          </div>
+          <div class="between" style="margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:11.5px;color:var(--mut);">
+            <span class="num" id="sUartMeta">UART RX:0 | RecFF:0 | RAM:--KB</span>
+            <span id="sPollMeta">Poll: --</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 2: ADVANCED PRESETS & IF-ELSE RULES ==================== -->
+  <section class="screen" id="sc-adv">
+    <div class="adv-strip">
+      <div class="row">
+        <button class="btn btn-ok btn-sm" id="advPwr" onclick="togglePower()">⏻ ON</button>
+        <span style="font-size:15px;font-weight:800;" class="num" id="advLcd">COOL 25°C • AUTO</span>
+        <span class="pill p-cyan num" id="advEnv">ห้อง --°C / --%</span>
+      </div>
+      <div class="row">
+        <button class="btn btn-sm" id="advLock" onclick="toggleFlag('lock')">🔒 Lock</button>
+        <button class="btn btn-sm" id="advLed" onclick="toggleFlag('display')">💡 LED</button>
+        <button class="btn btn-sm" onclick="confirmResetAc()">↺ Reset</button>
+      </div>
+    </div>
+
+    <div class="grid2" style="grid-template-columns:1fr 1.25fr;">
+      <!-- Direct Preset Builder -->
+      <div class="card">
+        <div class="ctitle"><span>🚀 สั่ง Preset ครบจบในปุ่มเดียว (Direct Control)</span></div>
+        <div class="row" style="margin-bottom:10px;">
+          <button class="btn btn-sm" style="flex:1" onclick="applyQuickPreset(1,22,5,'turbo',0)">❄️ เย็นจัด 22° Turbo</button>
+          <button class="btn btn-sm" style="flex:1" onclick="applyQuickPreset(1,26,3,'quiet',360)">🌙 นอน 26° Quiet 6ชม.</button>
+          <button class="btn btn-sm" style="flex:1" onclick="applyQuickPreset(1,27,3,'eco3',0)">🍃 ประหยัด 27° ECO3</button>
+        </div>
+        <div class="fgrid">
+          <div class="fg"><label>โหมด (Mode)</label>
+            <select id="prMode"><option value="1">COOL (เย็น)</option><option value="2">DRY (ลดชื้น)</option><option value="6">FAN (พัดลม)</option><option value="0">AUTO</option></select>
+          </div>
+          <div class="fg"><label>อุณหภูมิเป้าหมาย (°C)</label>
+            <input type="number" id="prTemp" min="16" max="30" step="1" value="25">
+          </div>
+          <div class="fg"><label>แรงลม (Fan)</label>
+            <select id="prFan"><option value="5">AUTO</option><option value="3">LOW</option><option value="2">MID</option><option value="1">HIGH</option></select>
+          </div>
+          <div class="fg"><label>โหมดกำลัง (Performance)</label>
+            <select id="prPerf"><option value="normal">ปกติ (Normal)</option><option value="turbo">⚡ E-Turbo</option><option value="quiet">🌙 Quiet</option><option value="eco1">🍃 ECO L1</option><option value="eco2">🍃 ECO L2</option><option value="eco3">🍃 ECO L3</option></select>
+          </div>
+          <div class="fg" style="grid-column:1/-1"><label>ตั้งปิดแอร์อัตโนมัติ (Optional Timer)</label>
+            <select id="prOff"><option value="0">ไม่ตั้งเวลาปิด</option><option value="30">ปิดใน 30 นาที</option><option value="60">ปิดใน 1 ชั่วโมง</option><option value="120">ปิดใน 2 ชั่วโมง</option><option value="240">ปิดใน 4 ชั่วโมง</option><option value="360">ปิดใน 6 ชั่วโมง</option><option value="480">ปิดใน 8 ชั่วโมง</option></select>
+          </div>
+        </div>
+        <button class="btn btn-pri" style="width:100%;margin-top:12px;" onclick="sendCustomPreset()">🚀 ส่งคำสั่ง Preset ไปยังแอร์</button>
+      </div>
+
+      <!-- Autonomous If-Else Rules Engine -->
+      <div class="card">
+        <div class="ctitle">
+          <span>🤖 กฎอัตโนมัติ IF → THEN (ทำงานเองบน ESP32-C3 24 ชม.)</span>
+          <label class="ios-sw" title="เปิด/ปิดระบบกฎอัตโนมัติทั้งหมด">
+            <input type="checkbox" id="rulesMasterSw" onchange="toggleRulesMaster(this.checked)">
+            <span class="ios-sl"></span>
+          </label>
+        </div>
+        <div class="between" style="margin-bottom:10px;">
+          <span class="sub">ทำงานแม้มือถือ/คอมปิดเว็บแล้ว • หยุดอัตโนมัติขณะล้างคอยล์ (CL)</span>
+          <div class="row">
+            <button class="btn btn-pri btn-sm" onclick="openRuleModal(null)">+ เพิ่มกฎใหม่</button>
+            <button class="btn btn-sm" onclick="confirmResetRules()">คืนค่าเริ่มต้น</button>
+          </div>
+        </div>
+        <div class="stack" id="rulesList"><div class="sub">กำลังโหลดกฎ...</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 3: ANALYTICS & ENERGY COST ==================== -->
+  <section class="screen" id="sc-hist">
+    <div class="card" style="margin-bottom:12px;">
+      <div class="between" style="margin-bottom:10px;">
+        <div class="seg" style="min-width:290px;">
+          <button id="hrDay" class="act-cyan" onclick="setHistRange('day')">วัน (15น.)</button>
+          <button id="hrWeek" onclick="setHistRange('week')">สัปดาห์ (7วัน)</button>
+          <button id="hrMonth" onclick="setHistRange('month')">เดือน (30วัน)</button>
+          <button id="hrYear" onclick="setHistRange('year')">ปี (12เดือน)</button>
+        </div>
+        <div class="row">
+          <div class="row" id="dayPager">
+            <button class="btn btn-sm" onclick="stepDayOffset(1)">◀ วันก่อน</button>
+            <span class="pill p-cyan num" id="dayLbl">วันนี้</span>
+            <button class="btn btn-sm" id="btnNextDay" onclick="stepDayOffset(-1)">ถัดไป ▶</button>
+            <button class="btn btn-err btn-sm" id="btnDelToday" onclick="confirmDeleteCurrentDay()">🗑️ ลบวันนี้</button>
+          </div>
+          <button class="btn btn-sm" onclick="loadHistory()">🔄 รีเฟรช</button>
+          <a class="btn btn-sm" href="#csv-demo" onclick="event.preventDefault();toast('โหมด Demo: บนบอร์ดจริงจะดาวน์โหลดไฟล์ haier_ac_energy_history.csv')" style="text-decoration:none;">📥 CSV</a>
+          <button class="btn btn-err btn-sm" onclick="confirmClearHistory()">ล้างทั้งหมด</button>
+        </div>
+      </div>
+
+      <!-- KPI Strip -->
+      <div class="kpi4">
+        <div class="kpi"><div class="kl">⚡ ค่าไฟช่วงนี้ (กฟภ.)</div><div class="kv num" style="color:var(--em)" id="kCost">฿0.00</div><div class="ks num" id="kKwh">0.000 kWh</div></div>
+        <div class="kpi"><div class="kl">⏱️ เวลาเปิดแอร์รวม</div><div class="kv num" style="color:var(--cyan)" id="kOnTime">0 ชม.</div><div class="ks num" id="kAvgDay">เฉลี่ย 0.00 หน่วย/วัน</div></div>
+        <div class="kpi"><div class="kl">🌡️ อุณหภูมิเฉลี่ย</div><div class="kv num" style="color:var(--blue)" id="kAvgT">--°C</div><div class="ks num" id="kMinMaxT">ต่ำสุด -- / สูงสุด --</div></div>
+        <div class="kpi"><div class="kl">💧 ความชื้น / กำลังไฟเฉลี่ย</div><div class="kv num" style="color:var(--amb)" id="kAvgW">0 W</div><div class="ks num" id="kAvgH">ความชื้นเฉลี่ย --%</div></div>
+      </div>
+
+      <!-- PEA (กฟภ. ประเภทที่ 1 บ้านอยู่อาศัย) Interactive Tariff & Bill Calculator -->
+      <div class="pea-box">
+        <div class="between" style="margin-bottom:8px;">
+          <span style="font-weight:800;font-size:12.5px;color:#c4b5fd;">⚡ สูตรคิดค่าไฟ กฟภ. (PEA ประเภทที่ 1 บ้านอยู่อาศัย)</span>
+          <span class="pill p-vio num" id="peaEffBadge">-- ฿/หน่วย</span>
+        </div>
+        <div class="seg" id="peaTypeSeg" style="margin-bottom:8px;">
+          <button data-pt="1.1.1" onclick="setPeaType('1.1.1')">1.1.1 ไม่เกิน 150 หน่วย</button>
+          <button data-pt="1.1.2" class="act-vio" onclick="setPeaType('1.1.2')">1.1.2 เกิน 150 หน่วย</button>
+          <button data-pt="1.2" onclick="setPeaType('1.2')">1.2 TOU (ตามเวลา)</button>
+          <button data-pt="custom" onclick="setPeaType('custom')">กำหนดเอง</button>
+        </div>
+        <div class="fgrid" style="grid-template-columns:repeat(3,1fr);">
+          <div class="fg" id="peaFtWrap">
+            <label>ค่า Ft (สตางค์/หน่วย) <span style="color:var(--cyan);cursor:pointer;" onclick="setFtPreset(16.23)">[16.23 สต.]</span></label>
+            <input type="number" step="0.01" id="peaFt" value="16.23" oninput="onPeaUiChange()">
+          </div>
+          <div class="fg" id="peaTierWrap">
+            <label>โหมดคำนวณขั้นบันได กฟภ.</label>
+            <select id="peaTier" onchange="onPeaUiChange()">
+              <option value="1">ส่วนเพิ่มแอร์ ขั้น 151–400 หน่วย (4.2218฿)</option>
+              <option value="2">ส่วนเพิ่มแอร์ ขั้น >400 หน่วย (4.4217฿)</option>
+              <option value="0">ขั้นบันไดจริงเริ่มจาก 0 หน่วย (ทั้งมิเตอร์)</option>
+            </select>
+          </div>
+          <div class="fg" id="peaCustomWrap" style="display:none;">
+            <label>อัตราคงที่ (บาท/หน่วย)</label>
+            <input type="number" step="0.01" id="peaCustom" value="4.50" oninput="onPeaUiChange()">
+          </div>
+          <div class="fg" style="display:flex;flex-direction:column;justify-content:flex-end;gap:5px;">
+            <div class="row" style="gap:12px;">
+              <label class="chk-lbl"><input type="checkbox" id="peaVat" checked onchange="onPeaUiChange()"><span>VAT 7%</span></label>
+              <label class="chk-lbl"><input type="checkbox" id="peaSvc" onchange="onPeaUiChange()"><span id="peaSvcLbl">ค่าบริการ 24.62฿</span></label>
+            </div>
+            <button class="btn btn-ok btn-sm" onclick="savePeaConfig()">💾 บันทึกเรต กฟภ. ลงบอร์ด</button>
+          </div>
+        </div>
+        <div class="pea-break num" id="peaBreak">กำลังคำนวณบิล กฟภ....</div>
+      </div>
+
+      <!-- Multi-Overlay Sensor Toggles -->
+      <div class="series-bar" id="seriesBar"></div>
+
+      <!-- Dual-Axis Interactive SVG Chart -->
+      <div class="chart-box" id="mainChartBox">
+        <div class="ctip" id="chartTip"></div>
+        <div id="mainChartWrap"></div>
+      </div>
+
+      <!-- Energy Bar Chart (shown in week/month/year) -->
+      <div id="energyBarSec" style="display:none;margin-top:12px;">
+        <div class="ctitle"><span>💰 กราฟหน่วยไฟ (kWh) และค่าไฟ (฿) รายวัน/เดือน</span></div>
+        <div class="chart-box"><div id="energyBarWrap"></div></div>
+      </div>
+    </div>
+
+    <!-- 24h Heatmap + Sessions -->
+    <div class="grid2" style="grid-template-columns:1fr 1fr;margin-bottom:12px;">
+      <div class="card">
+        <div class="ctitle"><span>🔥 ช่วงเวลาที่เปิดแอร์บ่อย (24-Hour Heatmap)</span></div>
+        <div class="sub">สีเขียวยิ่งเข้ม = ช่วงชั่วโมงนั้นเปิดแอร์บ่อย</div>
+        <div class="heat24" id="heat24"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle"><span>🕒 ประวัติรอบการเปิด-ปิดแอร์ (Sessions)</span></div>
+        <div class="tbl-wrap" style="max-height:200px;overflow-y:auto;">
+          <table><thead><tr><th>เริ่ม</th><th>จบ</th><th>นาน</th><th>ตั้งค่า</th><th>W เฉลี่ย</th><th>หน่วย/ค่าไฟ</th></tr></thead><tbody id="sessBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Data Table -->
+    <div class="card">
+      <div class="ctitle"><span id="histTblTitle">📋 ตารางสรุปข้อมูล</span><span class="sub" id="histRowsCnt">0 แถว</span></div>
+      <div class="tbl-wrap" style="max-height:300px;overflow-y:auto;">
+        <table><thead id="histThead"></thead><tbody id="histTbody"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 4: SELF-CLEAN (CL) ==================== -->
+  <section class="screen" id="sc-cl">
+    <div class="cl-hero idle" id="clHero">
+      <div class="between">
+        <div>
+          <div class="sub">สถานะระบบล้างคอยล์อัตโนมัติ (Cold Expansion Self-Clean)</div>
+          <div style="font-size:28px;font-weight:900;margin-top:2px;" id="clPhase">IDLE</div>
+        </div>
+        <div class="row">
+          <button class="btn btn-pri" id="btnClStart" onclick="clControl(true)">❄️ เริ่มล้างคอยล์ (CL)</button>
+          <button class="btn btn-err" id="btnClStop" onclick="clControl(false)" disabled>⏹️ ยกเลิก CL</button>
+        </div>
+      </div>
+      <div class="bar-bg" style="height:10px;margin:12px 0 6px;"><div class="bar-fill" id="clBar" style="width:0%"></div></div>
+      <div class="sub num" id="clElapsed">เวลาที่ผ่านไป: 00:00 / ~20:30 (0%)</div>
+      <div class="steps5">
+        <div class="step" id="st1">1.เตรียมระบบ</div>
+        <div class="step" id="st2">2.แช่แข็ง 0°C</div>
+        <div class="step" id="st3">3.ละลายล้าง</div>
+        <div class="step" id="st4">4.เป่าแห้ง</div>
+        <div class="step" id="st5">5.คืนสถานะ</div>
+      </div>
+    </div>
+
+    <div class="kpi4" style="margin-bottom:12px;">
+      <div class="kpi"><div class="kl">คอยล์เย็น (ต่ำสุด)</div><div class="kv num" style="color:var(--cyan)" id="clCoil">--</div><div class="ks num" id="clMinCoil">Min --°C</div></div>
+      <div class="kpi"><div class="kl">ท่ออัดคอมฯ (สูงสุด)</div><div class="kv num" style="color:var(--amb)" id="clPipe">--</div><div class="ks num" id="clPeakPipe">Peak --°C</div></div>
+      <div class="kpi"><div class="kl">กำลังไฟ (สูงสุด)</div><div class="kv num" style="color:var(--em)" id="clW">--</div><div class="ks num" id="clPeakW">Peak -- W</div></div>
+      <div class="kpi"><div class="kl">ห้องจริง Xiaomi</div><div class="kv num" id="clX">--</div><div class="ks num" id="clHz">-- Hz</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle"><span>⚙️ นโยบายอัตโนมัติหลังล้างคอยล์เสร็จ (Post-CL Action)</span></div>
+      <div class="post-grid" id="postGrid">
+        <button class="post-opt" data-p="restore_prev" onclick="setPostCl('restore_prev')"><b>🔄 คืนค่าก่อนทำ CL (แนะนำ)</b><div class="sub">ถ้าก่อนล้างปิดอยู่ ➔ ปิดกลับ OFF / ถ้าเปิดอยู่ ➔ คืนโหมดเดิม</div></button>
+        <button class="post-opt" data-p="power_off" onclick="setPostCl('power_off')"><b>⏻ ปิดเครื่อง (OFF) เสมอ</b><div class="sub">จบ CL แล้วสั่งปิดแอร์อัตโนมัติทันที</div></button>
+        <button class="post-opt" data-p="dry_off_10m" onclick="setPostCl('dry_off_10m')"><b>🌬️ เป่าลม 10 น. แล้วปิด</b><div class="sub">เป่าคอยล์แห้งสนิทป้องกันกลิ่นอับก่อนปิด</div></button>
+        <button class="post-opt" data-p="stay_on" onclick="setPostCl('stay_on')"><b>❄️ คงสถานะเปิดไว้ตามเดิม</b><div class="sub">ไม่สั่งเปลี่ยนสถานะหลังแอร์จบ CL</div></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 5: SYSTEM, BLE, SETTINGS & LOGS ==================== -->
+  <section class="screen" id="sc-sys">
+    <div class="stack">
+      <!-- Live LittleFS Log -->
+      <div class="card">
+        <div class="ctitle">
+          <span>📜 Live Event Log (Zero-Stall RAM + LittleFS)</span>
+          <span class="sub num" id="fsInfo">Flash -- KB</span>
+        </div>
+        <div class="between" style="margin-bottom:8px;">
+          <div class="row" id="logCats">
+            <button class="btn btn-sm btn-pri" data-lf="all" onclick="setLogCat('all')">All</button>
+            <button class="btn btn-sm" data-lf="CMD" onclick="setLogCat('CMD')">CMD</button>
+            <button class="btn btn-sm" data-lf="AC" onclick="setLogCat('AC')">AC</button>
+            <button class="btn btn-sm" data-lf="CL" onclick="setLogCat('CL')">CL</button>
+            <button class="btn btn-sm" data-lf="RULE" onclick="setLogCat('RULE')">RULE</button>
+            <button class="btn btn-sm" data-lf="SYS" onclick="setLogCat('SYS')">SYS</button>
+            <button class="btn btn-sm" data-lf="ERR" onclick="setLogCat('ERR')">ERR</button>
+          </div>
+          <div class="row">
+            <button class="btn btn-sm" onclick="loadLogs()">🔄</button>
+            <a class="btn btn-sm" href="#log-demo" onclick="event.preventDefault();toast('โหมด Demo: บนบอร์ดจริงจะดาวน์โหลดไฟล์ p25_haier_logs.jsonl')" style="text-decoration:none;">📥 .jsonl</a>
+            <button class="btn btn-err btn-sm" onclick="confirmClearLogs()">ล้าง Log</button>
+          </div>
+        </div>
+        <div class="logbox" id="logBox">กำลังโหลด...</div>
+      </div>
+
+      <!-- Xiaomi BLE & Scanner -->
+      <div class="card">
+        <div class="ctitle">
+          <span>📡 Xiaomi BLE & Live Scanner (ATC_v59 / Stock)</span>
+          <div class="row">
+            <button class="btn btn-sm" onclick="forceBleRead()">Force GATT Read</button>
+            <button class="btn btn-pri btn-sm" onclick="loadBleScan()">🔍 สแกน BLE รอบตัว</button>
+          </div>
+        </div>
+        <div class="sub num" id="bleDetail" style="margin-bottom:8px;">--</div>
+        <div id="bleScanBox" class="stack"></div>
+      </div>
+
+      <!-- Settings Form -->
+      <div class="card">
+        <div class="ctitle"><span>⚙️ ตั้งค่าระบบ, ค่าไฟ, UART และ Wi-Fi</span></div>
+        <div class="fgrid">
+          <div class="fg"><label>อัตราค่าไฟ (บาท / หน่วย kWh)</label><input type="number" step="0.01" id="cfgTariff" value="4.18"></div>
+          <div class="fg"><label>Xiaomi BLE MAC</label><input type="text" id="cfgMac"></div>
+          <div class="fg"><label>UART RX Pin (รับจากแอร์)</label><input type="number" id="cfgRx"></div>
+          <div class="fg"><label>UART TX Pin (ส่งเข้าแอร์)</label><input type="number" id="cfgTx"></div>
+          <div class="fg"><label>Wi-Fi 1 SSID</label><input type="text" id="cfgSsid1"></div>
+          <div class="fg"><label>Wi-Fi 1 Password (เว้นว่าง = ไม่เปลี่ยน)</label><input type="password" id="cfgPass1" placeholder="••••••••"></div>
+          <div class="fg"><label>Wi-Fi 2 สำรอง SSID</label><input type="text" id="cfgSsid2"></div>
+          <div class="fg"><label>Wi-Fi 2 Password</label><input type="password" id="cfgPass2" placeholder="••••••••"></div>
+          <div class="fg"><label>ใช้ Static IP (192.168.1.X)</label><select id="cfgStatic"><option value="1">เปิดใช้ Static IP</option><option value="0">DHCP อัตโนมัติ</option></select></div>
+          <div class="fg"><label>เลข IP ตัวท้าย (เช่น 25)</label><input type="number" id="cfgSuffix" min="2" max="250"></div>
+        </div>
+        <div class="between" style="margin-top:12px;">
+          <button class="btn btn-sm" onclick="scanWifi()">📶 สแกน Wi-Fi</button>
+          <button class="btn btn-ok" onclick="saveSettings()">💾 บันทึกการตั้งค่า</button>
+        </div>
+        <div id="wifiBox" class="stack" style="margin-top:8px;"></div>
+      </div>
+
+      <!-- OTA & Maintenance -->
+      <div class="card">
+        <div class="ctitle"><span>🔧 อัปเดต OTA, โหมดจำลอง & บำรุงรักษา</span></div>
+        <div class="between" style="margin-bottom:10px;">
+          <div class="sub num" id="sysMeta">Uptime: -- | Free Heap: -- | NTP: --</div>
+          <label class="row" style="font-size:12.5px;font-weight:700;cursor:pointer;">
+            <span>🧪 Debug AC Simulator</span>
+            <span class="ios-sw"><input type="checkbox" id="simSw" onchange="toggleSim(this.checked)"><span class="ios-sl"></span></span>
+          </label>
+        </div>
+        <div class="row">
+          <a class="btn btn-pri" href="#ota-demo" onclick="event.preventDefault();toast('โหมด Demo: บนบอร์ดจริงเปิด /update เพื่อแฟลชไฟล์ .bin ผ่านเบราว์เซอร์')" style="text-decoration:none;">⬆️ อัปเดต Firmware (Web OTA)</a>
+          <button class="btn btn-warn" onclick="confirmForceAp()">📶 เปิด Fail-Safe AP</button>
+          <button class="btn btn-err" onclick="confirmReboot()">🔄 รีบูต ESP32-C3</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 6: ALL SENSORS & TECHNICIAN DIAGNOSTICS ==================== -->
+  <section class="screen" id="sc-sens">
+    <!-- Real-Time Live Stream Control Bar -->
+    <div class="rt-bar" id="rtBar">
+      <div class="row" style="gap:10px;">
+        <span class="rt-dot" id="rtDot"></span>
+        <div>
+          <div style="font-weight:900;font-size:14px;">🔬 เซนเซอร์ทั้งหมด & วินิจฉัยช่างแอร์ (All Sensors)</div>
+          <div class="sub num" id="rtMeta">รอบปกติ (1.8s) • กดเปิดเรียลไทม์เพื่อสตรีม UART ความเร็วสูงสุดของเครื่อง (~2 Hz)</div>
+        </div>
+      </div>
+      <div class="row">
+        <label class="row" style="background:#081020;border:1px solid var(--line2);padding:6px 10px;border-radius:11px;cursor:pointer;font-size:12.5px;font-weight:800;">
+          <span id="rtLbl">🔴 โหมดเรียลไทม์</span>
+          <span class="ios-sw"><input type="checkbox" id="rtSw" onchange="toggleRealtime(this.checked)"><span class="ios-sl"></span></span>
+        </label>
+        <div class="seg" style="min-width:170px;">
+          <button id="svCardsBtn" class="act-cyan" onclick="setSensView('cards')">🗂️ การ์ดใหญ่</button>
+          <button id="svTblBtn" onclick="setSensView('table')">📋 ตารางช่าง</button>
+        </div>
+        <button class="btn btn-sm" onclick="checkAlarms()">🔍 Alarm 0x73</button>
+        <button class="btn btn-sm" onclick="resetSensMinMax()">↺ รีเซ็ต Min/Max</button>
+      </div>
+    </div>
+
+    <!-- Automated Technician Diagnostic Health Card -->
+    <div class="diag-card" id="diagCard">
+      <div class="diag-title" id="diagTitle">⏳ กำลังอ่านเซนเซอร์วิเคราะห์สุขภาพแอร์...</div>
+      <div class="sub" style="font-size:13px;color:#cbd5e1;" id="diagDesc">--</div>
+      <ul class="diag-list" id="diagChecks"></ul>
+      <div class="row" style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:11.5px;" id="diagPeaks"></div>
+    </div>
+
+    <!-- High-Contrast Categorized Cards View -->
+    <div id="sensCardsView" class="stack">
+      <div class="card">
+        <div class="ctitle"><span>🌡️ ชุดที่ 1: สภาพแวดล้อม, อุณหภูมิห้อง และความชื้น (Environment & Humidity)</span></div>
+        <div class="sens-grid" id="sgEnv"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle"><span>❄️ ชุดที่ 2: คอยล์เย็น, คอยล์ร้อน และท่อน้ำยา R32 (Evaporator & Pipeline)</span></div>
+        <div class="sens-grid" id="sgPipe"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle"><span>⚡ ชุดที่ 3: อินเวอร์เตอร์, คอมเพรสเซอร์ และระบบไฟฟ้า (Inverter & Electrical)</span></div>
+        <div class="sens-grid" id="sgInv"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle"><span>🛠️ ชุดที่ 4: บอร์ดแอร์, Error Code และบัสสื่อสาร UART (MCU & Diagnostics)</span></div>
+        <div class="sens-grid" id="sgMcu"></div>
+      </div>
+    </div>
+
+    <!-- Compact Structured Engineering Table View -->
+    <div id="sensTableView" class="card" style="display:none;">
+      <div class="ctitle"><span>📋 ตารางรวมเซนเซอร์ทั้งหมดสำหรับช่างแอร์ (Haier HSU-15VQRA03T + Xiaomi BLE)</span><span class="sub num" id="sensTblTime">--</span></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>หมวด</th><th>ชื่อเซนเซอร์ / พารามิเตอร์</th><th>แหล่งข้อมูล</th><th>ค่าปัจจุบัน</th><th>Min / Max รอบนี้</th><th>เกณฑ์ปกติ / หมายเหตุ</th></tr></thead>
+          <tbody id="sensTblBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Mobile Fixed Bottom Navigation (6 Native Tabs) -->
+<nav class="mob-nav" id="mobNav">
+  <button class="mbtn active" data-sc="ctrl" onclick="goScreen('ctrl')"><i>🎛️</i><span>ควบคุม</span></button>
+  <button class="mbtn" data-sc="adv" onclick="goScreen('adv')"><i>🤖</i><span>แอดวานซ์</span></button>
+  <button class="mbtn" data-sc="hist" onclick="goScreen('hist')"><i>📊</i><span>กราฟ&ไฟ</span></button>
+  <button class="mbtn" data-sc="cl" id="mNavCl" onclick="goScreen('cl')"><i>❄️</i><span>ล้างCL</span></button>
+  <button class="mbtn" data-sc="sys" onclick="goScreen('sys')"><i>⚙️</i><span>ระบบ</span></button>
+  <button class="mbtn" data-sc="sens" id="mNavSens" onclick="goScreen('sens')"><i>🔬</i><span>เซนเซอร์</span></button>
+</nav>
+
+<!-- ==================== CUSTOM INTERACTIVE MODALS (ZERO NATIVE POPUPS) ==================== -->
+<!-- 1. Takeover Modal -->
+<div class="mbd" id="takeoverModal">
+  <div class="modal">
+    <h3>🔒 มีอุปกรณ์อื่นกำลังควบคุมแอร์อยู่</h3>
+    <p class="sub" style="font-size:13px;line-height:1.6;">
+      ขณะนี้สิทธิ์ควบคุมเป็นของ <b style="color:#fbbf24" id="tkOwner">--</b><br>
+      เพื่อป้องกันคำสั่งชนกัน ระบบเปิดเป็น <b>ดูอย่างเดียว (Read-Only)</b> คุณต้องการยึดสิทธิ์ควบคุมมาที่เครื่องนี้หรือไม่?
+    </p>
+    <div class="mfoot">
+      <button class="btn" onclick="dismissTakeover()">ดูอย่างเดียว (Read-Only)</button>
+      <button class="btn btn-warn" onclick="doTakeover()">⚡ ยึดสิทธิ์ควบคุม</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Universal Confirm Modal -->
+<div class="mbd" id="confirmModal">
+  <div class="modal">
+    <h3 id="cfTitle">ยืนยันการทำงาน</h3>
+    <p class="sub" style="font-size:13px;line-height:1.6;" id="cfMsg">--</p>
+    <div class="mfoot">
+      <button class="btn" onclick="closeModal('confirmModal')">ยกเลิก</button>
+      <button class="btn btn-err" id="cfOkBtn" onclick="runConfirmOk()">ยืนยัน</button>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Interactive Timer Modal -->
+<div class="mbd" id="timerModal">
+  <div class="modal">
+    <h3>⏱️ ตั้งเวลาเปิด / ปิดแอร์</h3>
+    <div class="seg" style="margin-bottom:10px;">
+      <button id="tmModeOff" class="act-cyan" onclick="setTmMode(false)">ตั้งเวลาปิด (TIME OFF)</button>
+      <button id="tmModeOn" onclick="setTmMode(true)">ตั้งเวลาเปิด (TIME ON)</button>
+    </div>
+    <div class="row" style="margin-bottom:10px;">
+      <button class="btn btn-sm" onclick="setTmMin(30)">30 น.</button>
+      <button class="btn btn-sm" onclick="setTmMin(60)">1 ชม.</button>
+      <button class="btn btn-sm" onclick="setTmMin(120)">2 ชม.</button>
+      <button class="btn btn-sm" onclick="setTmMin(180)">3 ชม.</button>
+      <button class="btn btn-sm" onclick="setTmMin(240)">4 ชม.</button>
+      <button class="btn btn-sm" onclick="setTmMin(360)">6 ชม.</button>
+      <button class="btn btn-sm" onclick="setTmMin(480)">8 ชม.</button>
+    </div>
+    <div class="fg">
+      <label>จำนวนนาทีที่ต้องการ (นาที)</label>
+      <input type="number" id="tmMins" min="1" max="1440" value="60" oninput="updateTmPreview()">
+    </div>
+    <div class="sub" style="margin-top:8px;color:var(--cyan);" id="tmPreview">--</div>
+    <div class="mfoot">
+      <button class="btn btn-err btn-sm" onclick="cancelTimer();closeModal('timerModal')">ยกเลิกเวลาเดิม</button>
+      <button class="btn" onclick="closeModal('timerModal')">ปิด</button>
+      <button class="btn btn-pri" onclick="submitTimer()">บันทึกเวลา</button>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Interactive If-Else Rule Editor Modal -->
+<div class="mbd" id="ruleModal">
+  <div class="modal">
+    <h3 id="rmTitle">🤖 สร้างกฎอัตโนมัติ (IF → THEN)</h3>
+    <input type="hidden" id="rmId" value="0">
+    <div class="stack">
+      <div class="fg"><label>ชื่อกฎ (สั้น ๆ เข้าใจง่าย)</label><input type="text" id="rmName" maxlength="30" placeholder="เช่น เย็นแล้ว -> ECO L3"></div>
+      <div class="fgrid">
+        <div class="fg"><label>เงื่อนไข (IF)</label>
+          <select id="rmCond" onchange="syncRuleCondUi()">
+            <option value="0">อุณหภูมิห้อง Xiaomi ≤</option>
+            <option value="1">อุณหภูมิห้อง Xiaomi ≥</option>
+            <option value="2">ความชื้นห้อง Xiaomi ≥</option>
+            <option value="3">ความชื้นห้อง Xiaomi ≤</option>
+            <option value="4">ถึงเวลา (HH:MM)</option>
+          </select>
+        </div>
+        <div class="fg" id="rmValNumWrap"><label id="rmValLbl">ค่าเงื่อนไข (°C)</label><input type="number" step="0.5" id="rmValNum" value="26.5"></div>
+        <div class="fg" id="rmValTimeWrap" style="display:none;"><label>เวลา (24 ชม.)</label><input type="time" id="rmValTime" value="06:00"></div>
+      </div>
+      <label class="row" id="rmOnOnlyWrap" style="font-size:12.5px;cursor:pointer;">
+        <input type="checkbox" id="rmOnOnly" checked> <span>ทำงานเฉพาะตอนแอร์เปิดอยู่เท่านั้น</span>
+      </label>
+      <div style="border-top:1px solid var(--line);padding-top:8px;font-size:12px;font-weight:800;color:var(--em);">THEN สั่งการแอร์:</div>
+      <div class="fgrid">
+        <div class="fg"><label>เปิด/ปิดเครื่อง</label><select id="rmPwr"><option value="1">เปิดแอร์ (ON)</option><option value="0">ปิดแอร์ (OFF)</option><option value="2">คงเดิม</option></select></div>
+        <div class="fg"><label>โหมด</label><select id="rmMode"><option value="255">คงเดิม</option><option value="1">COOL</option><option value="2">DRY</option><option value="6">FAN</option><option value="0">AUTO</option></select></div>
+        <div class="fg"><label>ตั้งอุณหภูมิ (0=คงเดิม)</label><input type="number" id="rmTemp" min="0" max="30" value="26"></div>
+        <div class="fg"><label>แรงลม</label><select id="rmFan"><option value="255">คงเดิม</option><option value="3">LOW</option><option value="2">MID</option><option value="1">HIGH</option><option value="5">AUTO</option></select></div>
+        <div class="fg"><label>Performance / ECO</label><select id="rmPerf"><option value="255">คงเดิม</option><option value="0">ปกติ</option><option value="1">⚡ E-Turbo</option><option value="2">🌙 Quiet</option><option value="3">🍃 ECO L1</option><option value="4">🍃 ECO L2</option><option value="5">🍃 ECO L3</option></select></div>
+        <div class="fg"><label>Cooldown (วินาที)</label><input type="number" id="rmCd" min="30" max="3600" value="300"></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn" onclick="closeModal('ruleModal')">ยกเลิก</button>
+      <button class="btn btn-pri" onclick="saveRule()">💾 บันทึกกฎ</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+// ============================================================================
+// Virtual ESP32-C3 Haier AC Studio v4.1 Client-Side Mock Engine (GitHub Pages)
+// Intercepts all /api/* requests in-memory with realistic HVAC & PEA physics!
+// ============================================================================
+(function() {
+  if (new URLSearchParams(location.search).get('clean') === '1') {
+    document.body.classList.add('clean-mode');
+  }
+
+  const MODES = {0:'AUTO', 1:'COOL', 2:'DRY', 6:'FAN'};
+  const FANS  = {1:'HIGH', 2:'MID', 3:'LOW', 5:'AUTO'};
+  const VSW   = {0:'DEFAULT', 2:'MAX_UP', 4:'UP', 6:'CENTER', 8:'DOWN', 10:'MAX_DOWN', 12:'AUTO'};
+  const HSW   = {0:'CENTER', 3:'MAX_LEFT', 4:'LEFT', 5:'RIGHT', 6:'MAX_RIGHT', 7:'AUTO'};
+
+  const nowTs = () => {
+    const d = new Date();
+    const p = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  };
+
+  const VM = {
+    scenario: 'healthy', // 'healthy' | 'leak'
+    ownerId: '',
+    ownerLabel: '',
+    rtActive: false,
+    bootMs: Date.now() - 4320000,
+    pea: { type:'1.1.2', ft:16.23, vat:true, svc:false, tier:1, custom:4.50, eff:4.6910 },
+    ac: {
+      online:true, valid:true, sim:true, rx_pin:4, tx_pin:3,
+      rx_ok:1420, rx_rec_ff:4, rx_err:0, tx_cnt:86,
+      dev_name:'HSU-15VQRA03T', proto_ver:'E++2.18', sw_ver:'21060800', hw_ver:'01020000',
+      rtt_ms:118, rx_age_ms:180, last_hex:'3A400000000000027D0108002500020900000800000003F0',
+      ac_power:true, ac_mode:'COOL', mode_raw:1,
+      fan_mode:'AUTO', fan_mode_raw:5, target_temp:24,
+      vswing:'CENTER', vswing_raw:6, hswing:'CENTER', hswing_raw:0,
+      eco_level:0, display_status:true, health_mode:false,
+      fast_mode:false, quiet_mode:false, sleep_mode:false,
+      lock_remote:false, beeper_muted:false, self_cleaning:false,
+      room_temp_c:26.5, room_hum_pct:null, outdoor_temp_c:31,
+      error_code:0, op_source:'ESP/UART', alarm_count:0, alarm_hex:'0000',
+      comp_waiting:false, smart_eco:false, smart_eco_th:27.0,
+      timer_active:false, timer_on:false, timer_rem_s:0, timer_label:''
+    },
+    cl: {
+      active:false, phase:'IDLE', post_action:'restore_prev',
+      elapsed_s:0, startedMs:0, min_coil_c:null, peak_pipe_c:null,
+      peak_power_w:0, unacked:false, summary:'', seq:0
+    },
+    rulesMaster: true,
+    rules: [
+      {id:1, en:true,  cond:0, on_only:true,  th:265, pwr:1, mode:1,   temp:26, fan:3,   perf:5,   cd:300, name:'เย็นแล้ว -> ECO L3 + Low'},
+      {id:2, en:false, cond:2, on_only:true,  th:720, pwr:1, mode:2,   temp:25, fan:5,   perf:0,   cd:300, name:'ชื้น >= 72% -> โหมด DRY'},
+      {id:3, en:false, cond:3, on_only:true,  th:550, pwr:1, mode:6,   temp:0,  fan:2,   perf:0,   cd:300, name:'แห้ง <= 55% -> เป่าลม FAN'},
+      {id:4, en:true,  cond:4, on_only:false, th:360, pwr:0, mode:255, temp:0,  fan:255, perf:255, cd:90,  name:'ปิดแอร์อัตโนมัติ 06:00'}
+    ],
+    days: [
+      {day_idx:2512, date:'2026-11-17', lbl:'11-17', xt:27.1, tmin:25.2, tmax:31.5, xh:59, w:640, kwh:5.12, on_min:480, pp:76, cl:11.5},
+      {day_idx:2513, date:'2026-11-18', lbl:'11-18', xt:26.8, tmin:24.8, tmax:31.2, xh:58, w:590, kwh:4.45, on_min:450, pp:74, cl:11.0},
+      {day_idx:2514, date:'2026-11-19', lbl:'11-19', xt:27.4, tmin:25.5, tmax:32.1, xh:61, w:710, kwh:6.20, on_min:525, pp:79, cl:10.8},
+      {day_idx:2515, date:'2026-11-20', lbl:'11-20', xt:26.5, tmin:24.6, tmax:30.9, xh:57, w:540, kwh:4.10, on_min:455, pp:72, cl:11.8},
+      {day_idx:2516, date:'2026-11-21', lbl:'11-21', xt:27.8, tmin:25.9, tmax:32.4, xh:62, w:760, kwh:6.85, on_min:540, pp:81, cl:11.2},
+      {day_idx:2517, date:'2026-11-22', lbl:'11-22', xt:27.0, tmin:25.1, tmax:31.6, xh:60, w:620, kwh:4.95, on_min:475, pp:75, cl:11.5},
+      {day_idx:2518, date:'2026-11-23', lbl:'11-23', xt:26.9, tmin:25.0, tmax:31.4, xh:58, w:650, kwh:3.92, on_min:360, pp:76, cl:11.4}
+    ],
+    logs: [
+      {ts:nowTs(), cat:'SYS',  msg:'Boot v4.1.0 (Sandbox) | RX=4 TX=3 | IP=192.168.1.25'},
+      {ts:nowTs(), cat:'BLE',  msg:'Xiaomi aa:bb:cc:dd:ee:ff locked [bthome_v2] 26.85C / 58%'},
+      {ts:nowTs(), cat:'AC',   msg:'Haier HSU-15VQRA03T (E++2.18) 7D 01 dual-frame sync OK'},
+      {ts:nowTs(), cat:'RULE', msg:'Autonomous Engine Armed (2 active rules)'}
+    ]
+  };
+
+  function addLog(cat, msg) {
+    VM.logs.unshift({ts:nowTs(), cat, msg});
+    if (VM.logs.length > 60) VM.logs.pop();
+  }
+
+  function computePhysics() {
+    const ac = VM.ac;
+    const jit = (Math.sin(Date.now() / 1700) * 0.12);
+    ac.rx_ok++;
+    ac.rtt_ms = 105 + Math.round(Math.abs(Math.sin(Date.now() / 900)) * 28);
+
+    if (VM.cl.active) {
+      const sec = Math.floor((Date.now() - VM.cl.startedMs) / 1000);
+      VM.cl.elapsed_s = sec * 35; // Accelerated demo timeline (~35s full cycle)
+      let coil = 18, pipe = 84, hz = 65, w = 840, inFan = 0, comp = 1;
+      if (sec < 3)       { VM.cl.phase = 'STARTING'; coil = 21.0; pipe = 68; hz = 35; w = 420; }
+      else if (sec < 10) { VM.cl.phase = 'FREEZING'; coil = 0.0;  pipe = 88; hz = 80; w = 890; }
+      else if (sec < 17) { VM.cl.phase = 'WASHING';  coil = 18.5; pipe = 95; hz = 78; w = 1010; inFan = 1; }
+      else if (sec < 23) { VM.cl.phase = 'DRYING';   coil = 25.5; pipe = 46; hz = 0;  w = 26;   inFan = 1; comp = 0; }
+      else {
+        VM.cl.active = false;
+        VM.cl.phase = 'COMPLETED';
+        VM.cl.unacked = true;
+        VM.cl.summary = 'CL เสร็จสมบูรณ์ -> คืนค่าก่อนล้างอัตโนมัติแล้ว (Demo)';
+        ac.self_cleaning = false;
+        addLog('CL', VM.cl.summary);
+      }
+      VM.cl.min_coil_c = VM.cl.min_coil_c === null ? coil : Math.min(VM.cl.min_coil_c, coil);
+      VM.cl.peak_pipe_c = VM.cl.peak_pipe_c === null ? pipe : Math.max(VM.cl.peak_pipe_c, pipe);
+      VM.cl.peak_power_w = Math.max(VM.cl.peak_power_w, w);
+      return {
+        valid:true, power_w:w, indoor_coil_c:coil, outdoor_out_air_c:pipe,
+        outdoor_coil_c:null, outdoor_in_air_c:null, outdoor_defrost_c:null,
+        comp_freq_hz:hz, comp_current_a:+(w/225).toFixed(1),
+        comp_status:comp, in_fan_status:inFan, out_fan_status:comp?2:0,
+        defrost_status:0, four_way_status:2, eev_open:comp?280:0
+      };
+    }
+
+    if (!ac.ac_power) {
+      ac.room_temp_c = 28.5;
+      return { valid:true, power_w:2, indoor_coil_c:28.5, outdoor_out_air_c:32, outdoor_coil_c:null, outdoor_in_air_c:null, outdoor_defrost_c:null, comp_freq_hz:0, comp_current_a:0.0, comp_status:0, in_fan_status:0, out_fan_status:0, defrost_status:0, four_way_status:0, eev_open:0 };
+    }
+    if (ac.mode_raw === 6) {
+      const fw = ac.fan_mode_raw === 1 ? 36 : ac.fan_mode_raw === 2 ? 26 : 18;
+      return { valid:true, power_w:fw, indoor_coil_c:27.5, outdoor_out_air_c:33, outdoor_coil_c:null, outdoor_in_air_c:null, outdoor_defrost_c:null, comp_freq_hz:0, comp_current_a:+(fw/225).toFixed(1), comp_status:0, in_fan_status:1, out_fan_status:0, defrost_status:0, four_way_status:0, eev_open:0 };
+    }
+
+    if (VM.scenario === 'leak') {
+      ac.room_temp_c = 30.0;
+      ac.outdoor_temp_c = 28;
+      return {
+        valid:true, power_w:690, indoor_coil_c:+(26.8 + jit).toFixed(1), outdoor_out_air_c:92,
+        outdoor_coil_c:null, outdoor_in_air_c:null, outdoor_defrost_c:null,
+        comp_freq_hz:59, comp_current_a:3.0, comp_status:1, in_fan_status:1, out_fan_status:2,
+        defrost_status:0, four_way_status:2, eev_open:0
+      };
+    }
+
+    // Healthy R32 Inverter Physics
+    ac.room_temp_c = 26.5;
+    ac.outdoor_temp_c = 31;
+    const baseW = ac.eco_level===3 ? 350 : ac.eco_level===2 ? 520 : ac.eco_level===1 ? 680 : ac.fast_mode ? 1080 : ac.quiet_mode ? 480 : 790;
+    const w = Math.max(240, Math.min(1320, Math.round(baseW + (24 - ac.target_temp) * 32 + jit * 25)));
+    const hz = Math.max(22, Math.min(86, Math.round(w / 12.2)));
+    const coil = +( (ac.eco_level===3 ? 14.2 : ac.fast_mode ? 9.4 : 11.5) + jit ).toFixed(1);
+    const pipe = Math.round(62 + hz * 0.21);
+    return {
+      valid:true, power_w:w, indoor_coil_c:coil, outdoor_out_air_c:pipe,
+      outdoor_coil_c:null, outdoor_in_air_c:null, outdoor_defrost_c:null,
+      comp_freq_hz:hz, comp_current_a:+(w/225).toFixed(1),
+      comp_status:1, in_fan_status:1, out_fan_status:2,
+      defrost_status:0, four_way_status:2, eev_open:245
+    };
+  }
+
+  function buildStatus(cid, dev, okFlag) {
+    if (cid && !VM.ownerId) { VM.ownerId = cid; VM.ownerLabel = dev || 'Demo Browser'; }
+    const isOwner = !cid || cid === VM.ownerId;
+    const bd = computePhysics();
+    const xT = VM.scenario === 'leak' ? +(31.05 + Math.sin(Date.now()/2400)*0.08).toFixed(2) : +(26.82 + Math.sin(Date.now()/2400)*0.06).toFixed(2);
+    const xH = VM.scenario === 'leak' ? 64.0 : 57.5;
+    const res = {
+      ver: '4.1.0',
+      poll_mode: VM.rtActive ? 'REALTIME' : (VM.cl.active ? 'CL_LOCK' : 'ACTIVE'),
+      realtime: VM.rtActive,
+      rules_active: VM.rulesMaster ? VM.rules.filter(r => r.en).length : 0,
+      rules_master: VM.rulesMaster,
+      tariff: VM.pea.eff,
+      pea: VM.pea,
+      session: { is_owner: isOwner, owner_label: VM.ownerLabel, expires_s: 24 },
+      net: { ip:'192.168.1.25', ssid:'Demo-LAN-2.4GHz', rssi:-48, ap:false, uptime_s:Math.floor((Date.now()-VM.bootMs)/1000), free_heap:63488, ntp_ok:true, time:nowTs() },
+      ac: VM.ac,
+      bigdata: bd,
+      xiaomi: { ok:true, temp_c:xT, humidity_pct:xH, batt_pct:92, batt_v:3.02, rssi:-54, age_s:4, mode:'bthome_v2', mac:'aa:bb:cc:dd:ee:ff', adv_name:'ATC_DEMO', passive_pkts:128 + Math.floor((Date.now()-VM.bootMs)/8000), gatt_reads:0, raw:'40027a0a037616', err:'' },
+      cl: VM.cl,
+      cfg: { ssid1:'YOUR_PRIMARY_WIFI_SSID', ssid2:'YOUR_BACKUP_WIFI_SSID', use_static:true, ip_suffix:25, tariff:VM.pea.eff }
+    };
+    if (okFlag !== undefined) res.ok = okFlag;
+    return res;
+  }
+
+  function buildHistory(rng, dayOffset) {
+    const tf = VM.pea.eff;
+    const leak = VM.scenario === 'leak';
+    if (rng === 'day') {
+      const pts = [
+        {lbl:'08:00', xt:29.8, xh:63, ar:29.5, ot:30, cl:29.0, pp:31, w:0,   hz:0,  tg:null, on:0},
+        {lbl:'10:00', xt:31.2, xh:61, ar:30.5, ot:33, cl:12.0, pp:78, w:920, hz:75, tg:24,   on:1},
+        {lbl:'12:00', xt:27.9, xh:56, ar:27.0, ot:35, cl:11.2, pp:80, w:840, hz:68, tg:24,   on:1},
+        {lbl:'14:00', xt:26.9, xh:55, ar:26.5, ot:36, cl:12.5, pp:76, w:690, hz:56, tg:25,   on:1},
+        {lbl:'16:00', xt:26.7, xh:57, ar:26.0, ot:33, cl:13.8, pp:71, w:460, hz:38, tg:25,   on:1},
+        {lbl:'18:00', xt:27.1, xh:58, ar:26.5, ot:31, cl:leak?26.5:11.8, pp:leak?93:75, w:690, hz:59, tg:24, on:1},
+        {lbl:'NOW',   xt:leak?31.0:26.8, xh:leak?64:58, ar:VM.ac.room_temp_c, ot:VM.ac.outdoor_temp_c, cl:leak?27.0:11.5, pp:leak?92:74, w:leak?690:790, hz:leak?59:65, tg:VM.ac.ac_power?VM.ac.target_temp:null, on:VM.ac.ac_power?1:0}
+      ];
+      return {
+        range:'day', day_index:2518 - dayOffset, date:`2026-11-${String(23-dayOffset).padStart(2,'0')}`, tariff:tf, points:pts,
+        summary:{ total_kwh:3.92, total_cost:+(3.92*tf).toFixed(2), avg_daily_kwh:3.92, total_on_min:360, avg_temp:27.8, min_temp:26.7, max_temp:31.2, avg_hum:58, avg_watts:685, heatmap:[1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1] },
+        sessions:[
+          {active:true,  start:'11/23 18:00', end:'กำลังเปิดอยู่', dur_min:105, kwh:1.21, cost:+(1.21*tf).toFixed(2), avg_w:690, target:VM.ac.target_temp, mode:VM.ac.mode_raw},
+          {active:false, start:'11/23 10:00', end:'16:30', dur_min:390, kwh:4.25, cost:+(4.25*tf).toFixed(2), avg_w:654, target:24, mode:1}
+        ]
+      };
+    }
+    const pts = VM.days.map(d => ({...d, cost:+(d.kwh*tf).toFixed(2)}));
+    const totK = pts.reduce((a, b) => a + b.kwh, 0);
+    const totM = pts.reduce((a, b) => a + b.on_min, 0);
+    return {
+      range:rng, tariff:tf, points:pts,
+      summary:{ total_kwh:+totK.toFixed(3), total_cost:+(totK*tf).toFixed(2), avg_daily_kwh:+(totK/Math.max(1,pts.length)).toFixed(3), total_on_min:totM, avg_temp:27.1, min_temp:24.6, max_temp:32.4, avg_hum:59, avg_watts:644, heatmap:[5,5,5,4,4,3,1,0,0,1,2,3,4,4,4,3,3,4,6,7,6,6,6,5] },
+      sessions:[{active:true, start:'11/23 18:00', end:'กำลังเปิดอยู่', dur_min:105, kwh:1.21, cost:+(1.21*tf).toFixed(2), avg_w:690, target:24, mode:1}]
+    };
+  }
+
+  const origFetch = window.fetch.bind(window);
+  window.fetch = async function(input, init) {
+    const urlStr = typeof input === 'string' ? input : input.url;
+    if (!urlStr.startsWith('/api/')) return origFetch(input, init);
+    const u = new URL(urlStr, location.origin);
+    const p = u.pathname, q = Object.fromEntries(u.searchParams.entries());
+    const method = (init && init.method) || 'GET';
+    const okJson = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers:{'Content-Type':'application/json'} });
+
+    if (p === '/api/status') {
+      if ('rt' in q) VM.rtActive = q.rt === '1';
+      return okJson(buildStatus(q.cid || '', q.dev || ''));
+    }
+    if (p === '/api/session/takeover') {
+      VM.ownerId = q.cid || 'demo'; VM.ownerLabel = q.dev || 'Demo Browser';
+      addLog('SYS', 'Session takeover -> ' + VM.ownerLabel);
+      return okJson(buildStatus(VM.ownerId, VM.ownerLabel, true));
+    }
+    if (p === '/api/ac/cl_ack') {
+      VM.cl.unacked = false;
+      return okJson(buildStatus(q.cid || '', q.dev || '', true));
+    }
+    if (method === 'POST' && VM.ownerId && q.cid && q.cid !== VM.ownerId) {
+      return okJson({ ok:false, locked:true, locked_by:VM.ownerLabel }, 409);
+    }
+
+    const ac = VM.ac;
+    if (p === '/api/ac/power') {
+      ac.ac_power = q.on !== '0';
+      addLog('CMD', 'Power ' + (ac.ac_power ? 'ON -> OK' : 'OFF -> OK'));
+      return okJson(buildStatus(q.cid, q.dev, true));
+    }
+    if (p === '/api/ac/control') {
+      if ('power' in q) ac.ac_power = q.power !== '0';
+      if ('mode' in q) { const m = +q.mode; ac.mode_raw = m; ac.ac_mode = MODES[m]||'COOL'; ac.ac_power = true; }
+      if ('temp' in q) ac.target_temp = Math.round(+q.temp);
+      if ('fan' in q)  { const f = +q.fan; ac.fan_mode_raw = f; ac.fan_mode = FANS[f]||'AUTO'; ac.fast_mode = false; ac.quiet_mode = false; }
+      if ('perf' in q) { ac.fast_mode = q.perf==='turbo'; ac.quiet_mode = q.perf==='quiet'; ac.eco_level = q.perf==='eco1'?1:q.perf==='eco2'?2:q.perf==='eco3'?3:0; }
+      if ('eco' in q)  { ac.eco_level = +q.eco; if (ac.eco_level > 0) { ac.fast_mode = false; ac.quiet_mode = false; } }
+      if ('vswing' in q) { ac.vswing_raw = +q.vswing; ac.vswing = VSW[ac.vswing_raw]||'CENTER'; }
+      if ('hswing' in q) { ac.hswing_raw = +q.hswing; ac.hswing = HSW[ac.hswing_raw]||'CENTER'; }
+      if ('sleep' in q) ac.sleep_mode = q.sleep !== '0';
+      if ('health' in q) ac.health_mode = q.health !== '0';
+      if ('display' in q) ac.display_status = q.display !== '0';
+      if ('lock' in q) ac.lock_remote = q.lock !== '0';
+      if ('mute_beep' in q) ac.beeper_muted = q.mute_beep !== '0';
+      if ('off_min' in q && +q.off_min > 0) { ac.timer_active = true; ac.timer_rem_s = +q.off_min * 60; ac.timer_label = `ปิดแอร์ใน ${q.off_min} น.`; }
+      addLog('CMD', 'Ctrl update -> OK');
+      return okJson(buildStatus(q.cid, q.dev, true));
+    }
+    if (p === '/api/ac/dry_off') {
+      ac.ac_power = true; ac.mode_raw = 6; ac.ac_mode = 'FAN'; ac.fan_mode_raw = 1; ac.fan_mode = 'HIGH';
+      ac.timer_active = true; ac.timer_rem_s = 600; ac.timer_label = 'Dry & Off 10m';
+      addLog('CMD', 'Dry & Off 10m -> OK');
+      return okJson(buildStatus(q.cid, q.dev, true));
+    }
+    if (p === '/api/ac/alarms') {
+      addLog('AC', 'Alarms check (0x74): active=0 OK');
+      return okJson(buildStatus(q.cid, q.dev, true));
+    }
+    if (p === '/api/ac/timer') {
+      if (q.cancel === '1') { ac.timer_active = false; ac.timer_label = ''; }
+      else { const sec = +q.sec || 3600; ac.timer_active = true; ac.timer_on = q.on === '1'; ac.timer_rem_s = sec; ac.timer_label = `${ac.timer_on?'เปิด':'ปิด'}แอร์ใน ${Math.round(sec/60)} น.`; }
+      return okJson(buildStatus(q.cid, q.dev, true));
+    }
+    if (p === '/api/ac/cl') {
+      if (q.action === 'start') {
+        VM.cl.active = true; VM.cl.phase = 'STARTING'; VM.cl.startedMs = Date.now(); VM.cl.unacked = false; VM.cl.min_coil_c = null; VM.cl.peak_pipe_c = null; VM.cl.peak_power_w = 0;
+        ac.self_cleaning = true; addLog('CL', 'Self-Clean STARTED (Demo Accelerated)');
+      } else {
+        VM.cl.active = false; VM.cl.phase = 'IDLE'; VM.cl.unacked = true; VM.cl.summary = 'ยกเลิก CL -> คืนสถานะแอร์ก่อนล้างแล้ว';
+        ac.self_cleaning = false; addLog('CL', VM.cl.summary);
+      }
+      return okJson(buildStatus(q.cid, q.dev, true));
+    }
+    if (p === '/api/ac/cl_policy') { VM.cl.post_action = q.post || 'restore_prev'; return okJson(buildStatus(q.cid, q.dev, true)); }
+    if (p === '/api/pea') {
+      if (q.type) VM.pea.type = q.type;
+      if (q.ft) VM.pea.ft = +q.ft;
+      if ('vat' in q) VM.pea.vat = q.vat !== '0';
+      if ('svc' in q) VM.pea.svc = q.svc !== '0';
+      if ('tier' in q) VM.pea.tier = +q.tier;
+      if (q.custom) VM.pea.custom = +q.custom;
+      addLog('SYS', `PEA tariff -> ${VM.pea.type} Ft=${VM.pea.ft}st`);
+      return okJson(buildStatus(q.cid, q.dev, true));
+    }
+    if (p === '/api/rules') return okJson({ master: VM.rulesMaster, rules: VM.rules });
+    if (p === '/api/rules/save') {
+      const id = +q.id || (Math.max(0, ...VM.rules.map(r=>r.id)) + 1);
+      const rec = { id, en:q.en!=='0', cond:+q.cond, on_only:q.on_only!=='0', th:+q.th, pwr:+q.pwr, mode:+q.mode, temp:+q.temp, fan:+q.fan, perf:+q.perf, cd:+q.cd||300, name:q.name||'Auto Rule' };
+      VM.rules = VM.rules.filter(r => r.id !== id).concat([rec]);
+      addLog('RULE', 'Saved rule: ' + rec.name);
+      return okJson({ master: VM.rulesMaster, rules: VM.rules });
+    }
+    if (p === '/api/rules/toggle') {
+      VM.rules.forEach(r => { if (r.id === +q.id) r.en = q.en !== '0'; });
+      return okJson({ master: VM.rulesMaster, rules: VM.rules });
+    }
+    if (p === '/api/rules/delete') {
+      VM.rules = VM.rules.filter(r => r.id !== +q.id);
+      return okJson({ master: VM.rulesMaster, rules: VM.rules });
+    }
+    if (p === '/api/rules/master') { VM.rulesMaster = q.en !== '0'; return okJson({ master: VM.rulesMaster, rules: VM.rules }); }
+    if (p === '/api/rules/reset')  return okJson({ master: VM.rulesMaster, rules: VM.rules });
+    if (p === '/api/history') return okJson(buildHistory(q.range || 'day', +(q.day_offset || 0)));
+    if (p === '/api/history/delete_day') { VM.days = VM.days.filter(d => d.day_idx !== +q.day_idx); return okJson({ ok:true }); }
+    if (p === '/api/history/clear') { VM.days = []; return okJson({ ok:true }); }
+    if (p === '/api/logs') return okJson({ fs_used:14336, fs_total:131072, ram_count:VM.logs.length, entries:q.cat&&q.cat!=='all'?VM.logs.filter(e=>e.cat===q.cat):VM.logs });
+    if (p === '/api/logs/clear') { VM.logs = [{ts:nowTs(), cat:'SYS', msg:'Logs cleared (Sandbox)'}]; return okJson({ ok:true }); }
+    if (p === '/api/ble/scan') return okJson({ devices:[{mac:'aa:bb:cc:dd:ee:ff', name:'ATC_DEMO', rssi:-54, svc:'0xfcd2:40027a0a', env:true, age_s:2}] });
+    if (p === '/api/ble/refresh') return okJson({ ok:true });
+    if (p === '/api/wifi/scan') return okJson({ networks:[{ssid:'Home_WiFi_2.4GHz', rssi:-45}, {ssid:'Backup_Hotspot', rssi:-62}] });
+    if (p === '/api/settings' || p === '/api/wifi/force_ap' || p === '/api/reboot') return okJson({ ok:true, reboot:false });
+    if (p === '/api/debug/sim') { VM.ac.sim = q.enable === '1'; return okJson(buildStatus(q.cid, q.dev, true)); }
+    return okJson({ ok:true });
+  };
+
+  // Exposed Sandbox Scenario Controls
+  window.ghSetScenario = function(sc) {
+    VM.scenario = sc;
+    if (sc === 'leak') { VM.ac.ac_power = true; VM.ac.mode_raw = 1; VM.ac.ac_mode = 'COOL'; VM.ac.target_temp = 20; VM.ac.fast_mode = true; }
+    else { VM.ac.target_temp = 24; VM.ac.fast_mode = false; }
+    document.getElementById('scBtnOk').classList.toggle('act', sc === 'healthy');
+    document.getElementById('scBtnLeak').classList.toggle('act', sc === 'leak');
+    if (typeof resetSensMinMax === 'function') resetSensMinMax();
+    if (typeof refresh === 'function') refresh(true);
+    if (typeof curScreen !== 'undefined' && curScreen === 'hist' && typeof loadHistory === 'function') loadHistory();
+  };
+  window.ghTriggerTakeover = function() {
+    VM.ownerId = 'iphone-living-room';
+    VM.ownerLabel = 'iPhone 15 Pro (Living Room)';
+    if (typeof refresh === 'function') refresh(true);
+  };
+  window.ghDemoCl = function() {
+    if (typeof clControl === 'function') clControl(true);
+  };
+  window.ghOpenTech = function() {
+    if (typeof goScreen === 'function') goScreen('sens');
+    if (typeof toggleRealtime === 'function') toggleRealtime(true);
+  };
+})();
+</script>
+
+<script>
+// ============================================================================
+// Core State, Client Identity & Adaptive Scheduler
+// ============================================================================
+const CID = sessionStorage.getItem('p25_cid') || ('c' + Math.random().toString(36).slice(2, 10));
+sessionStorage.setItem('p25_cid', CID);
+const DEV_LABEL = (() => {
+  const ua = navigator.userAgent;
+  if (/iPhone/i.test(ua)) return 'iPhone';
+  if (/iPad/i.test(ua)) return 'iPad';
+  if (/Android/i.test(ua)) return 'Android';
+  if (/Mac/i.test(ua)) return 'Mac';
+  if (/Windows/i.test(ua)) return 'Windows PC';
+  return 'Web Browser';
+})();
+
+let S = null;
+let curScreen = 'ctrl';
+let ctrlView = localStorage.getItem('p25_view') || 'thermo';
+let roomPreview = false;
+let lastClActive = false;
+let cfgLoaded = false;
+let takeoverDismissed = false;
+let confirmCb = null;
+let tmTurnOn = false;
+
+// Adaptive polling state
+let lastInteractMs = Date.now();
+let pollTimer = null;
+let inFlightCtrl = null;
+
+// Optimistic Temp Stepper
+let optTemp = null;
+let tempTimer = null;
+
+// History, Rules, PEA & All-Sensors Real-Time state (v4.1)
+let histRange = 'day';
+let dayOffset = 0;
+let lastHistData = null;
+let rulesData = { master: true, rules: [] };
+let logCat = 'all';
+let rtEnabled = false;
+let sensView = localStorage.getItem('p25_sview') || 'cards';
+let peaCfg = { type: '1.1.2', ft: 16.23, vat: true, svc: false, tier: 1, custom: 4.50 };
+let peaSeeded = false;
+let sensStats = { minCoil: null, maxPipe: null, maxW: null, maxHz: null, minRoom: null, maxRoom: null, maxDt: null, frames: 0 };
+
+const SERIES_DEF = [
+  { k:'xt', name:'ห้องจริง Xiaomi', unit:'°C', axis:'L', color:'#22d3ee', on:true },
+  { k:'ar', name:'หน้าแอร์', unit:'°C', axis:'L', color:'#38bdf8', on:true },
+  { k:'cl', name:'คอยล์เย็น', unit:'°C', axis:'L', color:'#60a5fa', on:false },
+  { k:'ot', name:'ข้างนอก', unit:'°C', axis:'L', color:'#fbbf24', on:false },
+  { k:'pp', name:'ท่ออัดคอมฯ', unit:'°C', axis:'L', color:'#f87171', on:false },
+  { k:'tg', name:'ตั้งแอร์', unit:'°C', axis:'L', color:'#a78bfa', dash:true, on:true },
+  { k:'w',  name:'กำลังไฟ W', unit:'W', axis:'R', color:'#34d399', fill:true, on:true },
+  { k:'hz', name:'คอมฯ Hz', unit:'Hz', axis:'R', color:'#fb923c', on:false },
+  { k:'xh', name:'ความชื้น %', unit:'%', axis:'R', color:'#818cf8', on:false }
+];
+
+const $ = id => document.getElementById(id);
+
+function toast(msg) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+function markActive() {
+  const wasIdle = (Date.now() - lastInteractMs) > 20000;
+  lastInteractMs = Date.now();
+  if (wasIdle && !document.hidden) scheduleNextPoll(250);
+}
+['pointerdown', 'keydown', 'touchstart'].forEach(ev => window.addEventListener(ev, markActive, { passive: true }));
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    if (rtEnabled) { rtEnabled = false; if ($('rtSw')) $('rtSw').checked = false; }
+    clearTimeout(pollTimer);
+    if (inFlightCtrl) { try { inFlightCtrl.abort(); } catch(e){} }
+  } else {
+    lastInteractMs = Date.now();
+    refresh(true);
+  }
+});
+
+// ============================================================================
+// Unified API Client (Attaches cid/dev + Handles 409 Session Lock)
+// ============================================================================
+function withSession(path) {
+  const sep = path.includes('?') ? '&' : '?';
+  return `${path}${sep}cid=${encodeURIComponent(CID)}&dev=${encodeURIComponent(DEV_LABEL)}`;
+}
+
+async function api(path, method = 'GET', timeoutMs = 4500) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(withSession(path), { method, signal: ctrl.signal, cache: 'no-store' });
+    const data = await res.json();
+    if (res.status === 409 && data.locked) {
+      takeoverDismissed = false;
+      $('tkOwner').textContent = data.locked_by || 'อุปกรณ์อื่น';
+      openModal('takeoverModal');
+      return { ok: false, locked: true };
+    }
+    return data;
+  } finally {
+    clearTimeout(tid);
+  }
+}
+
+// ============================================================================
+// Adaptive Polling Engine (Zero Pile-Up)
+// ============================================================================
+function nextPollDelayMs() {
+  if (document.hidden) return 0;
+  if (rtEnabled && curScreen === 'sens') return 500;
+  if (S && S.session && !S.session.is_owner) return 8000;
+  const idle = Date.now() - lastInteractMs;
+  if (idle < 20000) return 1800;
+  if (idle < 60000) return 5000;
+  if (idle < 180000) return 10000;
+  if (idle < 600000) return 30000;
+  return 60000;
+}
+
+function scheduleNextPoll(overrideMs) {
+  clearTimeout(pollTimer);
+  if (document.hidden) return;
+  const ms = (overrideMs !== undefined) ? overrideMs : nextPollDelayMs();
+  if (ms > 0) pollTimer = setTimeout(() => refresh(false), ms);
+}
+
+async function refresh(forceNow = false, rtParam = null) {
+  if (document.hidden) return;
+  if (inFlightCtrl && !forceNow) return;
+  if (inFlightCtrl) { try { inFlightCtrl.abort(); } catch(e){} }
+  inFlightCtrl = new AbortController();
+  const tid = setTimeout(() => { if (inFlightCtrl) inFlightCtrl.abort(); }, 4000);
+  try {
+    const rtFlag = rtParam !== null ? `?rt=${rtParam}` : (rtEnabled && curScreen === 'sens' ? '?rt=1' : '');
+    const res = await fetch(withSession('/api/status' + rtFlag), { signal: inFlightCtrl.signal, cache: 'no-store' });
+    const d = await res.json();
+    applyStatus(d);
+  } catch (e) {
+    $('hNetDot').className = 'dot err';
+  } finally {
+    clearTimeout(tid);
+    inFlightCtrl = null;
+    scheduleNextPoll();
+  }
+}
+
+// ============================================================================
+// UI State Renderer
+// ============================================================================
+function applyStatus(d) {
+  if (!d || !d.ac) return;
+  S = d;
+  const ac = d.ac, bd = d.bigdata, x = d.xiaomi, net = d.net, cl = d.cl, sess = d.session;
+  const online = ac.online;
+  const canCtrl = online && sess.is_owner;
+
+  // Header
+  $('hNetDot').className = 'dot ' + (net.ap ? 'warn' : 'on');
+  $('hIp').textContent = net.ip;
+  $('hQuickEnv').textContent = `${x.ok ? x.temp_c.toFixed(1) : (ac.room_temp_c!==null?ac.room_temp_c.toFixed(1):'--')}°C • ${bd.valid ? bd.power_w : 0}W`;
+  $('hUart').textContent = online ? `UART OK (RX${ac.rx_pin}/TX${ac.tx_pin})` : 'UART OFFLINE';
+  $('hUart').className = 'pill hdr-hide-m ' + (online ? 'p-ok' : 'p-err');
+  $('hPoll').textContent = d.poll_mode;
+  $('hPoll').className = 'pill ' + (d.poll_mode === 'REALTIME' ? 'p-err' : d.poll_mode === 'ACTIVE' ? 'p-cyan' : d.poll_mode === 'CL_LOCK' ? 'p-warn' : 'p-off');
+  $('hSess').textContent = sess.is_owner ? `Owner: ${DEV_LABEL}` : `RO (${sess.owner_label})`;
+  $('hSess').className = 'pill hdr-hide-m ' + (sess.is_owner ? 'p-ok' : 'p-warn');
+
+  // Session Ownership & Takeover Modal
+  $('roBar').classList.toggle('show', !sess.is_owner);
+  $('roOwner').textContent = sess.owner_label || 'อุปกรณ์อื่น';
+  if (!sess.is_owner && !takeoverDismissed) {
+    $('tkOwner').textContent = sess.owner_label || 'อุปกรณ์อื่น';
+    openModal('takeoverModal');
+  } else if (sess.is_owner) {
+    takeoverDismissed = false;
+    closeModal('takeoverModal');
+  }
+
+  // Post-CL Completion Banner
+  $('clDoneBar').classList.toggle('show', cl.unacked && cl.summary);
+  if (cl.summary) $('clDoneTxt').textContent = cl.summary;
+
+  // Timer Strip
+  $('timerStrip').style.display = ac.timer_active ? 'flex' : 'none';
+  if (ac.timer_active) {
+    const mm = Math.ceil(ac.timer_rem_s / 60);
+    $('timerTxt').textContent = `${ac.timer_label} (เหลือ ${mm} นาที)`;
+  }
+
+  // Thermostat Hero
+  const dispTemp = (optTemp !== null) ? optTemp : ac.target_temp;
+  const pwrBtn = $('tPwrBtn');
+  pwrBtn.classList.toggle('on', online && ac.ac_power);
+  pwrBtn.disabled = !canCtrl;
+  $('tPwrLbl').textContent = ac.ac_power ? 'ON' : 'OFF';
+  $('tVal').innerHTML = cl.active ? 'CL' : `${online ? dispTemp : '--'}<small>°C</small>`;
+  $('tSub').textContent = `ห้องจริง ${x.ok ? x.temp_c.toFixed(1)+'°C' : (ac.room_temp_c!==null?ac.room_temp_c.toFixed(1)+'°C':'--')} • ${ac.ac_mode}`;
+  $('tUp').disabled = !canCtrl || !ac.ac_power || cl.active;
+  $('tDown').disabled = !canCtrl || !ac.ac_power || cl.active;
+
+  // Segmented Mode / Perf / Eco / Fan
+  document.querySelectorAll('#segMode button').forEach(b => {
+    b.className = (online && ac.ac_power && Number(b.dataset.m) === ac.mode_raw) ? 'act-cyan' : '';
+    b.disabled = !canCtrl || cl.active;
+  });
+  const pfNow = ac.fast_mode ? 'turbo' : ac.quiet_mode ? 'quiet' : (ac.eco_level === 0 ? 'normal' : '');
+  document.querySelectorAll('#segPerf button').forEach(b => {
+    const on = online && ac.ac_power && b.dataset.pf === pfNow;
+    b.className = on ? (pfNow==='turbo'?'act-amb':pfNow==='quiet'?'act-vio':'active') : '';
+    b.disabled = !canCtrl || !ac.ac_power || cl.active;
+  });
+  document.querySelectorAll('#segEco button').forEach(b => {
+    b.className = (online && ac.ac_power && Number(b.dataset.e) === ac.eco_level) ? (ac.eco_level>0?'act-em':'active') : '';
+    b.disabled = !canCtrl || !ac.ac_power || cl.active;
+  });
+  document.querySelectorAll('#segFan button').forEach(b => {
+    b.className = (online && ac.ac_power && Number(b.dataset.f) === ac.fan_mode_raw) ? 'act-cyan' : '';
+    b.disabled = !canCtrl || !ac.ac_power || cl.active;
+  });
+  $('tVsw').textContent = ac.vswing;
+  $('tHsw').textContent = ac.hswing;
+
+  // Quick Chips
+  $('qCl').className = 'chip' + (cl.active ? ' on-red' : '');
+  $('qDryOff').className = 'chip' + (ac.timer_active && ac.timer_label.includes('Dry') ? ' on-em' : '');
+  $('qTimer').className = 'chip' + (ac.timer_active ? ' on' : '');
+  $('qSleep').className = 'chip' + (ac.sleep_mode ? ' on' : '');
+  $('qUv').className = 'chip' + (ac.health_mode ? ' on-em' : '');
+  $('qLed').className = 'chip' + (ac.display_status ? ' on' : '');
+  $('qMute').className = 'chip' + (ac.beeper_muted ? ' on-amb' : '');
+  $('qLock').className = 'chip' + (ac.lock_remote ? ' on-amb' : '');
+
+  // Classic Remote LCD & Buttons
+  $('lAuto').className = (ac.ac_power && ac.mode_raw===0)?'on':'';
+  $('lCool').className = (ac.ac_power && ac.mode_raw===1)?'on':'';
+  $('lDry').className  = (ac.ac_power && ac.mode_raw===2)?'on':'';
+  $('lFan').className  = (ac.ac_power && ac.mode_raw===6)?'on':'';
+  $('lPwr').textContent = ac.ac_power ? 'ON' : 'OFF';
+  $('lPwr').className = ac.ac_power ? 'on' : '';
+  $('lVsw').textContent = ac.vswing;
+  $('lHsw').textContent = ac.hswing;
+  $('lFanTxt').textContent = ac.fan_mode;
+  $('lSubHint').textContent = roomPreview ? 'XIAOMI ROOM' : 'TARGET';
+  $('lTemp').textContent = cl.active ? 'CL' : (roomPreview && x.ok ? `${x.temp_c.toFixed(1)}°C` : `${dispTemp}°C`);
+  $('lQuiet').className = ac.quiet_mode?'on':'';
+  $('lTurbo').className = ac.fast_mode?'on':'';
+  $('lSleep').className = ac.sleep_mode?'on':'';
+  $('lUv').className    = ac.health_mode?'on':'';
+  $('lCl').className    = cl.active?'on':'';
+  $('lEco').className   = ac.eco_level>0?'on':'';
+  $('rPwr').className = 'rb pwr' + (ac.ac_power ? '' : ' off');
+  $('rTQ').className = 'rb' + ((ac.fast_mode||ac.quiet_mode)?' on':'');
+  $('rCool').className = 'rb' + (ac.ac_power&&ac.mode_raw===1?' on':'');
+  $('rDry').className  = 'rb' + (ac.ac_power&&ac.mode_raw===2?' on':'');
+  $('rAuto').className = 'rb' + (ac.ac_power&&ac.mode_raw===0?' on':'');
+  $('rFanOnly').className = 'rb sub-slot' + (ac.ac_power&&ac.mode_raw===6?' on':'');
+  $('rFanAuto').className = 'rb sub-slot' + (ac.ac_power&&ac.fan_mode_raw===5?' on':'');
+  $('rCl').className   = 'rb' + (cl.active?' cl-on':'');
+  $('rEco').className  = 'rb' + (ac.eco_level>0?' on':'');
+  $('rSleep').className= 'rb' + (ac.sleep_mode?' on':'');
+  $('rUv').className   = 'rb sub-slot' + (ac.health_mode?' on':'');
+  $('rMute').className = 'rb sub-slot' + (ac.beeper_muted?' on':'');
+  $('rLock').className = 'rdot' + (ac.lock_remote?' on':'');
+  $('rLed').className  = 'rdot' + (ac.display_status?' on':'');
+
+  // 3 Categorized Sensor Cards
+  $('cBleMode').textContent = x.ok ? x.mode.toUpperCase() : 'WAITING';
+  $('cBleMode').className = 'pill ' + (x.ok ? (x.mode==='stock_gatt'?'p-warn':'p-ok') : 'p-off');
+  $('sXTemp').textContent = x.ok ? `${x.temp_c.toFixed(2)}°C` : '--.--°C';
+  $('sXHum').textContent  = x.ok ? `${x.humidity_pct.toFixed(0)}%` : '--%';
+  $('sXBatt').textContent = x.ok ? `Batt ${x.batt_pct}% (${x.batt_v!==null?x.batt_v.toFixed(2)+'V':'--'})` : 'Batt --';
+  $('sXMeta').textContent = x.ok ? `${x.rssi} dBm • อัปเดต ${x.age_s}s ที่แล้ว` : `MAC ${x.mac} • ${x.err||'กำลังสแกน...'}`;
+
+  if (online && ac.room_temp_c !== null) {
+    const dt = x.ok ? ` (Δ${(x.temp_c - ac.room_temp_c)>=0?'+':''}${(x.temp_c - ac.room_temp_c).toFixed(1)}°)` : '';
+    $('sAcRoom').textContent = `${ac.room_temp_c.toFixed(1)}°C${dt}`;
+  } else $('sAcRoom').textContent = '--';
+  $('sOutTemp').textContent = (online && ac.outdoor_temp_c !== null) ? `${ac.outdoor_temp_c}°C` : '--';
+  $('sCoil').textContent = (online && bd.valid && bd.indoor_coil_c !== null) ? `${bd.indoor_coil_c.toFixed(1)}°C` : '--';
+
+  const w = (online && bd.valid) ? bd.power_w : 0;
+  const hz = (online && bd.valid) ? bd.comp_freq_hz : 0;
+  if (d.pea && !peaSeeded) {
+    peaCfg = { type: d.pea.type || '1.1.2', ft: Number(d.pea.ft ?? 16.23), vat: !!d.pea.vat, svc: !!d.pea.svc, tier: Number(d.pea.tier ?? 1), custom: Number(d.pea.custom ?? 4.50) };
+    peaSeeded = true;
+    syncPeaForm();
+  }
+  const effUnitRate = calcPeaUnitRate(peaCfg);
+  const rateHr = (w / 1000) * effUnitRate;
+  $('sWatt').textContent = `${w} W`;
+  $('sAmp').textContent = (online && bd.valid) ? `${bd.comp_current_a.toFixed(1)} A` : '0.0 A';
+  $('sHz').textContent = `${hz} Hz`;
+  $('sHzBar').style.width = `${Math.min(100, Math.round(hz / 95 * 100))}%`;
+  $('sRateHr').textContent = `${rateHr.toFixed(2)} ฿/ชม.`;
+
+  $('pComp').textContent = `Comp ${bd.comp_status?'ON':'OFF'}`;
+  $('pComp').className = 'pill ' + (bd.comp_status ? 'p-ok' : 'p-off');
+  $('pInFan').textContent = `In-Fan ${bd.in_fan_status?'ON':'OFF'}`;
+  $('pInFan').className = 'pill ' + (bd.in_fan_status ? 'p-cyan' : 'p-off');
+  $('pOutFan').textContent = `Out-Fan ${bd.out_fan_status?'ON':'OFF'}`;
+  $('pOutFan').className = 'pill ' + (bd.out_fan_status ? 'p-cyan' : 'p-off');
+  $('pWait3m').style.display = ac.comp_waiting ? 'inline-flex' : 'none';
+
+  const pipeEl = $('sPipe');
+  if (online && bd.valid && bd.outdoor_out_air_c !== null) {
+    const pv = bd.outdoor_out_air_c;
+    pipeEl.textContent = `${pv}°C`;
+    pipeEl.className = 'v num ' + (pv >= 98 ? 'pipe-hot' : pv >= 85 ? 'pipe-hi' : 'pipe-ok');
+  } else { pipeEl.textContent = '--'; pipeEl.className = 'v num'; }
+  $('sModeFan').textContent = online ? `${ac.ac_mode} / ${ac.fan_mode}` : '--';
+  $('sEcoCl').textContent = cl.active ? `CL:${cl.phase}` : (ac.eco_level>0 ? `ECO L${ac.eco_level}` : 'ปกติ');
+
+  $('sAlarmSrc').innerHTML = online ? `<span class="pill ${ac.alarm_count?'p-err':'p-ok'}">${ac.alarm_count?ac.alarm_count+' ERR':'0 OK'}</span> <span class="sub">${ac.op_source}</span>` : '--';
+  $('sRulesCnt').textContent = d.rules_master ? `เปิด ${d.rules_active} กฎ` : 'ปิดอยู่';
+  const pMap = {restore_prev:'คืนค่าเดิม',power_off:'ปิดเครื่อง',dry_off_10m:'เป่า 10น.➔ปิด',stay_on:'คงเดิม'};
+  $('sClPol').textContent = pMap[cl.post_action] || cl.post_action;
+  $('sUartMeta').textContent = `RX:${ac.rx_ok} | RecFF:${ac.rx_rec_ff} | Err:${ac.rx_err} | RAM:${Math.round(net.free_heap/1024)}KB`;
+  $('sPollMeta').textContent = `Poll: ${d.poll_mode} • ${net.time.slice(-8)}`;
+
+  // Advanced Top Strip
+  $('advPwr').textContent = ac.ac_power ? '⏻ ON' : '⏻ OFF';
+  $('advPwr').className = 'btn btn-sm ' + (ac.ac_power ? 'btn-ok' : '');
+  $('advLcd').textContent = `${ac.ac_mode} ${dispTemp}°C • ${ac.fan_mode}${ac.fast_mode?' • TURBO':ac.quiet_mode?' • QUIET':ac.eco_level>0?' • ECO L'+ac.eco_level:''}`;
+  $('advEnv').textContent = x.ok ? `ห้อง ${x.temp_c.toFixed(1)}°C / ${x.humidity_pct.toFixed(0)}%` : 'รอ BLE';
+  $('advLock').className = 'btn btn-sm' + (ac.lock_remote?' btn-warn':'');
+  $('advLed').className  = 'btn btn-sm' + (ac.display_status?' btn-pri':'');
+
+  // Self-Clean Screen & Auto-Switch / Auto-Bounce-Back
+  const clRun = online && cl.active;
+  $('dNavCl').classList.toggle('pulse', clRun);
+  $('mNavCl').classList.toggle('pulse', clRun);
+  $('dClTag').textContent = clRun ? `(${cl.phase})` : '';
+  if (!lastClActive && clRun) goScreen('cl');
+  if (lastClActive && !clRun) { goScreen('ctrl'); toast('ล้างคอยล์เสร็จสมบูรณ์! คืนสถานะแล้ว'); }
+  lastClActive = clRun;
+
+  $('clHero').className = 'cl-hero' + (clRun ? '' : ' idle');
+  $('clPhase').textContent = cl.phase;
+  const pct = clRun ? Math.min(99, Math.round(cl.elapsed_s / 1230 * 100)) : (cl.phase==='COMPLETED'?100:0);
+  $('clBar').style.width = pct + '%';
+  const mm = String(Math.floor(cl.elapsed_s/60)).padStart(2,'0');
+  const ss = String(cl.elapsed_s%60).padStart(2,'0');
+  $('clElapsed').textContent = `เวลาที่ผ่านไป: ${mm}:${ss} / ~20:30 (${pct}%)`;
+  $('btnClStart').disabled = !canCtrl || clRun;
+  $('btnClStop').disabled = !canCtrl || !clRun;
+  const stMap = {IDLE:0,STARTING:1,FREEZING:2,WASHING:3,DRYING:4,COMPLETED:5};
+  const cs = stMap[cl.phase] || 0;
+  for (let i=1;i<=5;i++) $('st'+i).className = 'step' + (i<cs?' done':(i===cs&&cs>0?' now':''));
+  $('clCoil').textContent = (bd.valid && bd.indoor_coil_c!==null) ? `${bd.indoor_coil_c.toFixed(1)}°C` : '--';
+  $('clMinCoil').textContent = cl.min_coil_c!==null ? `Min ${cl.min_coil_c.toFixed(1)}°C` : 'Min --';
+  $('clPipe').textContent = (bd.valid && bd.outdoor_out_air_c!==null) ? `${bd.outdoor_out_air_c}°C` : '--';
+  $('clPeakPipe').textContent = cl.peak_pipe_c!==null ? `Peak ${cl.peak_pipe_c}°C` : 'Peak --';
+  $('clW').textContent = `${w} W`;
+  $('clPeakW').textContent = `Peak ${cl.peak_power_w} W`;
+  $('clX').textContent = x.ok ? `${x.temp_c.toFixed(1)}°C` : '--';
+  $('clHz').textContent = `${hz} Hz • ${x.ok?x.humidity_pct.toFixed(0)+'%':'--'}`;
+  document.querySelectorAll('#postGrid .post-opt').forEach(b => b.classList.toggle('sel', b.dataset.p === cl.post_action));
+
+  // System Screen Meta & Form Seed
+  $('bleDetail').textContent = `Target: ${x.mac} ${x.adv_name?'('+x.adv_name+')':''} | Mode: ${x.mode} | Passive: ${x.passive_pkts} | GATT: ${x.gatt_reads} | Raw: ${x.raw||'--'}`;
+  $('sysMeta').textContent = `v${d.ver} | Uptime: ${Math.floor(net.uptime_s/3600)}h ${Math.floor((net.uptime_s%3600)/60)}m | Heap: ${Math.round(net.free_heap/1024)} KB | NTP: ${net.ntp_ok?'OK':'SYNC'}`;
+  $('simSw').checked = !!ac.sim;
+
+  if (!cfgLoaded) {
+    $('cfgTariff').value = (d.pea && d.pea.custom) ? d.pea.custom : d.cfg.tariff;
+    $('cfgMac').value = x.mac;
+    $('cfgRx').value = ac.rx_pin;
+    $('cfgTx').value = ac.tx_pin;
+    $('cfgSsid1').value = d.cfg.ssid1;
+    $('cfgSsid2').value = d.cfg.ssid2;
+    $('cfgStatic').value = d.cfg.use_static ? '1' : '0';
+    $('cfgSuffix').value = d.cfg.ip_suffix;
+    cfgLoaded = true;
+  }
+
+  // Update All-Sensors Min/Max tracker & render Technician Screen
+  updateSensStats(d);
+  if (curScreen === 'sens') renderAllSensors(d);
+}
+
+// ============================================================================
+// Navigation & Control Actions (1-Request Architecture)
+// ============================================================================
+function goScreen(sc) {
+  if (curScreen === 'sens' && sc !== 'sens' && rtEnabled) {
+    rtEnabled = false;
+    $('rtSw').checked = false;
+    refresh(true, 0);
+  }
+  curScreen = sc;
+  document.querySelectorAll('.screen').forEach(el => el.classList.toggle('active', el.id === 'sc-' + sc));
+  document.querySelectorAll('.ntab,.mbtn').forEach(b => b.classList.toggle('active', b.dataset.sc === sc));
+  $('mainScroll').scrollTop = 0;
+  if (sc === 'adv') loadRules();
+  if (sc === 'hist') { syncPeaForm(); loadHistory(); }
+  if (sc === 'sys') { loadLogs(); loadBleScan(); }
+  if (sc === 'sens' && S) renderAllSensors(S);
+}
+
+function setCtrlView(v) {
+  ctrlView = v;
+  localStorage.setItem('p25_view', v);
+  $('viewThermo').style.display = v === 'thermo' ? 'block' : 'none';
+  $('viewRem').style.display = v === 'rem' ? 'block' : 'none';
+  $('vBtnThermo').className = v === 'thermo' ? 'act-cyan' : '';
+  $('vBtnRem').className = v === 'rem' ? 'act-cyan' : '';
+}
+
+async function sendAc(params) {
+  if (!S || !S.ac.online) return toast('ยังไม่พบสัญญาณ UART จากแอร์');
+  markActive();
+  const r = await api('/api/ac/control?' + new URLSearchParams(params).toString(), 'POST');
+  if (r.locked) return;
+  if (r.ac) applyStatus(r);
+  toast(r.ok ? 'ส่งคำสั่งสำเร็จ' : 'แอร์ไม่ตอบกลับ UART');
+}
+
+async function togglePower() {
+  if (!S || !S.ac.online) return toast('ยังไม่พบสัญญาณ UART');
+  markActive();
+  const r = await api('/api/ac/power?on=' + (S.ac.ac_power ? 0 : 1), 'POST');
+  if (r.locked) return;
+  if (r.ac) applyStatus(r);
+  toast(r.ok ? (r.ac.ac_power ? 'เปิดแอร์แล้ว' : 'ปิดแอร์แล้ว') : 'ส่งไม่สำเร็จ');
+}
+
+function stepTemp(delta) {
+  if (!S || !S.ac.online || !S.ac.ac_power) return;
+  markActive();
+  const base = (optTemp !== null) ? optTemp : S.ac.target_temp;
+  optTemp = Math.max(16, Math.min(30, Math.round(base + delta)));
+  $('tVal').innerHTML = `${optTemp}<small>°C</small>`;
+  $('lTemp').textContent = `${optTemp}°C`;
+  clearTimeout(tempTimer);
+  tempTimer = setTimeout(async () => {
+    const val = optTemp;
+    optTemp = null;
+    await sendAc({ temp: val });
+  }, 260);
+}
+
+function cycleEco() { if (S) sendAc({ eco: (S.ac.eco_level + 1) % 4 }); }
+function cycleFan() {
+  if (!S) return;
+  const ord = [3, 2, 1, 5];
+  sendAc({ fan: ord[(ord.indexOf(S.ac.fan_mode_raw) + 1) % ord.length] });
+}
+function cycleTurboQuiet() {
+  if (!S) return;
+  if (!S.ac.fast_mode && !S.ac.quiet_mode) sendAc({ perf: 'turbo' });
+  else if (S.ac.fast_mode) sendAc({ perf: 'quiet' });
+  else sendAc({ perf: 'normal' });
+}
+function cycleVSwing() {
+  if (!S) return;
+  const a = [2, 4, 6, 8, 10, 12];
+  sendAc({ vswing: a[(a.indexOf(S.ac.vswing_raw) + 1) % a.length] });
+}
+function cycleHSwing() {
+  if (!S) return;
+  const a = [0, 3, 4, 5, 6, 7];
+  sendAc({ hswing: a[(a.indexOf(S.ac.hswing_raw) + 1) % a.length] });
+}
+function toggleFlag(name) {
+  if (!S) return;
+  const map = { display:'display_status', mute_beep:'beeper_muted', sleep:'sleep_mode', health:'health_mode', lock:'lock_remote' };
+  const p = {}; p[name] = S.ac[map[name]] ? 0 : 1;
+  sendAc(p);
+}
+function toggleRoomPreview() { roomPreview = !roomPreview; if (S) applyStatus(S); toast(roomPreview ? 'จอรีโมตแสดงอุณหภูมิ Xiaomi' : 'กลับแสดงอุณหภูมิเป้าหมาย'); }
+async function dryAndOff() {
+  const r = await api('/api/ac/dry_off', 'POST');
+  if (r.ac) applyStatus(r);
+  toast(r.ok ? 'เริ่มเป่าคอยล์ 10 นาที ➔ ปิดแอร์' : 'ส่งไม่สำเร็จ');
+}
+async function checkAlarms() {
+  const r = await api('/api/ac/alarms', 'POST');
+  if (r.ac) applyStatus(r);
+  toast(r.ac ? `ตรวจ Alarm: ${r.ac.alarm_count} รายการ` : 'ไม่สำเร็จ');
+}
+function toggleClean() { clControl(!(S && S.cl.active)); }
+async function clControl(start) {
+  const pol = S ? S.cl.post_action : 'restore_prev';
+  const r = await api(`/api/ac/cl?action=${start?'start':'stop'}&post=${pol}`, 'POST');
+  if (r.ac) applyStatus(r);
+  toast(r.ok ? (start ? 'เริ่มล้างคอยล์ (CL) แล้ว' : 'ยกเลิก CL แล้ว') : 'ส่งไม่สำเร็จ');
+}
+async function setPostCl(p) {
+  const r = await api('/api/ac/cl_policy?post=' + p, 'POST');
+  if (r.ac) applyStatus(r);
+  toast('บันทึกนโยบายหลังจบ CL แล้ว');
+}
+async function ackClDone() {
+  const r = await api('/api/ac/cl_ack', 'POST');
+  if (r.ac) applyStatus(r);
+}
+
+// ============================================================================
+// Session Takeover & Custom Modals
+// ============================================================================
+function openModal(id) { $(id).classList.add('show'); }
+function closeModal(id) { $(id).classList.remove('show'); }
+function dismissTakeover() { takeoverDismissed = true; closeModal('takeoverModal'); }
+
+async function doTakeover() {
+  const r = await api('/api/session/takeover', 'POST');
+  takeoverDismissed = false;
+  closeModal('takeoverModal');
+  if (r.ac) applyStatus(r);
+  toast('ยึดสิทธิ์ควบคุมแอร์สำเร็จ!');
+}
+
+function askConfirm(title, msg, okText, cb) {
+  $('cfTitle').textContent = title;
+  $('cfMsg').textContent = msg;
+  $('cfOkBtn').textContent = okText || 'ยืนยัน';
+  confirmCb = cb;
+  openModal('confirmModal');
+}
+async function runConfirmOk() {
+  closeModal('confirmModal');
+  if (confirmCb) { const fn = confirmCb; confirmCb = null; await fn(); }
+}
+
+function confirmResetAc() {
+  askConfirm('↺ รีเซ็ตการตั้งค่าแอร์', 'รีเซ็ตแอร์เป็น COOL 25°C Fan AUTO (ปิด Turbo/Quiet/ECO/Sleep)?', 'รีเซ็ตเลย', () => {
+    sendAc({ power:1, mode:1, temp:25, fan:5, perf:'normal', sleep:0 });
+  });
+}
+
+// Timer Modal
+function openTimerModal(turnOn) {
+  setTmMode(turnOn);
+  updateTmPreview();
+  openModal('timerModal');
+}
+function setTmMode(on) {
+  tmTurnOn = on;
+  $('tmModeOff').className = !on ? 'act-cyan' : '';
+  $('tmModeOn').className = on ? 'act-em' : '';
+  updateTmPreview();
+}
+function setTmMin(m) { $('tmMins').value = m; updateTmPreview(); }
+function updateTmPreview() {
+  const m = Math.max(1, parseInt($('tmMins').value || '60', 10));
+  const dt = new Date(Date.now() + m * 60000);
+  const hh = String(dt.getHours()).padStart(2, '0');
+  const mm = String(dt.getMinutes()).padStart(2, '0');
+  $('tmPreview').textContent = `จะ${tmTurnOn ? 'เปิดแอร์' : 'ปิดแอร์'}เวลาประมาณ ${hh}:${mm} น. (อีก ${m} นาที)`;
+}
+async function submitTimer() {
+  const m = Math.max(1, parseInt($('tmMins').value || '60', 10));
+  closeModal('timerModal');
+  const r = await api(`/api/ac/timer?on=${tmTurnOn?1:0}&sec=${m*60}`, 'POST');
+  if (r.ac) applyStatus(r);
+  toast('ตั้งเวลาสำเร็จ!');
+}
+async function cancelTimer() {
+  const r = await api('/api/ac/timer?cancel=1', 'POST');
+  if (r.ac) applyStatus(r);
+  toast('ยกเลิกเวลาแล้ว');
+}
+
+// ============================================================================
+// Advanced Presets & If-Else Rules Engine UI
+// ============================================================================
+function applyQuickPreset(mode, temp, fan, perf, offMin) {
+  $('prMode').value = mode; $('prTemp').value = temp; $('prFan').value = fan; $('prPerf').value = perf; $('prOff').value = offMin;
+  sendCustomPreset();
+}
+async function sendCustomPreset() {
+  const p = {
+    power: 1,
+    mode: $('prMode').value,
+    temp: $('prTemp').value,
+    fan: $('prFan').value,
+    perf: $('prPerf').value
+  };
+  const om = parseInt($('prOff').value, 10);
+  if (om > 0) p.off_min = om;
+  await sendAc(p);
+}
+
+const COND_LBL = ['ห้องจริง ≤','ห้องจริง ≥','ความชื้น ≥','ความชื้น ≤','เวลา =='];
+const MODE_LBL = {0:'AUTO',1:'COOL',2:'DRY',6:'FAN',255:'คงเดิม'};
+const FAN_LBL  = {1:'HIGH',2:'MID',3:'LOW',5:'AUTO',255:'คงเดิม'};
+const PERF_LBL = {0:'ปกติ',1:'E-Turbo',2:'Quiet',3:'ECO L1',4:'ECO L2',5:'ECO L3',255:'คงเดิม'};
+
+function formatRuleCond(r) {
+  if (r.cond === 4) {
+    const h = String(Math.floor(r.th / 60)).padStart(2, '0');
+    const m = String(r.th % 60).padStart(2, '0');
+    return `เวลา ${h}:${m} น.`;
+  }
+  const u = r.cond <= 1 ? '°C' : '%';
+  return `${COND_LBL[r.cond]} ${(r.th / 10).toFixed(1)}${u}` + (r.on_only ? ' (ขณะเปิดแอร์)' : '');
+}
+function formatRuleAct(r) {
+  if (r.pwr === 0) return 'ปิดแอร์ (OFF)';
+  const parts = [];
+  if (r.pwr === 1) parts.push('เปิดแอร์');
+  if (r.mode !== 255) parts.push(MODE_LBL[r.mode] || '');
+  if (r.temp >= 16) parts.push(`${r.temp}°C`);
+  if (r.fan !== 255) parts.push(`Fan ${FAN_LBL[r.fan]}`);
+  if (r.perf !== 255) parts.push(PERF_LBL[r.perf]);
+  return parts.join(' • ') || 'คงเดิม';
+}
+
+async function loadRules() {
+  try {
+    rulesData = await api('/api/rules');
+    renderRules();
+  } catch (e) {}
+}
+function renderRules() {
+  $('rulesMasterSw').checked = !!rulesData.master;
+  const box = $('rulesList');
+  const arr = rulesData.rules || [];
+  if (!arr.length) { box.innerHTML = '<div class="sub">ยังไม่มีกฎ กด "+ เพิ่มกฎใหม่" ได้เลย</div>'; return; }
+  box.innerHTML = arr.map(r => `
+    <div class="rule-card ${r.en && rulesData.master ? 'en' : ''}">
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:13.5px;margin-bottom:4px;">${r.name}</div>
+        <div class="row" style="gap:5px;">
+          <span class="pill p-cyan">IF ${formatRuleCond(r)}</span>
+          <span class="pill p-ok">THEN ${formatRuleAct(r)}</span>
+        </div>
+      </div>
+      <div class="row" style="flex-shrink:0;">
+        <button class="btn btn-sm" onclick="openRuleModal(${r.id})">✏️</button>
+        <button class="btn btn-err btn-sm" onclick="confirmDeleteRule(${r.id})">🗑️</button>
+        <label class="ios-sw"><input type="checkbox" ${r.en?'checked':''} onchange="toggleRule(${r.id},this.checked)"><span class="ios-sl"></span></label>
+      </div>
+    </div>`).join('');
+}
+
+async function toggleRulesMaster(en) {
+  rulesData = await api(`/api/rules/master?en=${en?1:0}`, 'POST');
+  renderRules();
+  toast(en ? 'เปิดระบบกฎอัตโนมัติแล้ว' : 'พักระบบกฎอัตโนมัติทั้งหมด');
+}
+async function toggleRule(id, en) {
+  rulesData = await api(`/api/rules/toggle?id=${id}&en=${en?1:0}`, 'POST');
+  renderRules();
+}
+function confirmDeleteRule(id) {
+  askConfirm('🗑️ ลบกฎอัตโนมัติ', 'ต้องการลบกฎนี้ถาวรใช่หรือไม่?', 'ลบกฎ', async () => {
+    rulesData = await api(`/api/rules/delete?id=${id}`, 'POST');
+    renderRules();
+    toast('ลบกฎแล้ว');
+  });
+}
+function confirmResetRules() {
+  askConfirm('↺ คืนค่ากฎเริ่มต้น', 'รีเซ็ตกฎทั้งหมดกลับเป็นเทมเพลตมาตรฐาน 4 ข้อ (ปิดไว้ก่อน)?', 'คืนค่าเริ่มต้น', async () => {
+    rulesData = await api('/api/rules/reset', 'POST');
+    renderRules();
+    toast('คืนค่ากฎเริ่มต้นแล้ว');
+  });
+}
+
+function syncRuleCondUi() {
+  const c = parseInt($('rmCond').value, 10);
+  $('rmValNumWrap').style.display = c === 4 ? 'none' : 'block';
+  $('rmValTimeWrap').style.display = c === 4 ? 'block' : 'none';
+  $('rmOnOnlyWrap').style.display = c === 4 ? 'none' : 'flex';
+  $('rmValLbl').textContent = c <= 1 ? 'อุณหภูมิ (°C)' : 'ความชื้น (%)';
+}
+function openRuleModal(id) {
+  const r = id ? (rulesData.rules || []).find(x => x.id === id) : null;
+  $('rmTitle').textContent = r ? '✏️ แก้ไขกฎอัตโนมัติ' : '🤖 สร้างกฎอัตโนมัติใหม่';
+  $('rmId').value = r ? r.id : 0;
+  $('rmName').value = r ? r.name : '';
+  $('rmCond').value = r ? r.cond : 0;
+  $('rmOnOnly').checked = r ? r.on_only : true;
+  if (r && r.cond === 4) {
+    $('rmValTime').value = `${String(Math.floor(r.th/60)).padStart(2,'0')}:${String(r.th%60).padStart(2,'0')}`;
+  } else {
+    $('rmValNum').value = r ? (r.th / 10).toFixed(1) : '26.5';
+  }
+  $('rmPwr').value = r ? r.pwr : 1;
+  $('rmMode').value = r ? r.mode : 1;
+  $('rmTemp').value = r ? r.temp : 26;
+  $('rmFan').value = r ? r.fan : 3;
+  $('rmPerf').value = r ? r.perf : 5;
+  $('rmCd').value = r ? r.cd : 300;
+  syncRuleCondUi();
+  openModal('ruleModal');
+}
+async function saveRule() {
+  const cond = parseInt($('rmCond').value, 10);
+  let th = 265;
+  if (cond === 4) {
+    const [hh, mm] = ($('rmValTime').value || '06:00').split(':').map(Number);
+    th = hh * 60 + mm;
+  } else {
+    th = Math.round(parseFloat($('rmValNum').value || '26') * 10);
+  }
+  const p = new URLSearchParams({
+    id: $('rmId').value,
+    en: 1,
+    cond,
+    on_only: $('rmOnOnly').checked ? 1 : 0,
+    th,
+    pwr: $('rmPwr').value,
+    mode: $('rmMode').value,
+    temp: $('rmTemp').value,
+    fan: $('rmFan').value,
+    perf: $('rmPerf').value,
+    cd: $('rmCd').value,
+    name: $('rmName').value.trim() || 'Auto Rule'
+  });
+  closeModal('ruleModal');
+  rulesData = await api('/api/rules/save?' + p.toString(), 'POST');
+  renderRules();
+  toast('บันทึกกฎอัตโนมัติแล้ว!');
+}
+
+// ============================================================================
+// Multi-Overlay Dual-Axis Analytics & Energy Cost Meter
+// ============================================================================
+function renderSeriesChips() {
+  const box = $('seriesBar');
+  box.innerHTML = SERIES_DEF.map((s, idx) => {
+    const disabled = histRange !== 'day' && !['xt','xh','w','pp','cl'].includes(s.k);
+    if (disabled) return '';
+    return `<button class="schip ${s.on?'on':''}" onclick="toggleSeries(${idx})"><i style="background:${s.color};color:${s.color}"></i>${s.name}</button>`;
+  }).join('');
+}
+function toggleSeries(idx) {
+  SERIES_DEF[idx].on = !SERIES_DEF[idx].on;
+  renderSeriesChips();
+  if (lastHistData) drawMultiChart(lastHistData);
+}
+
+function setHistRange(r) {
+  histRange = r;
+  dayOffset = 0;
+  ['Day','Week','Month','Year'].forEach(k => $('hr'+k).className = (r === k.toLowerCase()) ? 'act-cyan' : '');
+  $('dayPager').style.display = r === 'day' ? 'flex' : 'none';
+  renderSeriesChips();
+  loadHistory();
+}
+function stepDayOffset(delta) {
+  dayOffset = Math.max(0, Math.min(6, dayOffset + delta));
+  loadHistory();
+}
+
+async function loadHistory() {
+  try {
+    const d = await api(`/api/history?range=${histRange}&day_offset=${dayOffset}`, 'GET', 7000);
+    lastHistData = d;
+    renderHistoryWithPea();
+  } catch (e) {}
+}
+
+function renderHistoryWithPea() {
+  const d = lastHistData;
+  if (!d) return;
+  renderSeriesChips();
+  const sm = d.summary || {};
+  $('dayLbl').textContent = dayOffset === 0 ? `${d.date||'วันนี้'} (วันนี้)` : `${d.date} (-${dayOffset}วัน)`;
+  $('btnNextDay').disabled = dayOffset === 0;
+
+  const bill = calcPeaBill(sm.total_kwh || 0, peaCfg);
+  const unitR = calcPeaUnitRate(peaCfg);
+  $('kCost').textContent = `฿${bill.total.toFixed(2)}`;
+  $('kKwh').textContent  = `${(sm.total_kwh||0).toFixed(3)} kWh • เฉลี่ย ${bill.effRate.toFixed(2)}฿/หน่วย`;
+  const onH = Math.floor((sm.total_on_min||0)/60), onM = (sm.total_on_min||0)%60;
+  $('kOnTime').textContent = `${onH} ชม. ${onM} น.`;
+  $('kAvgDay').textContent = `เฉลี่ย ${(sm.avg_daily_kwh||0).toFixed(2)} หน่วย/วัน`;
+  $('kAvgT').textContent = sm.avg_temp !== null ? `${sm.avg_temp}°C` : '--°C';
+  $('kMinMaxT').textContent = sm.min_temp !== null ? `ต่ำสุด ${sm.min_temp}° / สูงสุด ${sm.max_temp}°` : 'ยังไม่มีข้อมูล';
+  $('kAvgW').textContent = `${sm.avg_watts||0} W`;
+  $('kAvgH').textContent = `ความชื้นเฉลี่ย ${sm.avg_hum!==null?sm.avg_hum+'%':'--'}`;
+
+  const tpName = peaCfg.type === '1.1.1' ? 'กฟภ. 1.1.1 (≤150)' : peaCfg.type === '1.1.2' ? 'กฟภ. 1.1.2 (>150)' : peaCfg.type === '1.2' ? 'กฟภ. 1.2 TOU' : 'กำหนดเอง';
+  $('peaEffBadge').textContent = `${tpName} ≈ ${unitR.toFixed(2)} ฿/หน่วย`;
+  $('peaBreak').innerHTML = peaCfg.type === 'custom'
+    ? `<span>อัตราคงที่ <b>${peaCfg.custom.toFixed(2)} ฿/หน่วย</b> × ${(sm.total_kwh||0).toFixed(3)} kWh = <b style="color:var(--em)">฿${bill.total.toFixed(2)}</b></span>`
+    : `<span>ค่าไฟฐาน: <b>฿${bill.base.toFixed(2)}</b></span>` +
+      `<span>ค่า Ft (${peaCfg.ft.toFixed(2)} สต.): <b>฿${bill.ft.toFixed(2)}</b></span>` +
+      (peaCfg.svc ? `<span>ค่าบริการ: <b>฿${bill.svc.toFixed(2)}</b></span>` : '') +
+      (peaCfg.vat ? `<span>VAT 7%: <b>฿${bill.vat.toFixed(2)}</b></span>` : '') +
+      `<span style="color:var(--em)">รวมสุทธิ: <b>฿${bill.total.toFixed(2)}</b></span>`;
+
+  // Re-map per-day / per-session costs dynamically with active PEA rate
+  const ptsMapped = (d.points || []).map(p => p.kwh !== undefined ? { ...p, cost: calcPeaUnitCost(p.kwh, peaCfg) } : p);
+  const dMapped = { ...d, points: ptsMapped };
+  const sessMapped = (d.sessions || []).map(s => ({ ...s, cost: calcPeaUnitCost(s.kwh, peaCfg) }));
+
+  drawMultiChart(dMapped);
+  drawEnergyBars(dMapped);
+  drawHeatmap(sm.heatmap || []);
+  drawSessions(sessMapped);
+  drawHistTable(dMapped);
+}
+
+function drawMultiChart(d) {
+  const pts = d.points || [];
+  const wrap = $('mainChartWrap');
+  if (!pts.length) {
+    wrap.innerHTML = '<div class="sub" style="padding:48px;text-align:center;">ยังไม่มีข้อมูลในช่วงเวลานี้</div>';
+    return;
+  }
+  const active = SERIES_DEF.filter(s => s.on && (histRange==='day' || ['xt','xh','w','pp','cl'].includes(s.k)));
+  const leftS = active.filter(s => s.axis === 'L');
+  const rightS = active.filter(s => s.axis === 'R');
+
+  const getMinMax = (list, defLo, defHi, nonNeg) => {
+    let lo = 1e9, hi = -1e9;
+    list.forEach(s => pts.forEach(p => { const v = p[s.k]; if (v !== null && v !== undefined) { if (v < lo) lo = v; if (v > hi) hi = v; } }));
+    if (lo > hi) return [defLo, defHi];
+    const pad = Math.max((hi - lo) * 0.15, 1.5);
+    const minV = Math.floor(lo - pad);
+    return [nonNeg ? Math.max(0, minV) : minV, Math.ceil(hi + pad)];
+  };
+  const [lLo, lHi] = getMinMax(leftS, 15, 40, false);
+  const [rLo, rHi] = getMinMax(rightS, 0, 100, true);
+
+  const W = Math.max(330, Math.round(wrap.clientWidth || 780)), H = 250, L = 36, R = 40, T = 16, B = 26;
+  const cw = W - L - R, ch = H - T - B;
+  const xAt = i => L + (pts.length === 1 ? cw * 0.5 : (i / (pts.length - 1)) * cw);
+  const yL = v => T + (1 - (v - lLo) / Math.max(1, lHi - lLo)) * ch;
+  const yR = v => T + (1 - (v - rLo) / Math.max(1, rHi - rLo)) * ch;
+
+  let grid = '';
+  for (let g = 0; g <= 4; g++) {
+    const gy = (T + ch * (1 - g / 4)).toFixed(1);
+    grid += `<line x1="${L}" y1="${gy}" x2="${W-R}" y2="${gy}" stroke="#1e293b" stroke-dasharray="3,4"/>`;
+    if (leftS.length) grid += `<text x="${L-6}" y="${+gy+3}" fill="#94a3b8" font-size="10" text-anchor="end">${(lLo + (lHi-lLo)*g/4).toFixed(0)}°</text>`;
+    if (rightS.length) grid += `<text x="${W-R+6}" y="${+gy+3}" fill="#34d399" font-size="10">${(rLo + (rHi-rLo)*g/4).toFixed(0)}</text>`;
+  }
+
+  let paths = '';
+  active.forEach(s => {
+    const yFn = s.axis === 'L' ? yL : yR;
+    let seg = [], allSegs = [];
+    pts.forEach((p, i) => {
+      const v = p[s.k];
+      if (v !== null && v !== undefined) seg.push([xAt(i), yFn(v)]);
+      else if (seg.length) { allSegs.push(seg); seg = []; }
+    });
+    if (seg.length) allSegs.push(seg);
+    allSegs.forEach(sg => {
+      if (sg.length === 1) {
+        paths += `<circle cx="${sg[0][0].toFixed(1)}" cy="${sg[0][1].toFixed(1)}" r="3.5" fill="${s.color}"/>`;
+        return;
+      }
+      const dStr = 'M ' + sg.map(pt => `${pt[0].toFixed(1)},${pt[1].toFixed(1)}`).join(' L ');
+      if (s.fill) {
+        paths += `<path d="${dStr} L ${sg[sg.length-1][0].toFixed(1)},${T+ch} L ${sg[0][0].toFixed(1)},${T+ch} Z" fill="${s.color}" fill-opacity="0.13"/>`;
+      }
+      paths += `<path d="${dStr}" fill="none" stroke="${s.color}" stroke-width="${s.dash?1.7:2.2}" ${s.dash?'stroke-dasharray="5,4"':''} stroke-linejoin="round"/>`;
+    });
+  });
+
+  let xlbls = '';
+  const step = Math.max(1, Math.ceil(pts.length / 7));
+  for (let i = 0; i < pts.length; i += step) {
+    xlbls += `<text x="${xAt(i).toFixed(1)}" y="${H-8}" fill="#64748b" font-size="10" text-anchor="middle">${pts[i].lbl}</text>`;
+  }
+
+  wrap.innerHTML = `<svg id="mSvg" viewBox="0 0 ${W} ${H}">${grid}${paths}<line id="cLine" x1="-10" y1="${T}" x2="-10" y2="${T+ch}" stroke="#64748b" stroke-dasharray="2,2"/>${xlbls}</svg>`;
+
+  const svg = $('mSvg'), tip = $('chartTip'), cLine = $('cLine');
+  const showIdx = ev => {
+    const rect = svg.getBoundingClientRect();
+    const px = ((ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left) / rect.width * W;
+    const ratio = Math.max(0, Math.min(1, (px - L) / cw));
+    const idx = Math.round(ratio * (pts.length - 1));
+    const p = pts[idx]; if (!p) return;
+    const xx = xAt(idx).toFixed(1);
+    cLine.setAttribute('x1', xx); cLine.setAttribute('x2', xx);
+    const lines = active.map(s => p[s.k]!==null && p[s.k]!==undefined ? `<div><span style="color:${s.color}">●</span> ${s.name}: <b>${p[s.k]}${s.unit}</b></div>` : '').filter(Boolean);
+    tip.innerHTML = `<div style="font-weight:800;margin-bottom:3px;color:#fff;">${p.date || p.lbl}</div>` + lines.join('');
+    tip.style.display = 'block';
+  };
+  svg.onmousemove = showIdx;
+  svg.ontouchmove = showIdx;
+  svg.onmouseleave = () => { tip.style.display = 'none'; cLine.setAttribute('x1', -10); cLine.setAttribute('x2', -10); };
+}
+
+function drawEnergyBars(d) {
+  const sec = $('energyBarSec');
+  const pts = d.points || [];
+  if (histRange === 'day' || !pts.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  const maxKwh = Math.max(0.5, ...pts.map(p => p.kwh || 0));
+  const barWrap = $('energyBarWrap');
+  const W = Math.max(330, Math.round(barWrap.clientWidth || 780)), H = 160, L = 24, R = 14, T = 20, B = 26;
+  const cw = W - L - R, ch = H - T - B;
+  const bw = Math.max(8, Math.min(44, (cw / pts.length) * 0.65));
+  let bars = '';
+  pts.forEach((p, i) => {
+    const x = L + (i + 0.5) * (cw / pts.length) - bw / 2;
+    const h = ((p.kwh || 0) / maxKwh) * ch;
+    const y = T + ch - h;
+    bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(2, h).toFixed(1)}" rx="4" fill="#10b981" fill-opacity="0.82"/>`;
+    if (pts.length <= 14) {
+      bars += `<text x="${(x+bw/2).toFixed(1)}" y="${(y-4).toFixed(1)}" fill="#a7f3d0" font-size="9.5" text-anchor="middle">฿${(p.cost||0).toFixed(0)}</text>`;
+    }
+    if (pts.length <= 14 || i % Math.ceil(pts.length/8) === 0) {
+      bars += `<text x="${(x+bw/2).toFixed(1)}" y="${H-7}" fill="#64748b" font-size="9.5" text-anchor="middle">${p.lbl}</text>`;
+    }
+  });
+  $('energyBarWrap').innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:155px;display:block;">${bars}</svg>`;
+}
+
+function drawHeatmap(hm) {
+  const maxV = Math.max(1, ...hm);
+  $('heat24').innerHTML = Array.from({length:24}, (_, h) => {
+    const v = hm[h] || 0;
+    const op = v ? (0.2 + 0.78 * (v / maxV)).toFixed(2) : 0;
+    return `<div class="hcell" style="${v?`background:rgba(16,185,129,${op});border-color:rgba(16,185,129,.5);color:#fff;`:''}" title="${String(h).padStart(2,'0')}:00 — ${v}">${String(h).padStart(2,'0')}</div>`;
+  }).join('');
+}
+
+function drawSessions(list) {
+  const tb = $('sessBody');
+  if (!list.length) { tb.innerHTML = '<tr><td colspan="6" class="sub">ยังไม่มีรอบการใช้งาน</td></tr>'; return; }
+  tb.innerHTML = list.map(s => `<tr>
+    <td class="num">${s.start}</td>
+    <td>${s.active?'<span class="pill p-ok">เปิดอยู่</span>':s.end}</td>
+    <td class="num">${s.dur_min} น.</td>
+    <td>${MODE_LBL[s.mode]||''} ${s.target}°</td>
+    <td class="num">${s.avg_w} W</td>
+    <td class="num" style="color:var(--em)">${s.kwh.toFixed(2)} / <b>฿${s.cost.toFixed(1)}</b></td>
+  </tr>`).join('');
+}
+
+function drawHistTable(d) {
+  const pts = (d.points || []).slice().reverse();
+  $('histRowsCnt').textContent = `${pts.length} แถว`;
+  if (histRange === 'day') {
+    $('histTblTitle').textContent = `📋 ตารางข้อมูลราย 15 นาที (${d.date||''})`;
+    $('histThead').innerHTML = '<tr><th>เวลา</th><th>Xiaomi</th><th>ความชื้น</th><th>หน้าแอร์</th><th>คอยล์เย็น</th><th>ท่ออัด</th><th>กำลังไฟ</th><th>Hz</th><th>ตั้งแอร์</th></tr>';
+    $('histTbody').innerHTML = pts.length ? pts.map(p => `<tr class="num">
+      <td><b>${p.lbl}</b></td>
+      <td style="color:var(--cyan)">${p.xt!==null?p.xt+'°':'--'}</td>
+      <td>${p.xh!==null?p.xh+'%':'--'}</td>
+      <td>${p.ar!==null?p.ar+'°':'--'}</td>
+      <td style="color:var(--blue)">${p.cl!==null?p.cl+'°':'--'}</td>
+      <td style="color:var(--amb)">${p.pp!==null?p.pp+'°':'--'}</td>
+      <td style="color:var(--em)">${p.w} W</td>
+      <td>${p.hz}</td>
+      <td>${p.tg!==null?p.tg+'°':'OFF'}</td>
+    </tr>`).join('') : '<tr><td colspan="9" class="sub">ยังไม่มีข้อมูล</td></tr>';
+  } else {
+    $('histTblTitle').textContent = histRange === 'year' ? '📋 สรุปรายเดือน' : '📋 สรุปรายวัน (ลบแยกวันได้)';
+    $('histThead').innerHTML = `<tr><th>ช่วงเวลา</th><th>อุณหภูมิเฉลี่ย (ต่ำ–สูง)</th><th>ชื้น</th><th>เปิดแอร์</th><th>W เฉลี่ย</th><th>kWh</th><th>ค่าไฟ (฿)</th>${histRange!=='year'?'<th>จัดการ</th>':''}</tr>`;
+    $('histTbody').innerHTML = pts.length ? pts.map(p => `<tr class="num">
+      <td><b>${p.date || p.lbl}</b></td>
+      <td style="color:var(--cyan)">${p.xt!==null?p.xt+'°':'--'} <span class="sub">(${p.tmin??'--'}–${p.tmax??'--'}°)</span></td>
+      <td>${p.xh!==null?p.xh+'%':'--'}</td>
+      <td>${Math.floor((p.on_min||0)/60)}ชม. ${(p.on_min||0)%60}น.</td>
+      <td>${p.w} W</td>
+      <td>${(p.kwh||0).toFixed(2)}</td>
+      <td style="color:var(--em);font-weight:800">฿${(p.cost||0).toFixed(2)}</td>
+      ${histRange!=='year'?`<td><button class="btn btn-err btn-sm" onclick="confirmDeleteDay(${p.day_idx},'${p.date}')">🗑️ ลบ</button></td>`:''}
+    </tr>`).join('') : '<tr><td colspan="8" class="sub">ยังไม่มีข้อมูล</td></tr>';
+  }
+}
+
+function confirmDeleteCurrentDay() {
+  if (!lastHistData || !lastHistData.day_index) return;
+  confirmDeleteDay(lastHistData.day_index, lastHistData.date);
+}
+function confirmDeleteDay(dayIdx, dateStr) {
+  askConfirm('🗑️ ลบข้อมูลเฉพาะวัน', `ลบข้อมูลกราฟและค่าไฟของวันที่ ${dateStr} ออกจาก ESP32-C3?`, 'ลบวันนี้', async () => {
+    await api('/api/history/delete_day?day_idx=' + dayIdx, 'POST');
+    toast(`ลบข้อมูลวันที่ ${dateStr} แล้ว`);
+    loadHistory();
+  });
+}
+function confirmClearHistory() {
+  askConfirm('🗑️ ล้างประวัติกราฟทั้งหมด', 'ลบข้อมูลกราฟ 15 นาที, รายวัน, ค่าไฟ และประวัติ Session ทั้งหมดใน Flash LittleFS?', 'ล้างทั้งหมด', async () => {
+    await api('/api/history/clear', 'POST');
+    toast('ล้างประวัติทั้งหมดแล้ว');
+    loadHistory();
+  });
+}
+
+// ============================================================================
+// Logs, BLE, Settings & System
+// ============================================================================
+function setLogCat(c) {
+  logCat = c;
+  document.querySelectorAll('#logCats button').forEach(b => b.className = 'btn btn-sm' + (b.dataset.lf===c?' btn-pri':''));
+  loadLogs();
+}
+async function loadLogs() {
+  try {
+    const d = await api('/api/logs?cat=' + logCat);
+    $('fsInfo').textContent = `Flash ${(d.fs_used/1024).toFixed(1)} / ${(d.fs_total/1024).toFixed(0)} KB`;
+    const box = $('logBox');
+    if (!d.entries || !d.entries.length) { box.textContent = 'ยังไม่มี Log ในหมวดนี้'; return; }
+    box.innerHTML = d.entries.map(e => `<div class="log-ln"><span class="sub">[${e.ts}]</span> <span class="c-${e.cat}">[${e.cat}]</span> ${e.msg}</div>`).join('');
+  } catch (e) {}
+}
+function confirmClearLogs() {
+  askConfirm('🗑️ ล้าง Event Log', 'ล้าง Log ทั้งหมดใน RAM และ LittleFS?', 'ล้าง Log', async () => {
+    await api('/api/logs/clear', 'POST');
+    toast('ล้าง Log แล้ว');
+    loadLogs();
+  });
+}
+
+async function forceBleRead() {
+  toast('กำลังอ่าน Xiaomi ผ่าน GATT...');
+  const r = await api('/api/ble/refresh', 'POST', 10000);
+  toast(r.ok ? 'อ่าน Xiaomi สำเร็จ!' : ('ไม่สำเร็จ: ' + (r.err || 'timeout')));
+  refresh(true);
+}
+async function loadBleScan() {
+  try {
+    const d = await api('/api/ble/scan');
+    const box = $('bleScanBox');
+    if (!d.devices || !d.devices.length) { box.innerHTML = '<div class="sub">ยังไม่พบอุปกรณ์ BLE รอบตัว</div>'; return; }
+    box.innerHTML = d.devices.map(x => `<div class="between" style="border-bottom:1px solid var(--line);padding:6px 0;">
+      <div class="num" style="font-size:12px;"><b>${x.mac}</b> ${x.name||''} (${x.rssi}dBm, ${x.age_s}s)<div class="sub">${x.svc||'no svc'}</div></div>
+      <button class="btn btn-sm" onclick="$('cfgMac').value='${x.mac}';toast('ใส่ MAC ${x.mac} ในช่องตั้งค่าแล้ว')">ใช้ MAC นี้</button>
+    </div>`).join('');
+  } catch (e) {}
+}
+
+async function scanWifi() {
+  $('wifiBox').innerHTML = '<div class="sub">กำลังสแกน Wi-Fi...</div>';
+  const d = await api('/api/wifi/scan', 'GET', 10000);
+  $('wifiBox').innerHTML = (d.networks || []).map(n => `<div class="between" style="border-bottom:1px solid var(--line);padding:5px 0;">
+    <span><b>${n.ssid}</b> (${n.rssi} dBm)</span>
+    <button class="btn btn-sm" onclick="$('cfgSsid1').value='${n.ssid.replace(/'/g,"\\'")}';toast('ใส่ SSID 1 แล้ว')">เลือก</button>
+  </div>`).join('') || '<div class="sub">ไม่พบเครือข่าย</div>';
+}
+
+async function saveSettings() {
+  const p = new URLSearchParams({
+    tariff: $('cfgTariff').value,
+    mac: $('cfgMac').value.trim(),
+    rx: $('cfgRx').value,
+    tx: $('cfgTx').value,
+    ssid1: $('cfgSsid1').value.trim(),
+    pass1: $('cfgPass1').value,
+    ssid2: $('cfgSsid2').value.trim(),
+    pass2: $('cfgPass2').value,
+    static: $('cfgStatic').value,
+    suffix: $('cfgSuffix').value
+  });
+  const r = await api('/api/settings?' + p.toString(), 'POST');
+  if (r.locked) return;
+  toast(r.reboot ? 'บันทึกแล้ว! กำลังรีบูตบอร์ด...' : 'บันทึกค่าไฟ/UART/BLE สำเร็จ!');
+  refresh(true);
+}
+
+async function toggleSim(en) {
+  const r = await api('/api/debug/sim?enable=' + (en ? 1 : 0), 'POST');
+  if (r.ac) applyStatus(r);
+  toast(en ? 'เปิด Debug Simulator แล้ว' : 'ปิด Simulator กลับโหมดแอร์จริงแล้ว');
+}
+function confirmForceAp() {
+  askConfirm('📶 เปิด Fail-Safe Hotspot AP', 'เปิด AP ชื่อ Haier-AC-P25-AP (IP 192.168.4.1 รหัส haier-ap-setup)?', 'เปิด AP', async () => {
+    await api('/api/wifi/force_ap', 'POST');
+    toast('เปิด Hotspot AP แล้ว');
+  });
+}
+function confirmReboot() {
+  askConfirm('🔄 รีบูต ESP32-C3', 'รีสตาร์ทบอร์ด ESP32-C3 ทันที? (ข้อมูลค่าไฟและ Log จะถูกบันทึกก่อนรีบูต)', 'รีบูตเลย', async () => {
+    await api('/api/reboot', 'POST');
+    toast('กำลังรีบูตบอร์ด...');
+  });
+}
+
+// ============================================================================
+// PEA (กฟภ. ประเภทที่ 1 บ้านอยู่อาศัย) Exact Tariff Calculator Engine
+// ============================================================================
+function isPeaTouOnPeak() {
+  const dt = new Date();
+  const d = dt.getDay(), h = dt.getHours();
+  return d >= 1 && d <= 5 && h >= 9 && h < 22;
+}
+
+function calcPeaUnitRate(cfg) {
+  if (cfg.type === 'custom') return Math.max(0.5, Number(cfg.custom) || 4.50);
+  const ft = (Number(cfg.ft) || 0) / 100;
+  const vm = cfg.vat ? 1.07 : 1.0;
+  if (cfg.type === '1.2') return ((isPeaTouOnPeak() ? 5.7982 : 2.6369) + ft) * vm;
+  const base = cfg.tier === 2 ? 4.4217 : cfg.tier === 1 ? 4.2218 : (cfg.type === '1.1.1' ? 3.6237 : 3.2484);
+  return (base + ft) * vm;
+}
+
+function calcPeaUnitCost(kwh, cfg) {
+  return calcPeaBill(kwh, { ...cfg, svc: false }).total;
+}
+
+function calcPeaBill(kwh, cfg) {
+  const k = Math.max(0, Number(kwh) || 0);
+  if (cfg.type === 'custom') {
+    const r = Math.max(0.5, Number(cfg.custom) || 4.50);
+    return { base: k * r, ft: 0, svc: 0, vat: 0, total: k * r, effRate: r };
+  }
+  const ftBaht = (Number(cfg.ft) || 0) / 100;
+  const vatMul = cfg.vat ? 1.07 : 1.0;
+  let base = 0;
+  const svcFee = cfg.type === '1.1.1' ? 8.19 : 24.62;
+  const svc = cfg.svc ? svcFee : 0;
+
+  if (cfg.type === '1.2') {
+    base = k * (isPeaTouOnPeak() ? 5.7982 : 2.6369);
+  } else if (cfg.tier === 1) {
+    base = k * 4.2218;
+  } else if (cfg.tier === 2) {
+    base = k * 4.4217;
+  } else {
+    const steps = cfg.type === '1.1.1'
+      ? [[15,2.3488],[10,2.9882],[10,3.2405],[65,3.6237],[50,3.7171],[250,4.2218],[1e9,4.4217]]
+      : [[150,3.2484],[250,4.2218],[1e9,4.4217]];
+    let rem = k;
+    for (const [lim, rate] of steps) {
+      if (rem <= 0) break;
+      const u = Math.min(rem, lim);
+      base += u * rate;
+      rem -= u;
+    }
+  }
+  const ft = k * ftBaht;
+  const sub = base + ft + svc;
+  const vat = cfg.vat ? sub * 0.07 : 0;
+  const total = sub + vat;
+  const effRate = k > 0 ? (total / k) : calcPeaUnitRate(cfg);
+  return { base, ft, svc, vat, total, effRate };
+}
+
+function syncPeaForm() {
+  document.querySelectorAll('#peaTypeSeg button').forEach(b => {
+    b.className = (b.dataset.pt === peaCfg.type) ? 'act-vio' : '';
+  });
+  $('peaFt').value = peaCfg.ft;
+  $('peaTier').value = String(peaCfg.tier);
+  $('peaCustom').value = peaCfg.custom;
+  $('peaVat').checked = !!peaCfg.vat;
+  $('peaSvc').checked = !!peaCfg.svc;
+  $('peaSvcLbl').textContent = `ค่าบริการ ${peaCfg.type === '1.1.1' ? '8.19' : '24.62'}฿`;
+  $('peaFtWrap').style.display = peaCfg.type === 'custom' ? 'none' : 'block';
+  $('peaTierWrap').style.display = (peaCfg.type === '1.1.1' || peaCfg.type === '1.1.2') ? 'block' : 'none';
+  $('peaCustomWrap').style.display = peaCfg.type === 'custom' ? 'block' : 'none';
+}
+
+function setPeaType(tp) {
+  peaCfg.type = tp;
+  syncPeaForm();
+  onPeaUiChange();
+}
+function setFtPreset(v) {
+  $('peaFt').value = v;
+  onPeaUiChange();
+}
+function onPeaUiChange() {
+  peaCfg.ft = parseFloat($('peaFt').value || '16.23');
+  peaCfg.tier = parseInt($('peaTier').value || '1', 10);
+  peaCfg.custom = parseFloat($('peaCustom').value || '4.50');
+  peaCfg.vat = $('peaVat').checked;
+  peaCfg.svc = $('peaSvc').checked;
+  if (lastHistData) renderHistoryWithPea();
+  if (S) applyStatus(S);
+}
+async function savePeaConfig() {
+  onPeaUiChange();
+  const p = new URLSearchParams({
+    type: peaCfg.type,
+    ft: peaCfg.ft.toFixed(2),
+    vat: peaCfg.vat ? 1 : 0,
+    svc: peaCfg.svc ? 1 : 0,
+    tier: peaCfg.tier,
+    custom: peaCfg.custom.toFixed(2)
+  });
+  const r = await api('/api/pea?' + p.toString(), 'POST');
+  if (r.locked) return;
+  if (r.ac) applyStatus(r);
+  toast(`บันทึกสูตร กฟภ. (${peaCfg.type} • Ft ${peaCfg.ft} สต.) แล้ว!`);
+}
+
+// ============================================================================
+// All-Sensors Technician Dashboard & Real-Time 2Hz Live Stream Engine
+// ============================================================================
+function toggleRealtime(on) {
+  rtEnabled = on;
+  $('rtBar').classList.toggle('live', on);
+  $('rtDot').classList.toggle('live', on);
+  $('rtLbl').textContent = on ? '🔴 LIVE 2Hz ON' : '🔴 โหมดเรียลไทม์';
+  if (on) {
+    toast('เปิดโหมดเรียลไทม์สูงสุด (~2Hz UART)');
+    refresh(true, 1);
+  } else {
+    toast('ปิดเรียลไทม์ กลับรอบประหยัดพลังงาน');
+    refresh(true, 0);
+  }
+}
+
+function setSensView(v) {
+  sensView = v;
+  localStorage.setItem('p25_sview', v);
+  $('sensCardsView').style.display = v === 'cards' ? 'flex' : 'none';
+  $('sensTableView').style.display = v === 'table' ? 'block' : 'none';
+  $('svCardsBtn').className = v === 'cards' ? 'act-cyan' : '';
+  $('svTblBtn').className = v === 'table' ? 'act-cyan' : '';
+  if (S) renderAllSensors(S);
+}
+
+function resetSensMinMax() {
+  sensStats = { minCoil: null, maxPipe: null, maxW: null, maxHz: null, minRoom: null, maxRoom: null, maxDt: null, frames: 0 };
+  if (S) renderAllSensors(S);
+  toast('รีเซ็ตค่า Min / Max สำหรับรอบทดสอบแล้ว');
+}
+
+function calcDewPoint(t, h) {
+  if (t === null || h === null || isNaN(t) || isNaN(h) || h <= 0) return null;
+  const a = 17.625, b = 243.04;
+  const g = Math.log(h / 100) + (a * t) / (b + t);
+  return (b * g) / (a - g);
+}
+
+function updateSensStats(d) {
+  const ac = d.ac, bd = d.bigdata, x = d.xiaomi;
+  sensStats.frames++;
+  const refRoom = x.ok ? x.temp_c : ac.room_temp_c;
+  if (refRoom !== null && refRoom !== undefined) {
+    if (sensStats.minRoom === null || refRoom < sensStats.minRoom) sensStats.minRoom = refRoom;
+    if (sensStats.maxRoom === null || refRoom > sensStats.maxRoom) sensStats.maxRoom = refRoom;
+  }
+  if (ac.online && bd.valid) {
+    if (bd.indoor_coil_c !== null && (sensStats.minCoil === null || bd.indoor_coil_c < sensStats.minCoil)) sensStats.minCoil = bd.indoor_coil_c;
+    if (bd.outdoor_out_air_c !== null && (sensStats.maxPipe === null || bd.outdoor_out_air_c > sensStats.maxPipe)) sensStats.maxPipe = bd.outdoor_out_air_c;
+    if (sensStats.maxW === null || bd.power_w > sensStats.maxW) sensStats.maxW = bd.power_w;
+    if (sensStats.maxHz === null || bd.comp_freq_hz > sensStats.maxHz) sensStats.maxHz = bd.comp_freq_hz;
+    if (ac.room_temp_c !== null && bd.indoor_coil_c !== null) {
+      const dt = ac.room_temp_c - bd.indoor_coil_c;
+      if (sensStats.maxDt === null || dt > sensStats.maxDt) sensStats.maxDt = dt;
+    }
+  }
+}
+
+function renderAllSensors(d) {
+  const ac = d.ac, bd = d.bigdata, x = d.xiaomi, net = d.net;
+  const online = ac.online;
+  const dtCool = (online && ac.room_temp_c !== null && bd.valid && bd.indoor_coil_c !== null) ? (ac.room_temp_c - bd.indoor_coil_c) : null;
+  const dp = x.ok ? calcDewPoint(x.temp_c, x.humidity_pct) : null;
+  const rateHr = (online && bd.valid ? bd.power_w / 1000 : 0) * calcPeaUnitRate(peaCfg);
+
+  $('rtBar').classList.toggle('live', rtEnabled);
+  $('rtDot').classList.toggle('live', rtEnabled);
+  $('rtSw').checked = rtEnabled;
+  $('rtMeta').textContent = `${rtEnabled ? '🔴 สตรีมเรียลไทม์ 2Hz (UART 450ms)' : 'รอบปกติ (' + d.poll_mode + ')'} • RTT: ${ac.rtt_ms ?? '--'}ms • RX Age: ${((ac.rx_age_ms||0)/1000).toFixed(1)}s • Samples: ${sensStats.frames}`;
+  $('sensTblTime').textContent = `อัปเดต ${net.time} • RTT ${ac.rtt_ms ?? '--'}ms`;
+
+  // 1. Automated HVAC Technician Diagnostic Card
+  const dc = $('diagCard'), dtEl = $('diagTitle'), ddEl = $('diagDesc'), dlEl = $('diagChecks');
+  let diagCls = 'diag-card', title = '', desc = '', items = [];
+  if (!online) {
+    diagCls += ' diag-err';
+    title = '❌ ไม่พบสัญญาณ UART จากบอร์ดแอร์';
+    desc = `ตรวจสอบสาย RX=GPIO${ac.rx_pin} / TX=GPIO${ac.tx_pin} และ GND ระหว่าง ESP32-C3 กับแอร์`;
+  } else if (d.cl.active) {
+    diagCls += ' diag-warn';
+    title = `❄️ กำลังอยู่ในโหมดล้างคอยล์อัตโนมัติ (Self-Clean: ${d.cl.phase})`;
+    desc = 'คอยล์เย็นจะดิ่งลง ~0°C และท่ออัดคอมฯ สูงถึง 90–97°C เป็นพฤติกรรมปกติของรอบแช่แข็ง/ละลายน้ำแข็ง';
+  } else if (!ac.ac_power || ac.mode_raw === 6) {
+    title = 'ℹ️ แอร์ปิดอยู่ หรือกำลังทำงานโหมดพัดลม (FAN Only)';
+    desc = 'สำหรับให้ช่างแอร์ตรวจเช็ก: กดเปิดโหมด COOL ตั้ง 18–20°C + E-Turbo ทิ้งไว้ 5 นาที แล้วเปิดสวิตช์ "โหมดเรียลไทม์" ด้านบนเพื่อดูคอยล์เย็นและท่ออัดคอมฯ';
+  } else if (ac.comp_waiting) {
+    diagCls += ' diag-warn';
+    title = '⏳ คอมเพรสเซอร์กำลังหน่วงเวลาป้องกันกระชาก (~3 นาที)';
+    desc = 'บอร์ดแอร์กำลังรอสมดุลแรงดันน้ำยา R32 ก่อนสตาร์ทคอมเพรสเซอร์ — รอคอมฯ หมุน (Hz > 0) ก่อนอ่านค่าวินิจฉัย';
+  } else if (bd.valid && bd.comp_freq_hz >= 30 && ((dtCool !== null && dtCool < 8.0) || (bd.indoor_coil_c !== null && bd.indoor_coil_c >= 20.0)) && (bd.outdoor_out_air_c !== null && bd.outdoor_out_air_c >= 84)) {
+    diagCls += ' diag-err';
+    title = '🚨 ผิดปกติชัดเจน: คอยล์เย็นไม่เย็น + ท่ออัดร้อนจัด (สงสัยน้ำยา R32 พร่อง/รั่ว หรือ EEV อุดตัน!)';
+    desc = `คอมฯ เดิน ${bd.comp_freq_hz} Hz (${bd.power_w}W) แต่คอยล์เย็นอยู่ที่ ${bd.indoor_coil_c}°C (ΔT แค่ ${dtCool!==null?dtCool.toFixed(1):'--'}°C • ปกติต้อง ≥13°C) ขณะที่ท่ออัดคอมฯ พุ่ง ${bd.outdoor_out_air_c}°C ทั้งที่อากาศข้างนอกแค่ ${ac.outdoor_temp_c??'--'}°C บอร์ดจึงลดรอบป้องกันคอมฯ ไหม้ (Thermal Derating)`;
+    items = [
+      'ให้ช่างวัดแรงดันน้ำยา R32 ฝั่ง Low-side ขณะคอมฯ เดินเต็มรอบ (ปกติ 115–135 PSI • ถ้าต่ำกว่า 95 PSI ยืนยันน้ำยารั่ว/พร่อง 100%)',
+      'ห้ามเติมน้ำยาอย่างเดียวโดยไม่หาจุดรั่ว! เช็กแฟลร์นัทคอยล์ร้อน/เย็น, วาล์วศร, โค้ง U-bend คอยล์ (ตรวจคราบน้ำมัน + อัดไนโตรเจน)',
+      'ตรวจการทำงานของวาล์ว EEV + พัดลมคอยล์ร้อน แล้วแวคคั่มชั่งกิโลเติม R32 ใหม่ → หลังซ่อมคอยล์เย็นต้องลง 8–14°C และท่ออัดลดเหลือ 62–80°C'
+    ];
+  } else if (bd.valid && ((dtCool !== null && dtCool < 11.0) || (bd.outdoor_out_air_c !== null && bd.outdoor_out_air_c >= 96))) {
+    diagCls += ' diag-warn';
+    title = '⚠️ เฝ้าระวัง: ประสิทธิภาพทำความเย็นต่ำกว่าเกณฑ์ หรือท่ออัดใกล้จุด Thermal Limit';
+    desc = `คอยล์เย็น ${bd.indoor_coil_c??'--'}°C (ΔT ${dtCool!==null?dtCool.toFixed(1):'--'}°C) • ท่ออัดคอมฯ ${bd.outdoor_out_air_c??'--'}°C ที่ ${bd.comp_freq_hz}Hz (${bd.power_w}W)`;
+    items = [
+      'หากเพิ่งเปิดแอร์ไม่ถึง 5 นาที ให้รอคอยล์เย็นลงอีกสักครู่ — หากเกิน 10 นาทีแล้วยัง ΔT < 11°C ควรล้างคอยล์ร้อน/เช็กแรงดันน้ำยา R32'
+    ];
+  } else if (bd.valid && bd.comp_freq_hz > 0) {
+    diagCls += ' diag-ok';
+    title = '✅ ระบบทำความเย็นและอินเวอร์เตอร์ทำงานอยู่ในเกณฑ์ปกติ';
+    desc = `คอยล์เย็นทำได้ ${bd.indoor_coil_c??'--'}°C (ΔT ${dtCool!==null?dtCool.toFixed(1):'--'}°C) • ท่ออัด ${bd.outdoor_out_air_c??'--'}°C • คอมฯ ${bd.comp_freq_hz}Hz (${bd.power_w}W)`;
+  } else {
+    title = '✅ แอร์ออนไลน์ (คอมเพรสเซอร์พักรอบ / อุณหภูมิได้ตามตั้ง)';
+    desc = `โหมด ${ac.ac_mode} ตั้งไว้ ${ac.target_temp}°C • ห้องหน้าแอร์ ${ac.room_temp_c??'--'}°C`;
+  }
+  dc.className = diagCls;
+  dtEl.textContent = title;
+  ddEl.textContent = desc;
+  dlEl.innerHTML = items.map(s => `<li>${s}</li>`).join('');
+  $('diagPeaks').innerHTML =
+    `<span class="pill p-cyan num">Min คอยล์เย็น: ${sensStats.minCoil!==null?sensStats.minCoil.toFixed(1)+'°C':'--'} (ปกติ 8–14°C)</span>` +
+    `<span class="pill p-ok num">Max ΔT: ${sensStats.maxDt!==null?sensStats.maxDt.toFixed(1)+'°C':'--'} (ปกติ ≥13°C)</span>` +
+    `<span class="pill p-warn num">Peak ท่ออัด: ${sensStats.maxPipe!==null?sensStats.maxPipe+'°C':'--'} (ปกติ 62–82°C)</span>` +
+    `<span class="pill p-vio num">Peak คอมฯ: ${sensStats.maxHz??'--'} Hz / ${sensStats.maxW??'--'} W</span>`;
+
+  // Build Unified All-Sensors Rows (used for BOTH Cards and Engineering Table!)
+  const fOpt = (v, u, dec = 1) => (v !== null && v !== undefined && !isNaN(v)) ? `${Number(v).toFixed(dec)}${u}` : 'N/A';
+  const rows = [
+    // Group 1: Environment & Humidity
+    { g:'env', cat:'สภาพแวดล้อม', name:'อุณหภูมิห้องจริง', src:'Xiaomi BLE', val: x.ok ? `${x.temp_c.toFixed(2)}°C` : 'รอ BLE', mm: sensStats.minRoom!==null?`${sensStats.minRoom.toFixed(1)}–${sensStats.maxRoom.toFixed(1)}°C`:'--', spec:'ความละเอียด 0.01°C (อ้างอิงจุดใช้งานจริง)', hi: x.ok?'ok':'' },
+    { g:'env', cat:'สภาพแวดล้อม', name:'ความชื้นสัมพัทธ์ห้อง', src:'Xiaomi BLE', val: x.ok ? `${x.humidity_pct.toFixed(1)}%` : 'รอ BLE', mm:'--', spec:'เหมาะสม 45–60% RH (>70% เหนียวตัว)', hi: x.ok && x.humidity_pct>70?'warn':'' },
+    { g:'env', cat:'สภาพแวดล้อม', name:'จุดน้ำค้าง (Dew Point)', src:'คำนวณสด', val: dp!==null ? `${dp.toFixed(1)}°C` : '--', mm:'--', spec:'อุณหภูมิที่ไอน้ำเริ่มกลั่นตัวเป็นหยดน้ำ', hi:'' },
+    { g:'env', cat:'สภาพแวดล้อม', name:'อุณหภูมิหน้าแอร์ (Return Air)', src:'Haier s[0]', val: fOpt(ac.room_temp_c,'°C',1), mm: x.ok&&ac.room_temp_c!==null?`Δ ${(x.temp_c-ac.room_temp_c)>=0?'+':''}${(x.temp_c-ac.room_temp_c).toFixed(1)}° vs Xiaomi`:'--', spec:'ความละเอียด 0.5°C (ลมดูดกลับเข้าเครื่อง)', hi:'' },
+    { g:'env', cat:'สภาพแวดล้อม', name:'ความชื้นหน้าแอร์ (Indoor RH)', src:'Haier s[1]', val: ac.room_hum_pct!==null&&ac.room_hum_pct>0?`${ac.room_hum_pct}%`:'N/A (รุ่นนี้ไม่ติด)', mm:'--', spec:'รุ่น HSU-15VQRA03T ไม่มีเซนเซอร์ชื้นในตัว (ใช้ Xiaomi แทน)', hi:'' },
+    { g:'env', cat:'สภาพแวดล้อม', name:'แบตเตอรี่ & สัญญาณ Xiaomi', src: x.mode.toUpperCase(), val: x.ok ? `${x.batt_pct}% (${fOpt(x.batt_v,'V',2)})` : 'รอ BLE', mm:`${x.rssi} dBm • ${x.age_s}s`, spec:`MAC ${x.mac} • Passive ${x.passive_pkts} / GATT ${x.gatt_reads}`, hi:'' },
+
+    // Group 2: Evaporator, Condenser & R32 Pipeline
+    { g:'pipe', cat:'คอยล์ & ท่อน้ำยา', name:'อุณหภูมิคอยล์เย็น (Indoor Coil Te)', src:'Haier b[2]', val: bd.valid?fOpt(bd.indoor_coil_c,'°C',1):'--', mm:`Min ${sensStats.minCoil!==null?sensStats.minCoil.toFixed(1)+'°C':'--'}`, spec:'ปกติตอน COOL: 8–14°C (>20°C ขณะคอมฯเดิน = น้ำยาขาด!)', hi: bd.valid&&bd.comp_freq_hz>=30&&bd.indoor_coil_c>=20?'err':(bd.valid&&bd.indoor_coil_c<=14?'ok':'') },
+    { g:'pipe', cat:'คอยล์ & ท่อน้ำยา', name:'ส่วนต่างความเย็น ΔT (ห้อง − คอยล์)', src:'คำนวณสด', val: dtCool!==null?`${dtCool.toFixed(1)}°C`:'--', mm:`Max ${sensStats.maxDt!==null?sensStats.maxDt.toFixed(1)+'°C':'--'}`, spec:'ปกติตอน COOL ต้อง ≥ 13°C (<8°C = เย็นไม่ออก)', hi: bd.valid&&bd.comp_freq_hz>=30&&dtCool!==null?(dtCool<8?'err':dtCool<12?'warn':'ok'):'' },
+    { g:'pipe', cat:'คอยล์ & ท่อน้ำยา', name:'อุณหภูมิอากาศภายนอก (Outdoor To)', src:'Haier s[2]', val: ac.outdoor_temp_c!==null?`${ac.outdoor_temp_c}°C`:'--', mm:'--', spec:'เซนเซอร์อากาศรอบคอยล์ร้อนนอกบ้าน', hi:'' },
+    { g:'pipe', cat:'คอยล์ & ท่อน้ำยา', name:'ท่ออัดคอมเพรสเซอร์ (Discharge Td)', src:'Haier b[3]', val: bd.valid&&bd.outdoor_out_air_c!==null?`${bd.outdoor_out_air_c}°C`:'--', mm:`Peak ${sensStats.maxPipe!==null?sensStats.maxPipe+'°C':'--'}`, spec:'ปกติ 60–82°C • 85–95°C ร้อนสูง • ≥98°C โดนลดรอบ!', hi: bd.valid&&bd.outdoor_out_air_c>=95?'err':(bd.valid&&bd.outdoor_out_air_c>=85?'warn':'ok') },
+    { g:'pipe', cat:'คอยล์ & ท่อน้ำยา', name:'ท่อคอยล์ร้อน (Outdoor Coil)', src:'Haier b[4]', val: bd.valid&&bd.outdoor_coil_c!==null?`${bd.outdoor_coil_c}°C`:'N/A (0x00)', mm:'--', spec:'รุ่น HSU-15VQRA03TC บางล็อตส่ง 0x00 (ไม่รายงาน)', hi:'' },
+    { g:'pipe', cat:'คอยล์ & ท่อน้ำยา', name:'อากาศเข้าคอยล์ร้อน / Defrost', src:'Haier b[5..6]', val: `${bd.outdoor_in_air_c!==null?bd.outdoor_in_air_c+'°C':'N/A'} / ${bd.outdoor_defrost_c!==null?bd.outdoor_defrost_c+'°C':'N/A'}`, mm:`Defrost=${bd.defrost_status}`, spec:'เซนเซอร์ท่อคอยล์ร้อนเสริมและสถานะละลายน้ำแข็ง', hi:'' },
+    { g:'pipe', cat:'คอยล์ & ท่อน้ำยา', name:'วาล์วฉีดน้ำยา EEV / 4-Way Valve', src:'Haier b[11..13]', val: bd.valid?`EEV ${bd.eev_open} • 4W:${bd.four_way_status}`:'--', mm:'--', spec:'ระยะเปิดวาล์วขยายตัว EEV และวาล์ว 4 ทาง', hi:'' },
+
+    // Group 3: Inverter & Electrical
+    { g:'inv', cat:'อินเวอร์เตอร์ & ไฟ', name:'กำลังไฟฟ้าสด (Real Power)', src:'Haier b[0..1]', val: bd.valid?`${bd.power_w} W`:'--', mm:`Peak ${sensStats.maxW??'--'} W`, spec:`ค่าไฟสด ~${rateHr.toFixed(2)} ฿/ชม. (สูตร ${peaCfg.type})`, hi:'' },
+    { g:'inv', cat:'อินเวอร์เตอร์ & ไฟ', name:'กระแสคอมเพรสเซอร์ (Current)', src:'Haier b[8..9]', val: bd.valid?`${bd.comp_current_a.toFixed(1)} A`:'--', mm:'--', spec:'รุ่น 15,000 BTU เต็มโหลด ~4.5–6.0 A (น้ำยาพร่องกระแสตก)', hi:'' },
+    { g:'inv', cat:'อินเวอร์เตอร์ & ไฟ', name:'ความถี่คอมเพรสเซอร์ (Frequency)', src:'Haier b[7]', val: bd.valid?`${bd.comp_freq_hz} Hz`:'--', mm:`Peak ${sensStats.maxHz??'--'} Hz`, spec:'เดินเบา 20–35 Hz • ปกติ 45–65 Hz • Turbo 75–90 Hz', hi: bd.valid&&bd.comp_freq_hz>0?'ok':'' },
+    { g:'inv', cat:'อินเวอร์เตอร์ & ไฟ', name:'สถานะคอมฯ / หน่วงป้องกันกระชาก', src:'Haier b[11]', val: bd.comp_status?'Comp ON':'Comp OFF', mm: ac.comp_waiting?'⏳ หน่วง 3 น.':'พร้อมเดิน', spec:'ตัดต่อทุกครั้งบอร์ดหน่วง ~2.5–3 นาทีเพื่อสมดุลแรงดัน', hi: bd.comp_status?'ok':'' },
+    { g:'inv', cat:'อินเวอร์เตอร์ & ไฟ', name:'พัดลมในบ้าน & โหมดการทำงาน', src:'Haier b[11]', val: `${bd.in_fan_status?'ON':'OFF'} (${ac.fan_mode})`, mm:`${ac.ac_mode} ${ac.target_temp}°C`, spec:`Turbo:${ac.fast_mode?'ON':'OFF'} • Quiet:${ac.quiet_mode?'ON':'OFF'} • ECO:L${ac.eco_level}`, hi:'' },
+    { g:'inv', cat:'อินเวอร์เตอร์ & ไฟ', name:'พัดลมคอยล์ร้อน (Outdoor Fan)', src:'Haier b[10]', val: bd.out_fan_status>0?`ON (Stage ${bd.out_fan_status})`:'OFF (0)', mm:'--', spec:'ต้องหมุนเสมอเมื่อคอมฯ ทำงาน (ถ้าไม่หมุนท่ออัดพุ่งทันที!)', hi: bd.comp_status&&bd.out_fan_status===0?'err':'' },
+
+    // Group 4: MCU Diagnostics & UART Bus
+    { g:'mcu', cat:'บอร์ดแอร์ & บัส', name:'Error Code บอร์ด & Alarm 0x73', src:'s[4] / 0x74', val: `Err:${ac.error_code} | Alarm:${ac.alarm_count}`, mm: ac.alarm_hex || '00 (OK)', spec:'0 = ไม่มีโค้ดเสียจากบอร์ดอินเวอร์เตอร์', hi: (ac.error_code>0||ac.alarm_count>0)?'err':'ok' },
+    { g:'mcu', cat:'บอร์ดแอร์ & บัส', name:'รุ่นแอร์ & เฟิร์มแวร์บอร์ดในบ้าน', src:'0x61 -> 0x62', val: ac.dev_name || 'HSU-15VQRA03T', mm: ac.proto_ver || 'E++2.18', spec:`SW:${ac.sw_ver||'--'} • HW:${ac.hw_ver||'--'}`, hi:'' },
+    { g:'mcu', cat:'บอร์ดแอร์ & บัส', name:'แหล่งคำสั่ง & สถานะตัวเครื่อง', src:'Haier s[5]', val: ac.op_source, mm:`LED:${ac.display_status?'ON':'OFF'} • UV:${ac.health_mode?'ON':'OFF'}`, spec:`V-Swing:${ac.vswing} • H-Swing:${ac.hswing}`, hi:'' },
+    { g:'mcu', cat:'บอร์ดแอร์ & บัส', name:'คุณภาพบัส UART (9600 8N1)', src:`RX${ac.rx_pin}/TX${ac.tx_pin}`, val: `RTT ${ac.rtt_ms ?? '--'} ms`, mm:`RX:${ac.rx_ok} • RecFF:${ac.rx_rec_ff}`, spec:`TX:${ac.tx_cnt} • CRC Err:${ac.rx_err} (RecFF กู้เฟรมได้ 100%)`, hi: online?'ok':'err' },
+    { g:'mcu', cat:'บอร์ดแอร์ & บัส', name:'เฟรมดิบล่าสุด (Raw Frame Hex)', src:'7D 01', val: ac.last_hex ? ac.last_hex.slice(0,16)+'…' : '--', mm:`Age ${((ac.rx_age_ms||0)/1000).toFixed(1)}s`, spec: ac.last_hex || 'รอข้อมูล', hi:'' },
+    { g:'mcu', cat:'บอร์ดแอร์ & บัส', name:'ESP32-C3 System Health', src:`v${d.ver}`, val: `${Math.round(net.free_heap/1024)} KB RAM`, mm:`Wi-Fi ${net.rssi} dBm`, spec:`Uptime ${Math.floor(net.uptime_s/3600)}h ${Math.floor((net.uptime_s%3600)/60)}m • ${d.poll_mode}`, hi:'' },
+  ];
+
+  const cardHtml = r => `<div class="scard ${r.hi?'hi-'+r.hi:''}">
+    <div class="sk"><span>${r.name}</span><span class="src-tag">${r.src}</span></div>
+    <div class="sv num">${r.val}</div>
+    <div class="ss num">${r.mm!=='--'?'<b>'+r.mm+'</b> • ':''}${r.spec}</div>
+  </div>`;
+
+  $('sgEnv').innerHTML  = rows.filter(r => r.g === 'env').map(cardHtml).join('');
+  $('sgPipe').innerHTML = rows.filter(r => r.g === 'pipe').map(cardHtml).join('');
+  $('sgInv').innerHTML  = rows.filter(r => r.g === 'inv').map(cardHtml).join('');
+  $('sgMcu').innerHTML  = rows.filter(r => r.g === 'mcu').map(cardHtml).join('');
+
+  $('sensTblBody').innerHTML = rows.map(r => `<tr>
+    <td><span class="pill p-off">${r.cat}</span></td>
+    <td><b>${r.name}</b></td>
+    <td><span class="src-tag">${r.src}</span></td>
+    <td class="num" style="font-weight:900;font-size:13.5px;color:${r.hi==='err'?'#f87171':r.hi==='warn'?'#fbbf24':r.hi==='ok'?'#34d399':'#fff'}">${r.val}</td>
+    <td class="num sub">${r.mm}</td>
+    <td class="sub">${r.spec}</td>
+  </tr>`).join('');
+}
+
+// Init
+setCtrlView(ctrlView);
+setSensView(sensView);
+syncPeaForm();
+renderSeriesChips();
+refresh(true);
+</script>
+</body>
+</html>
